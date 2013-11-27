@@ -2,3 +2,9 @@ update/files/
 update/flist.txt
 update/scripts_zip/
 update/flist.upd
+temp/run/flist
+temp/run/flist.upd
+temp/run/game.bin
+temp/run/game.bin.upd
+temp/run/game.zip
+temp/run/game.zip.upd
