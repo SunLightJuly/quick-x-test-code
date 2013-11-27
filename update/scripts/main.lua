@@ -7,6 +7,6 @@ function __G__TRACKBACK__(errorMessage)
 end
 
 xpcall(function()
-    require("appentry")
-    --require("update")
+    --require("appentry")
+    require("update")
 end, __G__TRACKBACK__)
