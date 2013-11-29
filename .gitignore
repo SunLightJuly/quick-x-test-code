@@ -8,3 +8,6 @@ temp/run/game.bin
 temp/run/game.bin.upd
 temp/run/game.zip
 temp/run/game.zip.upd
+temp/compile_zip/scripts/
+temp/compile_zip/prj_compile_scripts.bat
+temp/compile_zip/scripts_zip/game.zip
