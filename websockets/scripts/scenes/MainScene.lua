@@ -65,7 +65,8 @@ end
 function MainScene:onConnectClicked()
     if self.websocket then return end
     --self.websocket = WebSockets.new("ws://echo.websocket.org")
-    self.websocket = WebSockets.new("ws://192.168.19.128:8088/test")
+    -- self.websocket = WebSockets.new("ws://192.168.19.128:8088/test")
+    self.websocket = WebSockets.new("ws://218.244.136.95:8086/test")
     self.websocket:addEventListener(WebSockets.OPEN_EVENT, handler(self, self.onOpen))
     self.websocket:addEventListener(WebSockets.MESSAGE_EVENT, handler(self, self.onMessage))
     self.websocket:addEventListener(WebSockets.CLOSE_EVENT, handler(self, self.onClose))
