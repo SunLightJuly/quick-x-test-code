@@ -48,6 +48,7 @@ end
 function MainScene:onMessage(event)
     if event.messageLength then
         printf("receive binary msg: len = %s, binary = %s", event.messageLength, bin2hex(event.message))
+        io.writefile("recvWebSocket.tmp", event.message, "wb")
     else
         printf("receive text msg: %s", event.message)
     end
