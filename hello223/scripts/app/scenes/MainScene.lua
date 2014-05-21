@@ -6,8 +6,6 @@ end)
 require("cclass")
 CClassNameSpace("ccx")
 
--- local cc = {}
-
 cclass("CCNodeTest", cc, "NodeTest")
 cclass("CCSpriteTest", cc, "SpriteTest")
 
@@ -15,7 +13,11 @@ function MainScene:ctor()
 	-- local node_t = CCNodeTest:create()
 	-- local sprite = cc.Sprite:create()
 
-
+	local sp = cc.SpriteTest:create()
+	dump(sp)
+	-- dump(getmetatable(sp))
+	print("####cclass_type_name: "..cclass_type_name(sp))
+	-- print(sp.udata_)
 	print(cc.SpriteTest:setPosition(10, 10).test("test cc.spritetest!!!"))
 
 	-- print(ccx.CCSpriteTest.test("test sprite!!!"))
