@@ -3,6 +3,8 @@ local MainScene = class("MainScene", function()
     return display.newScene("MainScene")
 end)
 
+--test cclass
+--[[
 require("cclass")
 CClassNameSpace("ccx")
 
@@ -12,8 +14,12 @@ cclass("CCSpriteTest", cc, "SpriteTest")
 function cc.SpriteTest:new(...)
 	return self.create(...)
 end
+]]
 
 function MainScene:ctor()
+
+	--test cclass
+	--[[
 	local x
 
 	local node = cc.Node:create()
@@ -55,6 +61,7 @@ function MainScene:ctor()
 	-- print(ccx.CCSpriteTest.test("test sprite!!!"))
 	-- print(ccx.CCNodeTest.test("test string!!!"))
 	-- print(ccx.CCNodeTest.test("test string again!!!"))
+	]]
 
     ui.newTTFLabel({text = "Hello, 世界", size = 64, align = ui.TEXT_ALIGN_CENTER})
         :pos(display.cx, display.cy)
