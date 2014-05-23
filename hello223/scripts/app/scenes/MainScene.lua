@@ -1,3 +1,4 @@
+require("fflua_test")
 
 local MainScene = class("MainScene", function()
     return display.newScene("MainScene")
