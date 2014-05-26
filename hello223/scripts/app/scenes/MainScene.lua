@@ -1,4 +1,5 @@
-require("fflua_test")
+-- require("fflua_test")
+-- require("ffi_test")
 
 local MainScene = class("MainScene", function()
     return display.newScene("MainScene")
