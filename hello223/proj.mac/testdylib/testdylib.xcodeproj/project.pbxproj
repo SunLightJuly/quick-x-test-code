@@ -1,0 +1,244 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DA5A38F91935C47C00A3AB37 /* testdylib.c in Sources */ = {isa = PBXBuildFile; fileRef = DA5A38F81935C47C00A3AB37 /* testdylib.c */; };
+		DA5A38FB1935CFF700A3AB37 /* libquickcocos2dx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DA5A38FA1935CFF700A3AB37 /* libquickcocos2dx.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		DA5A38EA1935C43100A3AB37 /* libtestdylib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libtestdylib.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA5A38F81935C47C00A3AB37 /* testdylib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = testdylib.c; sourceTree = "<group>"; };
+		DA5A38FA1935CFF700A3AB37 /* libquickcocos2dx.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libquickcocos2dx.a; path = "../../../../Library/Developer/Xcode/DerivedData/hello223-fthjrvhczxgrgsaqwkkpkcmupowg/Build/Products/Debug/libquickcocos2dx.a"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DA5A38E71935C43100A3AB37 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA5A38FB1935CFF700A3AB37 /* libquickcocos2dx.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DA5A38E11935C43100A3AB37 = {
+			isa = PBXGroup;
+			children = (
+				DA5A38FA1935CFF700A3AB37 /* libquickcocos2dx.a */,
+				DA5A38F81935C47C00A3AB37 /* testdylib.c */,
+				DA5A38EB1935C43100A3AB37 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DA5A38EB1935C43100A3AB37 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DA5A38EA1935C43100A3AB37 /* libtestdylib.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		DA5A38E81935C43100A3AB37 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		DA5A38E91935C43100A3AB37 /* testdylib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA5A38EE1935C43100A3AB37 /* Build configuration list for PBXNativeTarget "testdylib" */;
+			buildPhases = (
+				DA5A38E61935C43100A3AB37 /* Sources */,
+				DA5A38E71935C43100A3AB37 /* Frameworks */,
+				DA5A38E81935C43100A3AB37 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = testdylib;
+			productName = testdylib;
+			productReference = DA5A38EA1935C43100A3AB37 /* libtestdylib.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DA5A38E21935C43100A3AB37 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = "___FULLUSERNAME___";
+			};
+			buildConfigurationList = DA5A38E51935C43100A3AB37 /* Build configuration list for PBXProject "testdylib" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = DA5A38E11935C43100A3AB37;
+			productRefGroup = DA5A38EB1935C43100A3AB37 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DA5A38E91935C43100A3AB37 /* testdylib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DA5A38E61935C43100A3AB37 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DA5A38F91935C47C00A3AB37 /* testdylib.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		DA5A38EC1935C43100A3AB37 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		DA5A38ED1935C43100A3AB37 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		DA5A38EF1935C43100A3AB37 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(QUICK_COCOS2DX_ROOT)/lib/cocos2d-x/scripting/lua/luajit/include\"",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/hello223-fthjrvhczxgrgsaqwkkpkcmupowg/Build/Products/Debug",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		DA5A38F01935C43100A3AB37 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(QUICK_COCOS2DX_ROOT)/lib/cocos2d-x/scripting/lua/luajit/include\"",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/hello223-fthjrvhczxgrgsaqwkkpkcmupowg/Build/Products/Debug",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DA5A38E51935C43100A3AB37 /* Build configuration list for PBXProject "testdylib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA5A38EC1935C43100A3AB37 /* Debug */,
+				DA5A38ED1935C43100A3AB37 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DA5A38EE1935C43100A3AB37 /* Build configuration list for PBXNativeTarget "testdylib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA5A38EF1935C43100A3AB37 /* Debug */,
+				DA5A38F01935C43100A3AB37 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = DA5A38E21935C43100A3AB37 /* Project object */;
+}

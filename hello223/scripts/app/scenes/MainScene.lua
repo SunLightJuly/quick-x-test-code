@@ -19,6 +19,9 @@ end
 ]]
 
 function MainScene:ctor()
+	local func = package.loadlib("libtestdylib.dylib", "luaopen_testdylib")
+	func()
+	print(testdylib.sin(2.0))
 
 	--test cclass
 	--[[
