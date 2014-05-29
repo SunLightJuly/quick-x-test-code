@@ -19,3 +19,5 @@ websockets/recvWebSocket.tmp
 hello223/proj.win32/Debug/
 hello223/proj.win32/hello223.opensdf
 hello223/proj.win32/hello223.sdf
+hello223/proj.android/assets/
+hello223/proj.android/libs/
