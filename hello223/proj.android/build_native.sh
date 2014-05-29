@@ -14,6 +14,7 @@ echo "  APP_ANDROID_ROOT    = $APP_ANDROID_ROOT"
 
 # if use quick-cocos2d-x mini, uncomments line below
 # NDK_BUILD_FLAGS="CPPFLAGS=\"-DQUICK_MINI_TARGET=1\" QUICK_MINI_TARGET=1"
+NDK_BUILD_FLAGS="CPPFLAGS=\"-DCOCOS2D_DEBUG=1\" COCOS2D_DEBUG=1"
 
 # if use DEBUG, set NDK_DEBUG=1, otherwise set NDK_DEBUG=0
 NDK_DEBUG=1

@@ -19,9 +19,23 @@ end
 ]]
 
 function MainScene:ctor()
-	local func = package.loadlib("libtestdylib.dylib", "luaopen_testdylib")
-	func()
-	print(testdylib.sin(2.0))
+	print("============================="..device.writablePath)
+	local libpath,func
+	if device.platform=='mac' then
+		libpath = "libtestdylib.dylib"
+	else
+		-- libpath = device.writablePath.."testdylib.so"
+		libpath = "/sdcard/testdylib.so"
+	end
+	print("loadlib: "..libpath)
+	local data = CCFileUtils:sharedFileUtils():getFileData(libpath)
+	print("data len: "..string.len(data))
+	-- func = package.loadlib(libpath, "luaopen_testdylib")
+	-- print("=============================func:"..func)
+	-- func()
+	local sinx = testdylib.sin(2.0)
+	-- local sinx = "sinx"
+	print(sinx)
 
 	--test cclass
 	--[[
@@ -68,7 +82,7 @@ function MainScene:ctor()
 	-- print(ccx.CCNodeTest.test("test string again!!!"))
 	]]
 
-    ui.newTTFLabel({text = "Hello, 世界", size = 64, align = ui.TEXT_ALIGN_CENTER})
+    ui.newTTFLabel({text = "Hello, 世界\n"..sinx, size = 64, align = ui.TEXT_ALIGN_CENTER})
         :pos(display.cx, display.cy)
         :addTo(self)
 end

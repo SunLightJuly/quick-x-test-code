@@ -28,20 +28,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		DA5A38F61935C43200A3AB37 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DA5A38F11935C43100A3AB37 /* testdylib.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DA5A38EA1935C43100A3AB37;
-			remoteInfo = testdylib;
-		};
-		DA5A38FC1935D6F000A3AB37 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DA5A38F11935C43100A3AB37 /* testdylib.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DA5A38E91935C43100A3AB37;
-			remoteInfo = testdylib;
-		};
 		F4B08155175C89E30029F472 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F4B08151175C89E30029F472 /* quickcocos2dx.xcodeproj */;
@@ -65,7 +51,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		DA5A38F11935C43100A3AB37 /* testdylib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = testdylib.xcodeproj; path = testdylib/testdylib.xcodeproj; sourceTree = "<group>"; };
+		DA698B2F1936D6CF00399A2F /* testdylib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = testdylib.xcodeproj; path = dylib/testdylib/proj.mac/testdylib.xcodeproj; sourceTree = QUICK_COCOS2DX_ROOT; };
 		F44C957215F49004004D4151 /* hello223.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hello223.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F44C957615F49004004D4151 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		F44C957915F49004004D4151 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -116,18 +102,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		DA5A38F21935C43100A3AB37 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				DA5A38F71935C43200A3AB37 /* libtestdylib.dylib */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		F44C956715F49004004D4151 = {
 			isa = PBXGroup;
 			children = (
-				DA5A38F11935C43100A3AB37 /* testdylib.xcodeproj */,
+				DA698B2F1936D6CF00399A2F /* testdylib.xcodeproj */,
 				F4B08151175C89E30029F472 /* quickcocos2dx.xcodeproj */,
 				F44C957C15F49004004D4151 /* hello223 */,
 				F44C957515F49004004D4151 /* Frameworks */,
@@ -220,7 +198,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				DA5A38FD1935D6F000A3AB37 /* PBXTargetDependency */,
 			);
 			name = hello223;
 			productName = hello223;
@@ -251,10 +228,6 @@
 					ProductGroup = F4B08152175C89E30029F472 /* Products */;
 					ProjectRef = F4B08151175C89E30029F472 /* quickcocos2dx.xcodeproj */;
 				},
-				{
-					ProductGroup = DA5A38F21935C43100A3AB37 /* Products */;
-					ProjectRef = DA5A38F11935C43100A3AB37 /* testdylib.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -264,13 +237,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		DA5A38F71935C43200A3AB37 /* libtestdylib.dylib */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.dylib";
-			path = libtestdylib.dylib;
-			remoteRef = DA5A38F61935C43200A3AB37 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		F4B08156175C89E30029F472 /* libquickcocos2dx.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -304,14 +270,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		DA5A38FD1935D6F000A3AB37 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = testdylib;
-			targetProxy = DA5A38FC1935D6F000A3AB37 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		F44C958E15F49004004D4151 /* Debug */ = {
