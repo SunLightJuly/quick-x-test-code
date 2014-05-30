@@ -24,16 +24,19 @@ function MainScene:ctor()
 	if device.platform=='mac' then
 		libpath = "libtestdylib.dylib"
 	else
-		-- libpath = device.writablePath.."testdylib.so"
-		libpath = "/sdcard/testdylib.so"
+		libpath = device.writablePath.."libtestdylib.so"
+		-- libpath = "/sdcard/testdylib.so"
 	end
 	print("loadlib: "..libpath)
 	local data = CCFileUtils:sharedFileUtils():getFileData(libpath)
 	print("data len: "..string.len(data))
-	-- func = package.loadlib(libpath, "luaopen_testdylib")
-	-- print("=============================func:"..func)
-	-- func()
-	local sinx = testdylib.sin(2.0)
+	func = package.loadlib(libpath, "luaopen_testdylib")
+	if func then
+		func()
+		sinx = testdylib.sin(2.0)
+	else
+		sinx = "Error"
+	end
 	-- local sinx = "sinx"
 	print(sinx)
 
