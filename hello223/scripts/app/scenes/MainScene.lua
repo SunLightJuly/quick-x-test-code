@@ -19,7 +19,25 @@ end
 ]]
 
 function MainScene:ctor()
-	print("============================="..device.writablePath)
+	-- test get symbol
+	local sym, err
+	err = lua_binder.opensym()
+	if not err then
+		sym, err = lua_binder.getsym("printf")
+		if sym then
+			-- sym()
+			-- NodeTest:create()
+		else
+			print("========getsym err："..err)
+		end
+		lua_binder.closesym()
+	else
+			print("========opensym err："..err)
+	end
+
+
+	-- test dylib
+	-- print("============================="..device.writablePath)
 	local libpath,func
 	if device.platform=='mac' then
 		libpath = "libtestdylib.dylib"

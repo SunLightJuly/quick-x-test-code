@@ -28,6 +28,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		DA4A3A5119384361008B0DB0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DA698B2F1936D6CF00399A2F /* testdylib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = DA5A38EA1935C43100A3AB37;
+			remoteInfo = testdylib;
+		};
 		F4B08155175C89E30029F472 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F4B08151175C89E30029F472 /* quickcocos2dx.xcodeproj */;
@@ -102,6 +109,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DA4A3A4D19384361008B0DB0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DA4A3A5219384361008B0DB0 /* libtestdylib.dylib */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F44C956715F49004004D4151 = {
 			isa = PBXGroup;
 			children = (
@@ -228,6 +243,10 @@
 					ProductGroup = F4B08152175C89E30029F472 /* Products */;
 					ProjectRef = F4B08151175C89E30029F472 /* quickcocos2dx.xcodeproj */;
 				},
+				{
+					ProductGroup = DA4A3A4D19384361008B0DB0 /* Products */;
+					ProjectRef = DA698B2F1936D6CF00399A2F /* testdylib.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -237,6 +256,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		DA4A3A5219384361008B0DB0 /* libtestdylib.dylib */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.dylib";
+			path = libtestdylib.dylib;
+			remoteRef = DA4A3A5119384361008B0DB0 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F4B08156175C89E30029F472 /* libquickcocos2dx.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
