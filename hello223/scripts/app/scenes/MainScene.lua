@@ -18,21 +18,43 @@ function cc.SpriteTest:new(...)
 end
 ]]
 
+-- local oldfunc = CCNode.setPosition
+
+print("----···")
+-- cc.Sprite:setPosition(101, 101)
+
+-- local setPosition_C = tolua.getcfunction(cc.Sprite, "setPosition")
+
+function cc.Sprite:setPosition(x, y)
+	print("----CCNode:setPosition("..x..","..y..")")
+	-- setPosition_C(self, x, y)
+	self:setPosition_C(x, y)
+end
+
+-- cc.Sprite:setPosition_C(101, 101)
+
+
 function MainScene:ctor()
+	local sprite = cc.Sprite:create("helloworld.png")
+	print("----sprite:setPosition")
+	sprite:setPosition(100, 100)
+
 	-- test get symbol
 	local sym, err
-	err = lua_binder.opensym()
-	if not err then
-		sym, err = lua_binder.getsym("printf")
-		if sym then
-			-- sym()
-			-- NodeTest:create()
+	if lua_binder then
+		err = lua_binder.opensym()
+		if not err then
+			sym, err = lua_binder.getsym("printf")
+			if sym then
+				-- sym()
+				-- NodeTest:create()
+			else
+				print("========getsym err："..err)
+			end
+			lua_binder.closesym()
 		else
-			print("========getsym err："..err)
+				print("========opensym err："..err)
 		end
-		lua_binder.closesym()
-	else
-			print("========opensym err："..err)
 	end
 
 
@@ -47,8 +69,10 @@ function MainScene:ctor()
 	end
 	print("loadlib: "..libpath)
 	local data = CCFileUtils:sharedFileUtils():getFileData(libpath)
-	print("data len: "..string.len(data))
-	func = package.loadlib(libpath, "luaopen_testdylib")
+	if data then
+		print("data len: "..string.len(data))
+		func = package.loadlib(libpath, "luaopen_testdylib")
+	end
 	if func then
 		func()
 		sinx = testdylib.sin(2.0)
