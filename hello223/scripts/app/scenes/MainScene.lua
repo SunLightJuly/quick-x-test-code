@@ -20,15 +20,20 @@ end
 
 -- local oldfunc = CCNode.setPosition
 
-print("----···")
+-- print("----···")
 -- cc.Sprite:setPosition(101, 101)
 
--- local setPosition_C = tolua.getcfunction(cc.Sprite, "setPosition")
+function tolua.getcfunction( class, key )
+	if class[key..'_C'] then
+		return class[key..'_C']
+	end
+
+	return class[key]
+end
 
 function cc.Sprite:setPosition(x, y)
 	print("----CCNode:setPosition("..x..","..y..")")
-	-- setPosition_C(self, x, y)
-	self:setPosition_C(x, y)
+	tolua.getcfunction(cc.Sprite, "setPosition")(self, x, y)
 end
 
 -- cc.Sprite:setPosition_C(101, 101)
@@ -37,23 +42,26 @@ end
 function MainScene:ctor()
 	local sprite = cc.Sprite:create("helloworld.png")
 	print("----sprite:setPosition")
-	sprite:setPosition(100, 100)
+	sprite:setPosition(display.cx, display.cy)
+	self:addChild(sprite)
 
 	-- test get symbol
 	local sym, err
 	if lua_binder then
-		err = lua_binder.opensym()
-		if not err then
-			sym, err = lua_binder.getsym("printf")
-			if sym then
-				-- sym()
-				-- NodeTest:create()
+		if lua_binder.opensym then
+			err = lua_binder.opensym()
+			if not err then
+				sym, err = lua_binder.getsym("printf")
+				if sym then
+					-- sym()
+					-- NodeTest:create()
+				else
+					print("========getsym err："..err)
+				end
+				lua_binder.closesym()
 			else
-				print("========getsym err："..err)
+					print("========opensym err："..err)
 			end
-			lua_binder.closesym()
-		else
-				print("========opensym err："..err)
 		end
 	end
 
