@@ -20,26 +20,57 @@ end
 
 -- local oldfunc = CCNode.setPosition
 
--- print("----···")
 -- cc.Sprite:setPosition(101, 101)
 
 function tolua.getcfunction( class, key )
-	if class[key..'_C'] then
-		return class[key..'_C']
+	if class[key..'_C__'] then
+		return class[key..'_C__']
 	end
 
 	return class[key]
 end
 
-function cc.Sprite:setPosition(x, y)
-	print("----CCNode:setPosition("..x..","..y..")")
-	tolua.getcfunction(cc.Sprite, "setPosition")(self, x, y)
+print("----···")
+cc.Node.xxxx = {}
+print("============···")
+
+
+print("----define CCNode:setPosition")
+function CCNode:setPosition(x, y)
 end
 
--- cc.Sprite:setPosition_C(101, 101)
+print("----define CCSprite:setPosition")
+function CCSprite:setPosition(x, y)
+end
 
+print("----define end")
+
+
+-- function CCNode:setPosition(x, y)
+-- 	print("----CCNode:setPosition("..x..","..y..")")
+-- 	local func = tolua.getcfunction(CCNode, "setPosition")
+-- 	if func~=CCNode.setPosition then
+-- 		func(self, x, y)
+-- 	end
+-- end
+
+-- function CCSprite:setPosition(x, y)
+-- 	print("----CCNode:setPosition("..x..","..y..")")
+-- 	local func = tolua.getcfunction(CCSprite, "setPosition")
+-- 	if func~=CCSprite.setPosition then
+-- 		func(self, x, y)
+-- 	end
+-- end
+
+-- cc.Sprite:setPosition_C(101, 101)
+-- function cc.Node:setPosition(x, y)
+-- 	print("----CCNode:setPosition("..x..","..y..")")
+-- end
 
 function MainScene:ctor()
+	-- local class = cc.Node
+	-- print("======"..class["setPosition_C"])
+
 	local sprite = cc.Sprite:create("helloworld.png")
 	print("----sprite:setPosition")
 	sprite:setPosition(display.cx, display.cy)
