@@ -6,4 +6,6 @@ function __G__TRACKBACK__(errorMessage)
     print("----------------------------------------")
 end
 
+print("===================load APP")
+
 require("app.MyApp").new():run()

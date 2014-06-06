@@ -22,59 +22,62 @@ end
 
 -- cc.Sprite:setPosition(101, 101)
 
-function tolua.getcfunction( class, key )
-	if class[key..'_C__'] then
-		return class[key..'_C__']
-	end
+-- function tolua.getcfunction( class, key )
+-- 	if class[key..'_C__'] then
+-- 		return class[key..'_C__']
+-- 	end
 
-	return class[key]
-end
+-- 	return class[key]
+-- end
 
 print("----···")
 cc.Node.xxxx = {}
 print("============···")
 
 
-print("----define CCNode:setPosition")
-function CCNode:setPosition(x, y)
-end
-
-print("----define CCSprite:setPosition")
-function CCSprite:setPosition(x, y)
-end
-
-print("----define end")
-
-
+-- print("----define CCNode:setPosition")
 -- function CCNode:setPosition(x, y)
--- 	print("----CCNode:setPosition("..x..","..y..")")
--- 	local func = tolua.getcfunction(CCNode, "setPosition")
--- 	if func~=CCNode.setPosition then
--- 		func(self, x, y)
--- 	end
 -- end
 
+-- print("----define CCSprite:setPosition")
 -- function CCSprite:setPosition(x, y)
--- 	print("----CCNode:setPosition("..x..","..y..")")
--- 	local func = tolua.getcfunction(CCSprite, "setPosition")
--- 	if func~=CCSprite.setPosition then
--- 		func(self, x, y)
--- 	end
 -- end
 
--- cc.Sprite:setPosition_C(101, 101)
--- function cc.Node:setPosition(x, y)
--- 	print("----CCNode:setPosition("..x..","..y..")")
--- end
+-- print("----define end")
+
+
+function CCNode:setPosition(x, y)
+	print("----CCNode:setPosition("..x..","..y..")")
+	local func = tolua.getcfunction(self, "setPosition")
+	if func then return func(self, x, y) end
+end
+
+function CCLabelTTF:setPosition(x, y)
+	print("----CCLabelTTF:setPosition("..x..","..y..")")
+	local func = tolua.getcfunction(self, "setPosition")
+	if func then return func(self, x, y) end
+end
+
+function tolua.resetcfunction(cls, methodname)
+	local func = tolua.getcfunction(cls, methodname)
+	if func then cls[methodname] = func end
+end
 
 function MainScene:ctor()
-	-- local class = cc.Node
-	-- print("======"..class["setPosition_C"])
+
+    self.layer = display.newLayer()
+    self:addChild(self.layer)
+
+	self.img = display.newNode()
+	self:addChild(self.img)
+
+	-- tolua.resetcfunction( CCNode, "setPosition" )
 
 	local sprite = cc.Sprite:create("helloworld.png")
-	print("----sprite:setPosition")
+	print("----sprite:setPosition---- class="..tolua.type(sprite))
 	sprite:setPosition(display.cx, display.cy)
 	self:addChild(sprite)
+
 
 	-- test get symbol
 	local sym, err
@@ -166,12 +169,63 @@ function MainScene:ctor()
 	-- print(ccx.CCNodeTest.test("test string again!!!"))
 	]]
 
+	local lbl = 
     ui.newTTFLabel({text = "Hello, 世界\n"..sinx, size = 64, align = ui.TEXT_ALIGN_CENTER})
         :pos(display.cx, display.cy)
         :addTo(self)
+
+    print("lbl type: "..tolua.type(lbl))
+    print("Label type: "..tolua.type(CCLabelTTF))
+end
+
+function MainScene:onTouch(event, x, y)
+
+	print("----onTouch("..event..","..x..","..y..")")
+
+		print('2---- self.img=')
+		print(self.img)
+
+    if event == "began" then
+        local p = CCPoint(x, y)
+        -- if self.addCoinButtonBoundingBox:containsPoint(p) then
+        --     self.state = "ADD"
+        -- elseif self.removeCoinButtonBoundingBox:containsPoint(p) then
+        --     self.state = "REMOVE"
+        -- else
+        --     self.state = "IDLE"
+        -- end
+        return true
+    elseif event ~= "moved" then
+        self.state = "IDLE"
+    end
+end
+
+function MainScene:onEnterFrame(dt)
+	if not self.flag then
+		print('3---- self.img=')
+		print(self.img)
+		self.flag = true
+	end
 end
 
 function MainScene:onEnter()
+	-- self.img = nil
+	tolua.setvalue(self.img)
+	print('s---- self.img=')
+	print(self.img)
+
+	print('0---- self.img=')
+	print(self.img)
+	self.img:removeSelf()
+	print('1---- self.img=')
+	print(self.img)
+
+    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt) self:onEnterFrame(dt) end)
+    self:scheduleUpdate_()
+    self.layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+        return self:onTouch(event.name, event.x, event.y)
+    end)
+    self.layer:setTouchEnabled(true)
 end
 
 function MainScene:onExit()
