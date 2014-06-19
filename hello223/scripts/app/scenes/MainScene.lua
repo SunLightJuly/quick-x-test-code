@@ -210,9 +210,9 @@ end
 
 function MainScene:onEnter()
 	-- self.img = nil
-	tolua.setvalue(self.img)
-	print('s---- self.img=')
-	print(self.img)
+	-- tolua.setvalue(self.img)
+	-- print('s---- self.img=')
+	-- print(self.img)
 
 	print('0---- self.img=')
 	print(self.img)
