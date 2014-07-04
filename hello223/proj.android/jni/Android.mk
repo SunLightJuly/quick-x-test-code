@@ -19,4 +19,4 @@ include $(BUILD_SHARED_LIBRARY)
 
 $(call import-module,lib/proj.android)
 
-include $(QUICK_COCOS2DX_ROOT)/dylib/testdylib/proj.android/Android.mk
+#include $(QUICK_COCOS2DX_ROOT)/dylib/testdylib/proj.android/Android.mk
