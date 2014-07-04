@@ -259,10 +259,10 @@ end
 
 function Node:addNodeEventListener( evt, hdl, tag, priority )
     -- print("----Node:addNodeEventListener")
-    local cfunc = tolua.getcfunction(self, "addNodeEventListener")
-    if cfunc then 
-        cfunc( evt, hdl, tag, priority ) 
-    end
+    -- local cfunc = tolua.getcfunction(self, "addNodeEventListener")
+    -- if cfunc then 
+    --     cfunc( self, evt, hdl, tag, priority ) 
+    -- end
 
     priority = priority or 0
     self._scriptEventListeners_ = self._scriptEventListeners_ or {}
