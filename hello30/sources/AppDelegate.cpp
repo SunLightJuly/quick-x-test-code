@@ -53,11 +53,11 @@ bool AppDelegate::applicationDidFinishLaunching()
     string path = CCFileUtils::sharedFileUtils()->fullPathForFilename("scripts/main.lua");
 #else
     // load framework
-    if (m_projectConfig.isLoadPrecompiledFramework())
-    {
-        const string precompiledFrameworkPath = SimulatorConfig::sharedDefaults()->getPrecompiledFrameworkPath();
-        pStack->loadChunksFromZIP(precompiledFrameworkPath.c_str());
-    }
+//    if (m_projectConfig.isLoadPrecompiledFramework())
+//    {
+//        const string precompiledFrameworkPath = SimulatorConfig::sharedDefaults()->getPrecompiledFrameworkPath();
+//        pStack->loadChunksFromZIP(precompiledFrameworkPath.c_str());
+//    }
     
     // set script path
     string path = FileUtils::getInstance()->fullPathForFilename(m_projectConfig.getScriptFileRealPath().c_str());
