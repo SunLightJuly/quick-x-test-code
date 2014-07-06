@@ -22,3 +22,5 @@ hello223/proj.win32/hello223.sdf
 hello223/proj.android/assets/
 hello223/proj.android/libs/
 hello30/proj.android/assets/
+hello30/proj.android/obj/
+hello30/proj.android/libs/armeabi/libgame.so
