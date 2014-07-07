@@ -122,18 +122,18 @@ end
 --     end
 -- end
 
-function Node:setTouchMode(mode)
-    if self._TouchMode_ ~= mode then
-      self._TouchMode_ = mode
-      if not self._isTouchEnabled_ then return end
-      self:setTouchEnabled(false)   --unregister old listeners
-      self:setTouchEnabled(true)
-    end
-end
+-- function Node:setTouchMode(mode)
+--     if self._TouchMode_ ~= mode then
+--       self._TouchMode_ = mode
+--       if not self._isTouchEnabled_ then return end
+--       self:setTouchEnabled(false)   --unregister old listeners
+--       self:setTouchEnabled(true)
+--     end
+-- end
 
-function Node:getTouchMode()
-    return self._TouchMode_
-end
+-- function Node:getTouchMode()
+--     return self._TouchMode_
+-- end
 
 -- function Node:isSwallowsTouches()
 --     return self._isTouchSwallowEnabled_
