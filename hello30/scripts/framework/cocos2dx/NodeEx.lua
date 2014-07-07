@@ -111,16 +111,16 @@ end
 --     end
 -- end
 
-function Node:setTouchSwallowEnabled( isEnable )
-    if self._isTouchSwallowEnabled_ and self._isTouchSwallowEnabled_==isEnable then return end
-    self._isTouchSwallowEnabled_ = isEnable
-    local evt = c.NODE_TOUCH_EVENT
-    if self._scriptEventListeners_ and self._scriptEventListeners_[evt] then
-        for i,v in ipairs(self._scriptEventListeners_[evt]) do
-            if v.regHanler then v.regHanler:setSwallowTouches(isEnable) end
-        end
-    end
-end
+-- function Node:setTouchSwallowEnabled( isEnable )
+--     if self._isTouchSwallowEnabled_ and self._isTouchSwallowEnabled_==isEnable then return end
+--     self._isTouchSwallowEnabled_ = isEnable
+--     local evt = c.NODE_TOUCH_EVENT
+--     if self._scriptEventListeners_ and self._scriptEventListeners_[evt] then
+--         for i,v in ipairs(self._scriptEventListeners_[evt]) do
+--             if v.regHanler then v.regHanler:setSwallowTouches(isEnable) end
+--         end
+--     end
+-- end
 
 function Node:setTouchMode(mode)
     if self._TouchMode_ ~= mode then
@@ -135,9 +135,9 @@ function Node:getTouchMode()
     return self._TouchMode_
 end
 
-function Node:isSwallowsTouches()
-    return self._isTouchSwallowEnabled_
-end
+-- function Node:isSwallowsTouches()
+--     return self._isTouchSwallowEnabled_
+-- end
 
 function Node:removeSelf()
     -- body
