@@ -80,36 +80,36 @@ function Node:getCascadeBoundingBox()
     return rc
 end
 
-function Node:isTouchEnabled()
-    return self._isTouchEnabled_
-end
+-- function Node:isTouchEnabled()
+--     return self._isTouchEnabled_
+-- end
 
-function Node:setTouchEnabled( isEnable )
-    if self._isTouchEnabled_ and self._isTouchEnabled_==isEnable then return end
-    self._isTouchEnabled_ = isEnable
+-- function Node:setTouchEnabled( isEnable )
+--     if self._isTouchEnabled_ and self._isTouchEnabled_==isEnable then return end
+--     self._isTouchEnabled_ = isEnable
 
-    local evt = c.NODE_TOUCH_EVENT
-    if self._scriptEventListeners_ and self._scriptEventListeners_[evt] then
-        local eventDispatcher = self:getEventDispatcher()
+--     local evt = c.NODE_TOUCH_EVENT
+--     if self._scriptEventListeners_ and self._scriptEventListeners_[evt] then
+--         local eventDispatcher = self:getEventDispatcher()
 
-        local regFunc
-        if isEnable then
-            regFunc = function ( regHanler, obj )
-                eventDispatcher:addEventListenerWithSceneGraphPriority(regHanler, obj)
-            end
-        else
-            regFunc = function ( regHanler )
-                eventDispatcher:removeEventListener(regHanler)
-            end
-        end
+--         local regFunc
+--         if isEnable then
+--             regFunc = function ( regHanler, obj )
+--                 eventDispatcher:addEventListenerWithSceneGraphPriority(regHanler, obj)
+--             end
+--         else
+--             regFunc = function ( regHanler )
+--                 eventDispatcher:removeEventListener(regHanler)
+--             end
+--         end
         
-        for i,v in ipairs(self._scriptEventListeners_[evt]) do
-            if v.regHanler and v.mode==self._TouchMode_ then
-                regFunc(v.regHanler, self)
-            end
-        end
-    end
-end
+--         for i,v in ipairs(self._scriptEventListeners_[evt]) do
+--             if v.regHanler and v.mode==self._TouchMode_ then
+--                 regFunc(v.regHanler, self)
+--             end
+--         end
+--     end
+-- end
 
 function Node:setTouchSwallowEnabled( isEnable )
     if self._isTouchSwallowEnabled_ and self._isTouchSwallowEnabled_==isEnable then return end
@@ -292,43 +292,47 @@ function Node:addNodeEventListener( evt, hdl, tag, priority )
             func(self, listener, priority) 
         end
     elseif evt==c.NODE_TOUCH_EVENT then
-        local onTouchBegan = function (touch, event)
-            return NodeEventDispatcher(event:getCurrentTarget(), c.NODE_TOUCH_EVENT, {touch, event, "began"})
+        local cfunc = tolua.getcfunction(self, "addNodeEventListener")
+        if cfunc then 
+            cfunc( self, evt, hdl, tag, priority ) 
         end
+        -- local onTouchBegan = function (touch, event)
+        --     return NodeEventDispatcher(event:getCurrentTarget(), c.NODE_TOUCH_EVENT, {touch, event, "began"})
+        -- end
 
-        local onTouchMoved = function (touch, event)
-            return NodeEventDispatcher(event:getCurrentTarget(), c.NODE_TOUCH_EVENT, {touch, event, "moved"})
-        end
+        -- local onTouchMoved = function (touch, event)
+        --     return NodeEventDispatcher(event:getCurrentTarget(), c.NODE_TOUCH_EVENT, {touch, event, "moved"})
+        -- end
 
-        local onTouchEnded = function (touch, event)
-            return NodeEventDispatcher(event:getCurrentTarget(), c.NODE_TOUCH_EVENT, {touch, event, "ended"})
-        end
+        -- local onTouchEnded = function (touch, event)
+        --     return NodeEventDispatcher(event:getCurrentTarget(), c.NODE_TOUCH_EVENT, {touch, event, "ended"})
+        -- end
 
-        self._isTouchSwallowEnabled_ = self._isTouchSwallowEnabled_ or true
-        local isSwallow = self._isTouchSwallowEnabled_
-        local listener
-        self._TouchMode_ = self._TouchMode_ or c.EVENT_TOUCH_ONE_BY_ONE
-        local mode = self._TouchMode_
-        if mode==c.TOUCH_MODE_ALL_AT_ONCE then
-            -- print("====TOUCH_MODE_ALL_AT_ONCE listener")
-            listener = cc.EventListenerTouchAllAtOnce:create()
-            listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCHES_BEGAN )
-            -- listener:registerScriptHandler(onTouchMoved,cc.Handler.EVENT_TOUCH_MOVED )
-            listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCHES_ENDED )
-        else
-            -- print("====EVENT_TOUCH_ONE_BY_ONE listener")
-            listener = cc.EventListenerTouchOneByOne:create()
-            listener:setSwallowTouches(isSwallow)
-            listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
-            listener:registerScriptHandler(onTouchMoved,cc.Handler.EVENT_TOUCH_MOVED )
-            listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
-        end
-        local eventDispatcher = self:getEventDispatcher()
-        eventDispatcher:addEventListenerWithSceneGraphPriority(listener, self)
-        lis.regHanler = listener
-        lis.regHanler:retain()
-        lis.mode = mode
-        if nil==self._isTouchEnabled_ then self._isTouchEnabled_=true end
+        -- self._isTouchSwallowEnabled_ = self._isTouchSwallowEnabled_ or true
+        -- local isSwallow = self._isTouchSwallowEnabled_
+        -- local listener
+        -- self._TouchMode_ = self._TouchMode_ or c.EVENT_TOUCH_ONE_BY_ONE
+        -- local mode = self._TouchMode_
+        -- if mode==c.TOUCH_MODE_ALL_AT_ONCE then
+        --     -- print("====TOUCH_MODE_ALL_AT_ONCE listener")
+        --     listener = cc.EventListenerTouchAllAtOnce:create()
+        --     listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCHES_BEGAN )
+        --     -- listener:registerScriptHandler(onTouchMoved,cc.Handler.EVENT_TOUCH_MOVED )
+        --     listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCHES_ENDED )
+        -- else
+        --     -- print("====EVENT_TOUCH_ONE_BY_ONE listener")
+        --     listener = cc.EventListenerTouchOneByOne:create()
+        --     listener:setSwallowTouches(isSwallow)
+        --     listener:registerScriptHandler(onTouchBegan,cc.Handler.EVENT_TOUCH_BEGAN )
+        --     listener:registerScriptHandler(onTouchMoved,cc.Handler.EVENT_TOUCH_MOVED )
+        --     listener:registerScriptHandler(onTouchEnded,cc.Handler.EVENT_TOUCH_ENDED )
+        -- end
+        -- local eventDispatcher = self:getEventDispatcher()
+        -- eventDispatcher:addEventListenerWithSceneGraphPriority(listener, self)
+        -- lis.regHanler = listener
+        -- lis.regHanler:retain()
+        -- lis.mode = mode
+        -- if nil==self._isTouchEnabled_ then self._isTouchEnabled_=true end
     elseif evt==c.KEYPAD_EVENT then
         local onKeyPressed = function ( keycode, event )
             return NodeEventDispatcher(event:getCurrentTarget(), c.KEYPAD_EVENT, {keycode, event, "Pressed"})
