@@ -31,79 +31,6 @@
 		F4DDD22D1926533C00D37F83 /* hello30.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = F44C957215F49004004D4151 /* hello30.app */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		DAB3EA0F1966717800D192A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1551A33F158F2AB200E66CFE;
-			remoteInfo = "cocos2dx Mac";
-		};
-		DAB3EA111966717800D192A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A03F2FD617814595006731B9;
-			remoteInfo = "cocos2dx-extensions Mac";
-		};
-		DAB3EA131966717800D192A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A03F2CB81780BD04006731B9;
-			remoteInfo = "chipmunk Mac";
-		};
-		DAB3EA151966717800D192A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A03F2D9B1780BDF7006731B9;
-			remoteInfo = "box2d Mac";
-		};
-		DAB3EA171966717800D192A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A03F2ED617814268006731B9;
-			remoteInfo = "CocosDenshion Mac";
-		};
-		DAB3EA191966717800D192A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A07A4D641783777C0073F6A7;
-			remoteInfo = "cocos2dx iOS";
-		};
-		DAB3EA1B1966717800D192A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A07A4EFC1783867C0073F6A7;
-			remoteInfo = "cocos2dx-extensions iOS";
-		};
-		DAB3EA1D1966717800D192A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A07A4F3B178387670073F6A7;
-			remoteInfo = "chipmunk iOS";
-		};
-		DAB3EA1F1966717800D192A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A07A4F9E1783876B0073F6A7;
-			remoteInfo = "box2d iOS";
-		};
-		DAB3EA211966717800D192A3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = A07A4FB4178387730073F6A7;
-			remoteInfo = "CocosDenshion iOS";
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		F4DDD22C1926532400D37F83 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -123,7 +50,7 @@
 		9F6D8908195967EF00B36BA2 /* libcocos2dx Mac.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libcocos2dx Mac.a"; path = "../../../lib/proj.ios_mac/build/Debug/libcocos2dx Mac.a"; sourceTree = "<group>"; };
 		9F6D8909195967EF00B36BA2 /* libcocos2dx-extensions Mac.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libcocos2dx-extensions Mac.a"; path = "../../../lib/proj.ios_mac/build/Debug/libcocos2dx-extensions Mac.a"; sourceTree = "<group>"; };
 		9F6D890A195967EF00B36BA2 /* libCocosDenshion Mac.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libCocosDenshion Mac.a"; path = "../../../lib/proj.ios_mac/build/Debug/libCocosDenshion Mac.a"; sourceTree = "<group>"; };
-		DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = quick_libs.xcodeproj; path = quick/lib/proj.ios_mac/quick_libs.xcodeproj; sourceTree = QUICK_V3_ROOT; };
+		DAF28333196BDDB100959DA1 /* libquick.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libquick.xcodeproj; path = quick/lib/proj.mac/libquick.xcodeproj; sourceTree = QUICK_V3_ROOT; };
 		F44C957215F49004004D4151 /* hello30.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = hello30.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F44C957615F49004004D4151 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		F44C957915F49004004D4151 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -177,27 +104,10 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		DAB3EA011966717800D192A3 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				DAB3EA101966717800D192A3 /* libcocos2dx Mac.a */,
-				DAB3EA121966717800D192A3 /* libcocos2dx-extensions Mac.a */,
-				DAB3EA141966717800D192A3 /* libchipmunk Mac.a */,
-				DAB3EA161966717800D192A3 /* libbox2d Mac.a */,
-				DAB3EA181966717800D192A3 /* libCocosDenshion Mac.a */,
-				DAB3EA1A1966717800D192A3 /* libcocos2dx iOS.a */,
-				DAB3EA1C1966717800D192A3 /* libcocos2dx-extensions iOS.a */,
-				DAB3EA1E1966717800D192A3 /* libchipmunk iOS.a */,
-				DAB3EA201966717800D192A3 /* libbox2d iOS.a */,
-				DAB3EA221966717800D192A3 /* libCocosDenshion iOS.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		F44C956715F49004004D4151 = {
 			isa = PBXGroup;
 			children = (
-				DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */,
+				DAF28333196BDDB100959DA1 /* libquick.xcodeproj */,
 				F44C957C15F49004004D4151 /* hello30 */,
 				F44C957515F49004004D4151 /* Frameworks */,
 				F44C957315F49004004D4151 /* Products */,
@@ -311,91 +221,12 @@
 			mainGroup = F44C956715F49004004D4151;
 			productRefGroup = F44C957315F49004004D4151 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = DAB3EA011966717800D192A3 /* Products */;
-					ProjectRef = DAEBA9D71959895A00C31FBB /* quick_libs.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				F44C957115F49004004D4151 /* hello30 */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		DAB3EA101966717800D192A3 /* libcocos2dx Mac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libcocos2dx Mac.a";
-			remoteRef = DAB3EA0F1966717800D192A3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DAB3EA121966717800D192A3 /* libcocos2dx-extensions Mac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libcocos2dx-extensions Mac.a";
-			remoteRef = DAB3EA111966717800D192A3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DAB3EA141966717800D192A3 /* libchipmunk Mac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libchipmunk Mac.a";
-			remoteRef = DAB3EA131966717800D192A3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DAB3EA161966717800D192A3 /* libbox2d Mac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libbox2d Mac.a";
-			remoteRef = DAB3EA151966717800D192A3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DAB3EA181966717800D192A3 /* libCocosDenshion Mac.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libCocosDenshion Mac.a";
-			remoteRef = DAB3EA171966717800D192A3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DAB3EA1A1966717800D192A3 /* libcocos2dx iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libcocos2dx iOS.a";
-			remoteRef = DAB3EA191966717800D192A3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DAB3EA1C1966717800D192A3 /* libcocos2dx-extensions iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libcocos2dx-extensions iOS.a";
-			remoteRef = DAB3EA1B1966717800D192A3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DAB3EA1E1966717800D192A3 /* libchipmunk iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libchipmunk iOS.a";
-			remoteRef = DAB3EA1D1966717800D192A3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DAB3EA201966717800D192A3 /* libbox2d iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libbox2d iOS.a";
-			remoteRef = DAB3EA1F1966717800D192A3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DAB3EA221966717800D192A3 /* libCocosDenshion iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libCocosDenshion iOS.a";
-			remoteRef = DAB3EA211966717800D192A3 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		F44C957015F49004004D4151 /* Resources */ = {
@@ -515,12 +346,12 @@
 					"\"$(QUICK_V3_ROOT)/cocos/platform/mac\"",
 					"\"$(QUICK_V3_ROOT)/external/glfw3/include/mac\"",
 					"\"$(QUICK_V3_ROOT)/external\"",
-					"\"$(QUICK_V3_ROOT)/external/lua/luajit/include\"",
-					"\"$(QUICK_V3_ROOT)/external/lua/tolua\"",
-					"\"$(QUICK_V3_ROOT)/quick/lib/lua_bindings/manual\"",
-					"\"$(QUICK_V3_ROOT)/quick/lib/lua_bindings/auto\"",
 					"\"$(QUICK_V3_ROOT)/external/unzip\"",
 					"\"$(QUICK_V3_ROOT)/quick/lib\"",
+					"$(QUICK_V3_ROOT)/quick/lib/lua_bindings/luajit/include",
+					"$(QUICK_V3_ROOT)/quick/lib/lua_bindings/tolua",
+					"\"$(QUICK_V3_ROOT)/quick/lib/lua_bindings/auto\"",
+					"\"$(QUICK_V3_ROOT)/quick/lib/lua_bindings/manual\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INFOPLIST_OUTPUT_FORMAT = binary;
@@ -560,12 +391,12 @@
 					"\"$(QUICK_V3_ROOT)/cocos/platform/mac\"",
 					"\"$(QUICK_V3_ROOT)/external/glfw3/include/mac\"",
 					"\"$(QUICK_V3_ROOT)/external\"",
-					"\"$(QUICK_V3_ROOT)/external/lua/luajit/include\"",
-					"\"$(QUICK_V3_ROOT)/external/lua/tolua\"",
-					"\"$(QUICK_V3_ROOT)/quick/lib/lua_bindings/manual\"",
-					"\"$(QUICK_V3_ROOT)/quick/lib/lua_bindings/auto\"",
 					"\"$(QUICK_V3_ROOT)/external/unzip\"",
 					"\"$(QUICK_V3_ROOT)/quick/lib\"",
+					"$(QUICK_V3_ROOT)/quick/lib/lua_bindings/luajit/include",
+					"$(QUICK_V3_ROOT)/quick/lib/lua_bindings/tolua",
+					"\"$(QUICK_V3_ROOT)/quick/lib/lua_bindings/auto\"",
+					"\"$(QUICK_V3_ROOT)/quick/lib/lua_bindings/manual\"",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INFOPLIST_OUTPUT_FORMAT = binary;
