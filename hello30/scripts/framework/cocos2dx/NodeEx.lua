@@ -283,14 +283,14 @@ function Node:addNodeEventListener( evt, hdl, tag, priority )
         table.insert(self._scriptEventListeners_[evt], lis)
     end
 
-    if evt==c.NODE_ENTER_FRAME_EVENT then
-        local func = tolua.getcfunction(self, "scheduleUpdateWithPriorityLua")
-        if func then 
-            local listener = function (dt)
-                NodeEventDispatcher(self, c.NODE_ENTER_FRAME_EVENT, dt)
-            end
-            func(self, listener, priority) 
-        end
+    -- if evt==c.NODE_ENTER_FRAME_EVENT then
+    --     local func = tolua.getcfunction(self, "scheduleUpdateWithPriorityLua")
+    --     if func then 
+    --         local listener = function (dt)
+    --             NodeEventDispatcher(self, c.NODE_ENTER_FRAME_EVENT, dt)
+    --         end
+    --         func(self, listener, priority) 
+    --     end
     -- elseif evt==c.NODE_TOUCH_EVENT then
         -- local onTouchBegan = function (touch, event)
         --     return NodeEventDispatcher(event:getCurrentTarget(), c.NODE_TOUCH_EVENT, {touch, event, "began"})
@@ -329,7 +329,7 @@ function Node:addNodeEventListener( evt, hdl, tag, priority )
         -- lis.regHanler:retain()
         -- lis.mode = mode
         -- if nil==self._isTouchEnabled_ then self._isTouchEnabled_=true end
-    elseif evt==c.KEYPAD_EVENT then
+    if evt==c.KEYPAD_EVENT then
         local onKeyPressed = function ( keycode, event )
             return NodeEventDispatcher(event:getCurrentTarget(), c.KEYPAD_EVENT, {keycode, event, "Pressed"})
         end

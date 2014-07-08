@@ -43,7 +43,15 @@ function MenuScene:ctor()
 
 end
 
+function MenuScene:onEnterFrame(dt)
+    self.nf = self.nf or 0
+    self.nf = self.nf+1
+    if self.nf<5 then print("MenuScene:onEnterFrame", self.nf, dt) end
+end
+
 function MenuScene:onEnter()
+    print("---------MenuScene:onEnter")
+    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt) self:onEnterFrame(dt) end)
 end
 
 return MenuScene
