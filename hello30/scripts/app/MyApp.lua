@@ -1,57 +1,43 @@
 
 require("config")
 require("framework.init")
+require("framework.shortcodes")
+require("framework.cc.init")
 
 local MyApp = class("MyApp", cc.mvc.AppBase)
 
-local TESTS_LIST = {
-    "TestSingleTouch1Scene",
-    "TestSingleTouch2Scene",
-    "TestSingleTouch3Scene",
-    "TestSingleTouch4Scene",
-    "TestMultiTouches1Scene",
-    "TestMultiTouches2Scene",
-    "TestMultiTouches3Scene",
-}
+function MyApp:ctor()
+    MyApp.super.ctor(self)
+    self.objects_ = {}
+end
 
 function MyApp:run()
     cc.FileUtils:getInstance():addSearchPath("res/")
-    self:enterNextScene()
-end
+    display.addSpriteFrames(GAME_TEXTURE_DATA_FILENAME, GAME_TEXTURE_IMAGE_FILENAME)
 
-function MyApp:enterScene(sceneName, ...)
-    self.currentSceneName_ = sceneName
-    MyApp.super.enterScene(self, sceneName, ...)
-end
-
-function MyApp:enterNextScene()
-    local index = 1
-    while index <= #TESTS_LIST do
-        if TESTS_LIST[index] == self.currentSceneName_ then
-            break
-        end
-        index = index + 1
+    -- preload all sounds
+    for k, v in pairs(GAME_SFX) do
+        audio.preloadSound(v)
     end
-    index = index + 1
-    if index > #TESTS_LIST then index = 1 end
-    self:enterScene(TESTS_LIST[index])
+
+    self:enterMenuScene()
 end
 
-function MyApp:createTitle(scene, title)
-    cc.ui.UILabel.new({text = "-- " .. title .. " --", size = 24})
-        :align(display.CENTER, display.cx, display.top - 20)
-        :addTo(scene)
+function MyApp:enterMenuScene()
+    self:enterScene("MenuScene", nil, "fade", 0.6, display.COLOR_WHITE)
 end
 
-function MyApp:createNextButton(scene)
-    cc.ui.UIPushButton.new("BlueButton.png", {scale9 = true})
-        :setButtonSize(160, 60)
-        :setButtonLabel(cc.ui.UILabel.new({text = "Next", size = 32}))
-        :onButtonClicked(function(event)
-            self:enterNextScene()
-        end)
-        :align(display.RIGHT_BOTTOM, display.right - 20, display.bottom + 20)
-        :addTo(scene)
+function MyApp:enterMoreGamesScene()
+    self:enterScene("MoreGamesScene", nil, "fade", 0.6, display.COLOR_WHITE)
 end
 
+function MyApp:enterChooseLevelScene()
+    self:enterScene("ChooseLevelScene", nil, "fade", 0.6, display.COLOR_WHITE)
+end
+
+function MyApp:playLevel(levelIndex)
+    self:enterScene("PlayLevelScene", {levelIndex}, "fade", 0.6, display.COLOR_WHITE)
+end
+
+appInstance = MyApp
 return MyApp
