@@ -291,11 +291,7 @@ function Node:addNodeEventListener( evt, hdl, tag, priority )
             end
             func(self, listener, priority) 
         end
-    elseif evt==c.NODE_TOUCH_EVENT then
-        local cfunc = tolua.getcfunction(self, "addNodeEventListener")
-        if cfunc then 
-            cfunc( self, evt, hdl, tag, priority ) 
-        end
+    -- elseif evt==c.NODE_TOUCH_EVENT then
         -- local onTouchBegan = function (touch, event)
         --     return NodeEventDispatcher(event:getCurrentTarget(), c.NODE_TOUCH_EVENT, {touch, event, "began"})
         -- end
@@ -349,6 +345,11 @@ function Node:addNodeEventListener( evt, hdl, tag, priority )
         eventDispatcher:addEventListenerWithSceneGraphPriority(listener, self)
         lis.regHanler = listener
         lis.regHanler:retain()
+    else
+        local cfunc = tolua.getcfunction(self, "addNodeEventListener")
+        if cfunc then 
+            cfunc( self, evt, hdl, tag, priority ) 
+        end
     end
 
     return self._nextScriptEventHandleIndex_
