@@ -33,7 +33,7 @@ function createSimpleButton(imageName, name, movable, listener)
             return cc.TOUCH_BEGAN_NO_SWALLOWS -- continue event dispatching
         end
 
-        local touchInSprite = sprite:getCascadeBoundingBox():containsPoint(CCPoint(x, y))
+        local touchInSprite = cc.rectContainsPoint(sprite:getCascadeBoundingBox(), cc.p(x, y))
         if name == "moved" then
             sprite:setOpacity(128)
             if movable then
@@ -66,7 +66,6 @@ function drawBoundingBox(parent, target, color)
         {left, bottom + height},
         {left, bottom},
     }
-    local box = display.newPolygon(points, 1.0)
-    box:setLineColor(color)
+    local box = display.newPolygon(points, {borderColor = color})
     parent:addChild(box, 1000)
 end
