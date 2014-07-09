@@ -66,7 +66,7 @@ function drawBoundingBox(parent, target, color)
         {left, bottom + height},
         {left, bottom},
     }
-    -- local box = display.newPolygon(points, 1.0)
-    -- box:setLineColor(color)
-    -- parent:addChild(box, 1000)
+    local box = display.newPolygon(points, 1.0)
+    box:setLineColor(color)
+    parent:addChild(box, 1000)
 end
