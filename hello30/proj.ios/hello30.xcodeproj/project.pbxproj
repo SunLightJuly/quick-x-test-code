@@ -467,7 +467,7 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				LIBRARY_SEARCH_PATHS = "/Users/zhujunfeng/quick-x-3/quick/lib/proj.ios/build/Debug-iphoneos";
+				LIBRARY_SEARCH_PATHS = "$(QUICK_V3_ROOT)/quick/lib/proj.ios/build/Debug-iphoneos";
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lz",
@@ -521,7 +521,7 @@
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
-				LIBRARY_SEARCH_PATHS = "/Users/zhujunfeng/quick-x-3/quick/lib/proj.ios/build/Debug-iphoneos";
+				LIBRARY_SEARCH_PATHS = "$(QUICK_V3_ROOT)/quick/lib/proj.ios/build/Debug-iphoneos";
 				OTHER_LDFLAGS = (
 					"-lxml2",
 					"-lz",
