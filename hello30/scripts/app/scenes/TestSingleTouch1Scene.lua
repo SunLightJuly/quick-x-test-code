@@ -36,4 +36,25 @@ function TestSingleTouch1Scene:ctor()
     app:createTitle(self, "单点触摸测试 - 响应触摸事件")
 end
 
+function TestSingleTouch1Scene:onEnter()
+    -- if device.platform == "android" then
+        -- avoid unmeant back
+        self:performWithDelay(function()
+            -- keypad layer, for android
+            local layer = display.newLayer()
+            layer:addNodeEventListener(cc.KEYPAD_EVENT, function(event)
+                print("*******NodeEventListener*******")
+                dump(event)
+                -- if event.key == "back" then
+                --   app.exit()
+                -- end
+            end)
+            self:addChild(layer)
+
+            layer:setKeypadEnabled(true)
+            layer:setTouchEnabled(false)
+        end, 0.5)
+    -- end
+end
+
 return TestSingleTouch1Scene
