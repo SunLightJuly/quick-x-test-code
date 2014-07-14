@@ -55,6 +55,10 @@ function TestSingleTouch1Scene:onEnter()
             layer:setTouchEnabled(false)
         end, 0.5)
     -- end
+
+    local ts = crypto.md5("ksdjflkasdjflsjfdlasdjfl")
+    print("*******ts = ", ts)
+    local dt = cc.HelperFunc:getFileData("ttttt")
 end
 
 return TestSingleTouch1Scene

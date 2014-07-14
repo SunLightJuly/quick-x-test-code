@@ -50,7 +50,7 @@ local p = cc.PACKAGE_NAME .. ".cocos2dx."
 require(p .. "Cocos2dConstants")
 require (p .. "OpenglConstants")
 require (p .. "Cocos2d")
-require (p .. "Cocos2dExtral")
+-- require (p .. "Cocos2dExtral")
 
 cc.c3 = cc.c3b
 
