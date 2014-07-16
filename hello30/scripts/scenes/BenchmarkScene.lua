@@ -74,7 +74,10 @@ function BenchmarkScene:addCoin()
         local x, y = self:getPosition()
         x = x + random(-2, 2)
         y = y + random(-2, 2)
-        self:setPosition(x, y)
+        -- self:setPosition(x, y)
+        local pt = {x=x, y=y}
+        -- local pt = cc.Vec2:new(x,y)
+        self:setPosition(pt)
     end
 
     self.coins[#self.coins + 1] = coin
