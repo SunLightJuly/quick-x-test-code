@@ -6,8 +6,10 @@ end)
 local random = math.random
 
 function BenchmarkScene:ctor()
-    self.layer = display.newNode()
-    self.layer:setContentSize(cc.size(display.width, display.height))
+    self.batch = display.newBatchNode(GAME_TEXTURE_IMAGE_FILENAME, 10000)
+    self:addChild(self.batch)
+
+    self.layer = display.newLayer()
     self:addChild(self.layer)
 
     local button = display.newSprite("#AddCoinButton.png", display.right - 100, display.bottom + 270)
@@ -18,12 +20,16 @@ function BenchmarkScene:ctor()
     self:addChild(button)
     self.removeCoinButtonBoundingBox = button:getBoundingBox()
 
-    cc.ui.UIPushButton.new({normal = "#ExitButton.png"})
-        :onButtonClicked(function()
+    local button = ui.newImageMenuItem({
+        image = "#ExitButton.png",
+        listener = function()
             game.exit()
-        end)
-        :pos(display.right - 100, display.top - 100)
-        :addTo(self)
+        end,
+        x = display.right - 100,
+        y = display.top - 100,
+    })
+    local menu = ui.newMenu({button})
+    self:addChild(menu)
 
     self.label = ui.newBMFontLabel({
         text = "00000",
@@ -35,7 +41,6 @@ function BenchmarkScene:ctor()
 
     self.coins = {}
     self.state = "IDLE"
-
 
     local frames = display.newFrames("CoinSpin%02d.png", 1, 8)
     local animation = display.newAnimation(frames, 0.4 / 8)
@@ -49,10 +54,10 @@ end
 
 function BenchmarkScene:onTouch(event, x, y)
     if event == "began" then
-        local p = cc.p(x, y)
-        if cc.rectContainsPoint(self.addCoinButtonBoundingBox, p) then
+        local p = CCPoint(x, y)
+        if self.addCoinButtonBoundingBox:containsPoint(p) then
             self.state = "ADD"
-        elseif cc.rectContainsPoint(self.removeCoinButtonBoundingBox, p) then
+        elseif self.removeCoinButtonBoundingBox:containsPoint(p) then
             self.state = "REMOVE"
         else
             self.state = "IDLE"
@@ -63,23 +68,17 @@ function BenchmarkScene:onTouch(event, x, y)
     end
 end
 
--- local pt = cc.Vec2:new()
-
 function BenchmarkScene:addCoin()
     local coin = display.newSprite("#CoinSpin01.png")
     coin:playAnimationForever(display.getAnimationCache("Coin"))
     coin:setPosition(random(self.left, self.right), random(self.bottom, self.top))
-    -- self.batch:addChild(coin)
-    self:addChild(coin)
+    self.batch:addChild(coin)
 
     function coin:onEnterFrame(dt)
         local x, y = self:getPosition()
         x = x + random(-2, 2)
         y = y + random(-2, 2)
         self:setPosition(x, y)
-        -- local pt = {x=x, y=y}
-        -- pt:set(x,y)
-        -- self:setPosition(pt)
     end
 
     self.coins[#self.coins + 1] = coin
@@ -89,7 +88,7 @@ end
 
 function BenchmarkScene:removeCoin()
     local coin = self.coins[self.coinsCount]
-    coin:removeFromParent()
+    coin:removeSelf()
     table.remove(self.coins, self.coinsCount)
     self.coinsCount = self.coinsCount - 1
     self.label:setString(string.format("%05d", self.coinsCount))
@@ -103,56 +102,64 @@ function BenchmarkScene:onEnterFrame(dt)
     end
 
     local coins = self.coins
-    -- self.prevNumCoins = self.prevNumCoins or 0
-    -- if self.prevNumCoins~=#coins then
-    --     self.prevNumCoins = #coins
-    --     self.trackTimes = 0
-    -- end
-    -- local socket = require "socket"
-    -- self.trackStart = socket.gettime()
     for i = 1, #coins do
         local coin = coins[i]
         coin:onEnterFrame(dt)
     end
-    -- self.trackEnd = socket.gettime()
-    -- if self.trackTimes then
-    --     print("=========================")
-    --     print("----coins num:", self.prevNumCoins)
-    --     local ts = self.trackStart*1000
-    --     print("----time start:", ts)
-    --     local te = self.trackEnd*1000
-    --     print("----time end:", te)
-    --     print("----time used:", te-ts)
-    --     self.trackTimes = self.trackTimes+1
-    --     if self.trackTimes>=3 then self.trackTimes=nil end
-    -- end
+
     if self.trackFlag==nil and coins[1] then
         local c = coins[1]
         -- local pt = cc.Vec2:new(0,0)
-        local pt = {x=0, y=0}
+        local pt = cc.p(0,0)
         local socket = require "socket"
+
         self.trackStart = socket.gettime()
         for i = 1, 100000 do
-            -- c:setPosition(pt)
             c:setPosition(0,0)
         end
         self.trackEnd = socket.gettime()
-        print("=========================")
+        print("=========================setPosition(0,0)")
         local ts = self.trackStart*1000
         print("----time start:", ts)
         local te = self.trackEnd*1000
         print("----time end:", te)
         print("----time used:", te-ts)
+
+        self.trackStart = socket.gettime()
+        for i = 1, 100000 do
+            c:setPosition(pt)
+        end
+        self.trackEnd = socket.gettime()
+        print("=========================setPosition(pt)")
+        local ts = self.trackStart*1000
+        print("----time start:", ts)
+        local te = self.trackEnd*1000
+        print("----time end:", te)
+        print("----time used:", te-ts)
+
+        self.trackStart = socket.gettime()
+        for i = 1, 100000 do
+            c:setPosition(cc.p(0,0))
+        end
+        self.trackEnd = socket.gettime()
+        print("=========================setPosition(cc.p(0,0))")
+        local ts = self.trackStart*1000
+        print("----time start:", ts)
+        local te = self.trackEnd*1000
+        print("----time end:", te)
+        print("----time used:", te-ts)
+
         self.trackFlag = 1
     end
 end
 
 function BenchmarkScene:onEnter()
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt) self:onEnterFrame(dt) end)
-    self.layer:setTouchEnabled(true)
+    self:scheduleUpdate_()
     self.layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
         return self:onTouch(event.name, event.x, event.y)
     end)
+    self.layer:setTouchEnabled(true)
 end
 
 return BenchmarkScene
