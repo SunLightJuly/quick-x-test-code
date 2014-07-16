@@ -98,9 +98,27 @@ function BenchmarkScene:onEnterFrame(dt)
     end
 
     local coins = self.coins
+    self.prevNumCoins = self.prevNumCoins or 0
+    if self.prevNumCoins~=#coins then
+        self.prevNumCoins = #coins
+        self.trackTimes = 0
+    end
+    self.trackStart = os.clock()
     for i = 1, #coins do
         local coin = coins[i]
         coin:onEnterFrame(dt)
+    end
+    self.trackEnd = os.clock()
+    if self.trackTimes then
+        print("=========================")
+        print("----coins num:", self.prevNumCoins)
+        local ts = self.trackStart*1000
+        print("----time start:", ts)
+        local te = self.trackEnd*1000
+        print("----time end:", te)
+        print("----time used:", te-ts)
+        self.trackTimes = self.trackTimes+1
+        if self.trackTimes>=3 then self.trackTimes=nil end
     end
 end
 
