@@ -63,7 +63,7 @@ function BenchmarkScene:onTouch(event, x, y)
     end
 end
 
-local pt = cc.Vec2:new()
+-- local pt = cc.Vec2:new()
 
 function BenchmarkScene:addCoin()
     local coin = display.newSprite("#CoinSpin01.png")
@@ -76,10 +76,10 @@ function BenchmarkScene:addCoin()
         local x, y = self:getPosition()
         x = x + random(-2, 2)
         y = y + random(-2, 2)
-        -- self:setPosition(x, y)
+        self:setPosition(x, y)
         -- local pt = {x=x, y=y}
-        pt:set(x,y)
-        self:setPosition(pt)
+        -- pt:set(x,y)
+        -- self:setPosition(pt)
     end
 
     self.coins[#self.coins + 1] = coin
@@ -103,28 +103,45 @@ function BenchmarkScene:onEnterFrame(dt)
     end
 
     local coins = self.coins
-    self.prevNumCoins = self.prevNumCoins or 0
-    if self.prevNumCoins~=#coins then
-        self.prevNumCoins = #coins
-        self.trackTimes = 0
-    end
-    local socket = require "socket"
-    self.trackStart = socket.gettime()
+    -- self.prevNumCoins = self.prevNumCoins or 0
+    -- if self.prevNumCoins~=#coins then
+    --     self.prevNumCoins = #coins
+    --     self.trackTimes = 0
+    -- end
+    -- local socket = require "socket"
+    -- self.trackStart = socket.gettime()
     for i = 1, #coins do
         local coin = coins[i]
         coin:onEnterFrame(dt)
     end
-    self.trackEnd = socket.gettime()
-    if self.trackTimes then
+    -- self.trackEnd = socket.gettime()
+    -- if self.trackTimes then
+    --     print("=========================")
+    --     print("----coins num:", self.prevNumCoins)
+    --     local ts = self.trackStart*1000
+    --     print("----time start:", ts)
+    --     local te = self.trackEnd*1000
+    --     print("----time end:", te)
+    --     print("----time used:", te-ts)
+    --     self.trackTimes = self.trackTimes+1
+    --     if self.trackTimes>=3 then self.trackTimes=nil end
+    -- end
+    if self.trackFlag==nil and coins[1] then
+        local c = coins[1]
+        local pt = cc.Vec2:new(0,0)
+        local socket = require "socket"
+        self.trackStart = socket.gettime()
+        for i = 1, 100000 do
+            c:setPosition(pt)
+        end
+        self.trackEnd = socket.gettime()
         print("=========================")
-        print("----coins num:", self.prevNumCoins)
         local ts = self.trackStart*1000
         print("----time start:", ts)
         local te = self.trackEnd*1000
         print("----time end:", te)
         print("----time used:", te-ts)
-        self.trackTimes = self.trackTimes+1
-        if self.trackTimes>=3 then self.trackTimes=nil end
+        self.trackFlag = 1
     end
 end
 
