@@ -63,6 +63,8 @@ function BenchmarkScene:onTouch(event, x, y)
     end
 end
 
+local pt = cc.Vec2:new()
+
 function BenchmarkScene:addCoin()
     local coin = display.newSprite("#CoinSpin01.png")
     coin:playAnimationForever(display.getAnimationCache("Coin"))
@@ -75,8 +77,8 @@ function BenchmarkScene:addCoin()
         x = x + random(-2, 2)
         y = y + random(-2, 2)
         -- self:setPosition(x, y)
-        local pt = {x=x, y=y}
-        -- local pt = cc.Vec2:new(x,y)
+        -- local pt = {x=x, y=y}
+        pt:set(x,y)
         self:setPosition(pt)
     end
 
