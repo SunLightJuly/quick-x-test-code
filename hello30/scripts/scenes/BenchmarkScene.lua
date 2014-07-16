@@ -106,12 +106,13 @@ function BenchmarkScene:onEnterFrame(dt)
         self.prevNumCoins = #coins
         self.trackTimes = 0
     end
-    self.trackStart = os.clock()
+    local socket = require "socket"
+    self.trackStart = socket.gettime()
     for i = 1, #coins do
         local coin = coins[i]
         coin:onEnterFrame(dt)
     end
-    self.trackEnd = os.clock()
+    self.trackEnd = socket.gettime()
     if self.trackTimes then
         print("=========================")
         print("----coins num:", self.prevNumCoins)
