@@ -6,6 +6,9 @@ end)
 local random = math.random
 
 function BenchmarkScene:ctor()
+    self.batch = display.newBatchNode(GAME_TEXTURE_IMAGE_FILENAME, 10000)
+    self:addChild(self.batch)
+
     self.layer = display.newNode()
     self.layer:setContentSize(cc.size(display.width, display.height))
     self:addChild(self.layer)
@@ -69,8 +72,8 @@ function BenchmarkScene:addCoin()
     local coin = display.newSprite("#CoinSpin01.png")
     coin:playAnimationForever(display.getAnimationCache("Coin"))
     coin:setPosition(random(self.left, self.right), random(self.bottom, self.top))
-    -- self.batch:addChild(coin)
-    self:addChild(coin)
+    self.batch:addChild(coin)
+    -- self:addChild(coin)
 
     function coin:onEnterFrame(dt)
         local x, y = self:getPosition()
@@ -103,48 +106,30 @@ function BenchmarkScene:onEnterFrame(dt)
     end
 
     local coins = self.coins
-    -- self.prevNumCoins = self.prevNumCoins or 0
-    -- if self.prevNumCoins~=#coins then
-    --     self.prevNumCoins = #coins
-    --     self.trackTimes = 0
-    -- end
-    -- local socket = require "socket"
-    -- self.trackStart = socket.gettime()
     for i = 1, #coins do
         local coin = coins[i]
         coin:onEnterFrame(dt)
     end
-    -- self.trackEnd = socket.gettime()
-    -- if self.trackTimes then
+
+    -- if self.trackFlag==nil and coins[1] then
+    --     local c = coins[1]
+    --     -- local pt = cc.Vec2:new(0,0)
+    --     local pt = {x=0, y=0}
+    --     local socket = require "socket"
+    --     self.trackStart = socket.gettime()
+    --     for i = 1, 100000 do
+    --         -- c:setPosition(pt)
+    --         c:setPosition(0,0)
+    --     end
+    --     self.trackEnd = socket.gettime()
     --     print("=========================")
-    --     print("----coins num:", self.prevNumCoins)
     --     local ts = self.trackStart*1000
     --     print("----time start:", ts)
     --     local te = self.trackEnd*1000
     --     print("----time end:", te)
     --     print("----time used:", te-ts)
-    --     self.trackTimes = self.trackTimes+1
-    --     if self.trackTimes>=3 then self.trackTimes=nil end
+    --     self.trackFlag = 1
     -- end
-    if self.trackFlag==nil and coins[1] then
-        local c = coins[1]
-        -- local pt = cc.Vec2:new(0,0)
-        local pt = {x=0, y=0}
-        local socket = require "socket"
-        self.trackStart = socket.gettime()
-        for i = 1, 100000 do
-            -- c:setPosition(pt)
-            c:setPosition(0,0)
-        end
-        self.trackEnd = socket.gettime()
-        print("=========================")
-        local ts = self.trackStart*1000
-        print("----time start:", ts)
-        local te = self.trackEnd*1000
-        print("----time end:", te)
-        print("----time used:", te-ts)
-        self.trackFlag = 1
-    end
 end
 
 function BenchmarkScene:onEnter()

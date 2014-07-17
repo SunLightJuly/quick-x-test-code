@@ -101,56 +101,56 @@ function BenchmarkScene:onEnterFrame(dt)
         self:removeCoin()
     end
 
-    local coins = self.coins
-    for i = 1, #coins do
-        local coin = coins[i]
-        coin:onEnterFrame(dt)
-    end
+    -- local coins = self.coins
+    -- for i = 1, #coins do
+    --     local coin = coins[i]
+    --     coin:onEnterFrame(dt)
+    -- end
 
-    if self.trackFlag==nil and coins[1] then
-        local c = coins[1]
-        -- local pt = cc.Vec2:new(0,0)
-        local pt = cc.p(0,0)
-        local socket = require "socket"
+    -- if self.trackFlag==nil and coins[1] then
+    --     local c = coins[1]
+    --     -- local pt = cc.Vec2:new(0,0)
+    --     local pt = cc.p(0,0)
+    --     local socket = require "socket"
 
-        self.trackStart = socket.gettime()
-        for i = 1, 100000 do
-            c:setPosition(0,0)
-        end
-        self.trackEnd = socket.gettime()
-        print("=========================setPosition(0,0)")
-        local ts = self.trackStart*1000
-        print("----time start:", ts)
-        local te = self.trackEnd*1000
-        print("----time end:", te)
-        print("----time used:", te-ts)
+    --     self.trackStart = socket.gettime()
+    --     for i = 1, 100000 do
+    --         c:setPosition(0,0)
+    --     end
+    --     self.trackEnd = socket.gettime()
+    --     print("=========================setPosition(0,0)")
+    --     local ts = self.trackStart*1000
+    --     print("----time start:", ts)
+    --     local te = self.trackEnd*1000
+    --     print("----time end:", te)
+    --     print("----time used:", te-ts)
 
-        self.trackStart = socket.gettime()
-        for i = 1, 100000 do
-            c:setPosition(pt)
-        end
-        self.trackEnd = socket.gettime()
-        print("=========================setPosition(pt)")
-        local ts = self.trackStart*1000
-        print("----time start:", ts)
-        local te = self.trackEnd*1000
-        print("----time end:", te)
-        print("----time used:", te-ts)
+    --     self.trackStart = socket.gettime()
+    --     for i = 1, 100000 do
+    --         c:setPosition(pt)
+    --     end
+    --     self.trackEnd = socket.gettime()
+    --     print("=========================setPosition(pt)")
+    --     local ts = self.trackStart*1000
+    --     print("----time start:", ts)
+    --     local te = self.trackEnd*1000
+    --     print("----time end:", te)
+    --     print("----time used:", te-ts)
 
-        self.trackStart = socket.gettime()
-        for i = 1, 100000 do
-            c:setPosition(cc.p(0,0))
-        end
-        self.trackEnd = socket.gettime()
-        print("=========================setPosition(cc.p(0,0))")
-        local ts = self.trackStart*1000
-        print("----time start:", ts)
-        local te = self.trackEnd*1000
-        print("----time end:", te)
-        print("----time used:", te-ts)
+    --     self.trackStart = socket.gettime()
+    --     for i = 1, 100000 do
+    --         c:setPosition(cc.p(0,0))
+    --     end
+    --     self.trackEnd = socket.gettime()
+    --     print("=========================setPosition(cc.p(0,0))")
+    --     local ts = self.trackStart*1000
+    --     print("----time start:", ts)
+    --     local te = self.trackEnd*1000
+    --     print("----time end:", te)
+    --     print("----time used:", te-ts)
 
-        self.trackFlag = 1
-    end
+    --     self.trackFlag = 1
+    -- end
 end
 
 function BenchmarkScene:onEnter()
