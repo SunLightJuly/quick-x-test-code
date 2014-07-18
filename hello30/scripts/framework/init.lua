@@ -131,7 +131,7 @@ crypto     = require(cc.PACKAGE_NAME .. ".crypto")
 json       = require(cc.PACKAGE_NAME .. ".json")
 
 if device.platform == "android" then
-    -- require(cc.PACKAGE_NAME .. ".platform.android")
+    require(cc.PACKAGE_NAME .. ".platform.android")
 elseif device.platform == "ios" then
     require(cc.PACKAGE_NAME .. ".platform.ios")
 elseif device.platform == "mac" then

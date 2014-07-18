@@ -138,9 +138,6 @@ end
 function crypto.md5(input, isRawOutput)
     input = tostring(input)
     if type(isRawOutput) ~= "boolean" then isRawOutput = false end
-    dump(cc.Crypto)
-    local mt = getmetatable(cc.Crypto)
-    dump(mt)
     return cc.Crypto:MD5(input, isRawOutput)
 end
 
