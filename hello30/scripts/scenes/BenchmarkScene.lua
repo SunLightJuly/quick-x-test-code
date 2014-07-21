@@ -133,6 +133,9 @@ function BenchmarkScene:onEnterFrame(dt)
 end
 
 function BenchmarkScene:onEnter()
+    print("-----cc.EVENT_COME_TO_BACKGROUND:", cc.EVENT_COME_TO_BACKGROUND)
+    print("-----cc.EVENT_COME_TO_FOREGROUND:", cc.EVENT_COME_TO_FOREGROUND)
+    print("test isDirectoryExist: ", cc.FileUtils:getInstance():isDirectoryExist("/Users")) 
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt) self:onEnterFrame(dt) end)
     self.layer:setTouchEnabled(true)
     self.layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)

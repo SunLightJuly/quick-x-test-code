@@ -12,10 +12,10 @@ function AppBase:ctor(appName, packageRoot)
 
     local node = cc.Node:create()
     local eventDispatcher = node:getEventDispatcher()
-    local customListenerBg = cc.EventListenerCustom:create("APP_ENTER_BACKGROUND_EVENT",
+    local customListenerBg = cc.EventListenerCustom:create(cc.EVENT_COME_TO_BACKGROUND,
                                 handler(self, self.onEnterBackground))
     eventDispatcher:addEventListenerWithFixedPriority(customListenerBg, 1)
-    local customListenerFg = cc.EventListenerCustom:create("APP_ENTER_FOREGROUND_EVENT",
+    local customListenerFg = cc.EventListenerCustom:create(cc.EVENT_COME_TO_FOREGROUND,
                                 handler(self, self.onEnterForeground))
     eventDispatcher:addEventListenerWithFixedPriority(customListenerFg, 1)
 

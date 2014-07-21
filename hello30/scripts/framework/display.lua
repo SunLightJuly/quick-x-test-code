@@ -922,12 +922,12 @@ shape = display.newLine(point表, [参数])
 -- 创建一个线宽为2，颜色为红色，从(10,10)到(100,100)的线段
 local shape3 = display.newRect({cc.p(10, 10), cc.p(100,100)},
     {borderColor = cc.c4f(1.0, 0.0, 0.0, 1.0),
-    radius = 1})
+    borderWidth = 1})
 
 ~~~
 
 @param table point table
-@param table params 有参数，边线色 borderColor 及边线宽度 radius
+@param table params 有参数，边线色 borderColor 及边线宽度 borderWidth
 
 @return DrawNode
 
@@ -943,7 +943,7 @@ function display.newLine(points, params)
         radius = 0.5
     else
         borderColor = params.borderColor or cc.c4f(0,0,0,1)
-        radius = params.borderWidth or 0.5
+        radius = (params.borderWidth and params.borderWidth/2) or 0.5
     end
 
     for i, p in ipairs(points) do

@@ -313,7 +313,7 @@ using namespace cocos2d;
     if (i >= 0 && i < SimulatorConfig::sharedDefaults()->getScreenSizeCount())
     {
         SimulatorScreenSize size = SimulatorConfig::sharedDefaults()->getScreenSize((int)i);
-        projectConfig.setFrameSize(projectConfig.isLandscapeFrame() ? CCSize(size.height, size.width) : CCSize(size.width, size.height));
+        projectConfig.setFrameSize(projectConfig.isLandscapeFrame() ? cocos2d::Size(size.height, size.width) : cocos2d::Size(size.width, size.height));
         projectConfig.setFrameScale(1.0f);
         [self relaunch];
     }

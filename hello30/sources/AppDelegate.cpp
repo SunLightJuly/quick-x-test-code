@@ -50,7 +50,8 @@ bool AppDelegate::applicationDidFinishLaunching()
     pStack->loadChunksFromZIP("res/framework_precompiled.zip");
     
     // set script path
-    string path = CCFileUtils::sharedFileUtils()->fullPathForFilename("scripts/main.lua");
+    string path = FileUtils::getInstance()->fullPathForFilename("scripts/main.lua");
+    log("fullPathForFilename: %s", path.c_str());
 #else
     // load framework
 //    if (m_projectConfig.isLoadPrecompiledFramework())
@@ -101,7 +102,6 @@ void AppDelegate::applicationDidEnterBackground()
     Director::getInstance()->pause();
     SimpleAudioEngine::getInstance()->pauseBackgroundMusic();
     SimpleAudioEngine::getInstance()->pauseAllEffects();
-    NotificationCenter::getInstance()->postNotification("APP_ENTER_BACKGROUND_EVENT");
 }
 
 // this function will be called when the app is active again
@@ -111,7 +111,6 @@ void AppDelegate::applicationWillEnterForeground()
     Director::getInstance()->resume();
     SimpleAudioEngine::getInstance()->resumeBackgroundMusic();
     SimpleAudioEngine::getInstance()->resumeAllEffects();
-    NotificationCenter::getInstance()->postNotification("APP_ENTER_FOREGROUND_EVENT");
 }
 
 void AppDelegate::setProjectConfig(const ProjectConfig& config)
