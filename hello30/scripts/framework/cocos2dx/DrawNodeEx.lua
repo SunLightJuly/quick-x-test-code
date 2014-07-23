@@ -29,11 +29,6 @@ THE SOFTWARE.
 local c = cc
 local DrawNode = c.DrawNode
 
-function DrawNode:drawPol(points, params)
-	PRINT_DEPRECATED("DrawNode.drawPol() is deprecated, please use DrawNode.drawPolygon()")
-	return self:drawPolygon(points, params)
-end
-
 local drawPolygon = DrawNode.drawPolygon
 function DrawNode:drawPolygon(points, params)
 	local segments = #points

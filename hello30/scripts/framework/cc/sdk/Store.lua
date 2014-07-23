@@ -1,8 +1,6 @@
 
 local Store = {}
 
-PRINT_DEPRECATED("module api.Store is deprecated, please use cc.sdk.pay")
-
 local function checkCCStore()
     if not CCStore then
         printError("framework.api.Store - CCStore not exists.")
@@ -138,5 +136,9 @@ function Store.finishTransaction(transaction)
 
     return cc.storeProvider:finishTransaction(transaction.transactionIdentifier)
 end
+
+cc = cc or {}
+cc.sdk = cc.sdk or {}
+cc.sdk.pay = Store
 
 return Store

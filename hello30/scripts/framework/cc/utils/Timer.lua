@@ -1,8 +1,6 @@
 
 local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 
-PRINT_DEPRECATED("module api.Timer is deprecated, please use cc.utils.Timer")
-
 --[[--
 
 Timer 实现了一个计时器容器，用于跟踪应用中所有需要计时的事件。
@@ -163,5 +161,9 @@ function Timer.new()
 
     return timer
 end
+
+cc = cc or {}
+cc.utils = cc.utils or {}
+cc.utils.Timer = Timer
 
 return Timer

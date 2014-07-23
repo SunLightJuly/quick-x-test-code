@@ -18,8 +18,6 @@ See http://support.openfeint.com/dev/game-center-compatibility/ for details.
 
 local GameNetwork = {}
 
-PRINT_DEPRECATED("module api.GameNetwork is deprecated, please use cc.sdk.social")
-
 local provider = __FRAMEWORK_GLOBALS__["api.GameNetwork"]
 
 --[[--
@@ -282,5 +280,9 @@ function GameNetwork.exit()
 
     provider.exit()
 end
+
+cc = cc or {}
+cc.sdk = cc.sdk or {}
+cc.sdk.social = GameNetwork
 
 return GameNetwork
