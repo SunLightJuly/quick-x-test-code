@@ -24,23 +24,31 @@ function UIListView:ctor(params)
 	self.container = cc.Node:create()
 	-- self.padding_ = params.padding or {left = 0, right = 0, top = 0, bottom = 0}
 
+	self:addBgColorIf(params)
+	self:addBgIf(params)
+
+	-- params.viewRect.x = params.viewRect.x + self.padding_.left
+	-- params.viewRect.y = params.viewRect.y + self.padding_.bottom
+	-- params.viewRect.width = params.viewRect.width - self.padding_.left - self.padding_.right
+	-- params.viewRect.height = params.viewRect.height - self.padding_.bottom - self.padding_.top
+
 	self:setDirection(params.direction)
 	self:setViewRect(params.viewRect)
 	self:addScrollNode(self.container)
 	self:onScroll(handler(self, self.scrollListener))
 
-	self:addBgColorIf(params.bgColor)
-	self:addBgIf(params)
-
 	self.size = {}
 end
 
-function UIListView:addBgColorIf(bgColor)
-	if not bgColor then
+function UIListView:addBgColorIf(params)
+	if not params.bgColor then
 		return
 	end
 
-	display.newColorLayer(bgColor):addTo(self, UIListView.BG_ZORDER)
+	display.newColorLayer(params.bgColor)
+		:size(params.viewRect.width, params.viewRect.height)
+		:pos(params.viewRect.x, params.viewRect.y)
+		:addTo(self, UIListView.BG_ZORDER)
 		:setTouchEnabled(false)
 end
 
