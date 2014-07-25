@@ -5,13 +5,30 @@ end)
 
 local random = math.random
 
-function BenchmarkScene:ctor()
-    self.batch = display.newBatchNode(GAME_TEXTURE_IMAGE_FILENAME, 10000)
-    self:addChild(self.batch)
+function BenchmarkScene:exit()
+    print("BenchmarkScene:exit")
+    local coins = self.coins
+    for i = 1, #coins do
+        local coin = coins[i]
+        coin:setTag(i)
+        -- coin:setTouchEnabled(false)
+        -- self.batch:removeChild(coin)
+    end
+    -- self:removeChild(self.batch)
+    -- self.layer:setTouchEnabled(false)
+    -- self:removeChild(self.layer)
+    game.exit()
+end
 
+function BenchmarkScene:ctor()
     self.layer = display.newNode()
     self.layer:setContentSize(cc.size(display.width, display.height))
     self:addChild(self.layer)
+    self.layer:setTag(111)
+
+    self.batch = display.newBatchNode(GAME_TEXTURE_IMAGE_FILENAME, 10000)
+    self:addChild(self.batch)
+    self.batch:setTag(222)
 
     local button = display.newSprite("#AddCoinButton.png", display.right - 100, display.bottom + 270)
     self:addChild(button)
@@ -23,7 +40,7 @@ function BenchmarkScene:ctor()
 
     cc.ui.UIPushButton.new({normal = "#ExitButton.png"})
         :onButtonClicked(function()
-            game.exit()
+            self:exit()
         end)
         :pos(display.right - 100, display.top - 100)
         :addTo(self)
@@ -70,7 +87,7 @@ end
 
 function BenchmarkScene:addCoin()
     local coin = display.newSprite("#CoinSpin01.png")
-    coin:playAnimationForever(display.getAnimationCache("Coin"))
+    -- coin:playAnimationForever(display.getAnimationCache("Coin"))
     coin:setPosition(random(self.left, self.right), random(self.bottom, self.top))
     self.batch:addChild(coin)
     -- self:addChild(coin)
@@ -98,18 +115,45 @@ function BenchmarkScene:removeCoin()
     self.label:setString(string.format("%05d", self.coinsCount))
 end
 
-function BenchmarkScene:onEnterFrame(dt)
-    if self.state == "ADD" then
-        self:addCoin()
-    elseif self.state == "REMOVE" and self.coinsCount > 0 then
-        self:removeCoin()
-    end
-
+function BenchmarkScene:setCoin(b)
     local coins = self.coins
     for i = 1, #coins do
         local coin = coins[i]
-        coin:onEnterFrame(dt)
+        if b then
+            local handle = nil
+            handle = coin:addNodeEventListener(cc.NODE_TOUCH_EVENT, function()
+             print("coin num:", i) 
+             coin:removeNodeEventListener(handle)
+             end, i)
+        else
+            coin:removeNodeEventListenersByEvent(cc.NODE_TOUCH_EVENT)
+        end
+        coin:setTouchEnabled(true)
     end
+
+    -- if self.layer then
+    --         local handle = nil
+    --         handle = self.layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function()
+    --          print("prev handle:", handle) 
+    --          self.layer:removeNodeEventListener(handle)
+    --          end)
+    -- end
+end
+
+function BenchmarkScene:onEnterFrame(dt)
+    if self.state == "ADD" then
+        -- self:addCoin()
+        self:setCoin(true)
+    elseif self.state == "REMOVE" and self.coinsCount > 0 then
+        -- self:removeCoin()
+        self:setCoin(false)
+    end
+
+    -- local coins = self.coins
+    -- for i = 1, #coins do
+    --     local coin = coins[i]
+    --     coin:onEnterFrame(dt)
+    -- end
 
     -- if self.trackFlag==nil and coins[1] then
     --     local c = coins[1]
@@ -133,6 +177,9 @@ function BenchmarkScene:onEnterFrame(dt)
 end
 
 function BenchmarkScene:onEnter()
+    -- for i=1,50 do
+        self:addCoin()
+    -- end
     print("-----cc.EVENT_COME_TO_BACKGROUND:", cc.EVENT_COME_TO_BACKGROUND)
     print("-----cc.EVENT_COME_TO_FOREGROUND:", cc.EVENT_COME_TO_FOREGROUND)
     print("test isDirectoryExist: ", cc.FileUtils:getInstance():isDirectoryExist("/Users")) 
