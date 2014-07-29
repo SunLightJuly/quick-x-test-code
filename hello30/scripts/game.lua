@@ -7,16 +7,35 @@ game = {}
 
 function game.startup()
     cc.FileUtils:getInstance():addSearchPath("res/")
-    display.addSpriteFrames(GAME_TEXTURE_DATA_FILENAME, GAME_TEXTURE_IMAGE_FILENAME)
 
-    game.benchmark()
+    game.armatureSceneIdx = 1
+    game.test()
 end
 
 function game.exit()
     os.exit()
 end
 
-function game.benchmark()
-    local BenchmarkScene = require("scenes.BenchmarkScene")
-    display.replaceScene(BenchmarkScene.new())
+function game.test()
+    local newScene = require("scenes.ArmatureTestScene").new(game.armatureSceneIdx)
+    display.replaceScene(newScene)
 end
+
+function game.nextTest()
+	if game.armatureSceneIdx >= game.numArmatureScenes then
+		game.armatureSceneIdx = 1
+	else
+		game.armatureSceneIdx = game.armatureSceneIdx + 1
+	end
+	game.test()
+end
+
+function game.prevTest()
+	if game.armatureSceneIdx < 2 then
+		game.armatureSceneIdx = game.numArmatureScenes
+	else
+		game.armatureSceneIdx = game.armatureSceneIdx - 1
+	end
+	game.test()
+end
+
