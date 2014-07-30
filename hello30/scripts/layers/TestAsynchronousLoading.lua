@@ -10,7 +10,7 @@ function TestAsynchronousLoading:ctor()
 end
 
 function TestAsynchronousLoading:onEnter()
-    self.backButton:setButtonEnabled(false)
+    self.prevButton:setButtonEnabled(false)
     self.restartButton:setButtonEnabled(false)
     self.nextButton:setButtonEnabled(false)
 
@@ -35,8 +35,8 @@ function TestAsynchronousLoading:onEnter()
             local subInfo = self.subTitle(1) .. (percent * 100)
             label:setString(subInfo)
         end
-        if percent >= 1 and self.backButton and self.restartButton and self.nextButton then
-            self.backButton:setButtonEnabled(true)
+        if percent >= 1 and self.prevButton and self.restartButton and self.nextButton then
+            self.prevButton:setButtonEnabled(true)
             self.restartButton:setButtonEnabled(true)
             self.nextButton:setButtonEnabled(true)
         end

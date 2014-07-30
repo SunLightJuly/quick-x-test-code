@@ -49,7 +49,7 @@ function ArmatureTestLayer:ctor()
     local h = sz.height / 2
     self.restartButton:setPosition(display.cx, h)
 
-    self.backButton = 
+    self.prevButton = 
         cc.ui.UIPushButton.new({normal = resPathes.s_pPathB1, pressed = resPathes.s_pPathB2})
         :onButtonClicked(function()
             game.prevTest()
@@ -65,6 +65,15 @@ function ArmatureTestLayer:ctor()
         :pos(display.cx + w, h)
         :addTo(self)
 
+    self.exitButton =     
+        cc.ui.UIPushButton.new({})
+        :setButtonLabel("normal", cc.Label:createWithTTF("Exit", resPathes.s_arialPath, 24))
+        :setButtonLabel("pressed", cc.Label:createWithTTF("Exit", resPathes.s_arialPath, 30))
+        :onButtonClicked(function()
+            game.exit()
+        end)
+        :pos(display.right - 120, 30)
+        :addTo(self)
 end
 
 function ArmatureTestLayer:onEnter()

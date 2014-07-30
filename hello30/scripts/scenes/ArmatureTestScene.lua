@@ -9,12 +9,12 @@ local armatureSceneName =
     "TestDirectLoading",
     "TestCSWithSkeleton",
     "TestDragonBones20",
-    -- "TestPerformance",
+    "TestPerformance",
     --"TestPerformanceBatchNode",
-    -- "TestChangeZorder",
-    -- "TestAnimationEvent",
-    -- "TestFrameEvent",
-    -- "TestParticleDisplay",
+    "TestChangeZorder",
+    "TestAnimationEvent",
+    "TestFrameEvent",
+    "TestParticleDisplay",
     -- "TestUseMutiplePicture",
     -- "TestAnchorPoint",
     -- "TestArmatureNesting",
@@ -47,6 +47,10 @@ function ArmatureTestScene:onEnter()
     -- self.layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
     --     return self:onTouch(event.name, event.x, event.y)
     -- end)
+end
+
+function ArmatureTestScene:onExit()
+    self.layer:onExit()
 end
 
 return ArmatureTestScene

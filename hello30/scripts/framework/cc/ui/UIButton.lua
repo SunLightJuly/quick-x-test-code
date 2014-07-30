@@ -240,7 +240,7 @@ function UIButton:updateButtonImage_()
 
         self.sprite_:setAnchorPoint(self:getAnchorPoint())
         self.sprite_:setPosition(0, 0)
-    else
+    elseif not self.labels_ then
         printError("UIButton:updateButtonImage_() - not set image for state %s", state)
     end
 end
