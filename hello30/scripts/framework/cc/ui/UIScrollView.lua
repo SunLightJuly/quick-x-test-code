@@ -3,6 +3,8 @@ local UIScrollView = class("UIScrollView", function()
 	return cc.ClippingRegionNode:create()
 end)
 
+UIScrollView.BG_ZORDER 				= -100
+
 UIScrollView.DIRECTION_BOTH			= 0
 UIScrollView.DIRECTION_VERTICAL		= 1
 UIScrollView.DIRECTION_HORIZONTAL	= 2
@@ -29,9 +31,38 @@ function UIScrollView:ctor(params)
 		self.sbV = display.newScale9Sprite(params.scrollbarImgV, 100):addTo(self)
 	end
 
+	self:addBgColorIf(params)
+	self:addBgGradientColorIf(params)
+
 	self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(...)
 			self:update_(...)
 		end)
+end
+
+function UIScrollView:addBgColorIf(params)
+	if not params.bgColor then
+		return
+	end
+
+	-- display.newColorLayer(params.bgColor)
+	cc.LayerColor:create(params.bgColor)
+		:size(params.viewRect.width, params.viewRect.height)
+		:pos(params.viewRect.x, params.viewRect.y)
+		:addTo(self, UIScrollView.BG_ZORDER)
+		:setTouchEnabled(false)
+end
+
+function UIScrollView:addBgGradientColorIf(params)
+	if not params.bgStartColor or not params.bgEndColor then
+		return
+	end
+
+	local layer = cc.LayerGradient:create(params.bgStartColor, params.bgEndColor)
+		:size(params.viewRect.width, params.viewRect.height)
+		:pos(params.viewRect.x, params.viewRect.y)
+		:addTo(self, UIScrollView.BG_ZORDER)
+		:setTouchEnabled(false)
+	layer:setVector(params.bgVector)
 end
 
 function UIScrollView:setViewRect(rect)

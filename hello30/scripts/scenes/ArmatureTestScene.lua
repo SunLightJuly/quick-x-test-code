@@ -15,10 +15,10 @@ local armatureSceneName =
     "TestAnimationEvent",
     "TestFrameEvent",
     "TestParticleDisplay",
-    -- "TestUseMutiplePicture",
-    -- "TestAnchorPoint",
-    -- "TestArmatureNesting",
-    -- "TestArmatureNesting2",
+    "TestUseMutiplePicture",
+    "TestAnchorPoint",
+    "TestArmatureNesting",
+    "TestArmatureNesting2",
 }
 game.numArmatureScenes = #armatureSceneName
 

@@ -224,18 +224,35 @@ function UIButton:updateButtonImage_()
             end
             self.currentImage_ = image
 
-            if self.scale9_ then
-                self.sprite_ = display.newScale9Sprite(image)
-                if not self.scale9Size_ then
-                    local size = self.sprite_:getContentSize()
-                    self.scale9Size_ = {size.width, size.height}
+            -- if "table" == type(image) then
+            --     for i,v in ipairs(image) do
+            --         if self.scale9_ then
+            --             self.sprite_ = display.newScale9Sprite(v)
+            --             if not self.scale9Size_ then
+            --                 local size = self.sprite_:getContentSize()
+            --                 self.scale9Size_ = {size.width, size.height}
+            --             else
+            --                 self.sprite_:setContentSize(cc.size(self.scale9Size_[1], self.scale9Size_[2]))
+            --             end
+            --         else
+            --             self.sprite_ = display.newSprite(v)
+            --         end
+            --         self:addChild(self.sprite_, UIButton.IMAGE_ZORDER)
+            --     end
+            -- else
+                if self.scale9_ then
+                    self.sprite_ = display.newScale9Sprite(image)
+                    if not self.scale9Size_ then
+                        local size = self.sprite_:getContentSize()
+                        self.scale9Size_ = {size.width, size.height}
+                    else
+                        self.sprite_:setContentSize(cc.size(self.scale9Size_[1], self.scale9Size_[2]))
+                    end
                 else
-                    self.sprite_:setContentSize(cc.size(self.scale9Size_[1], self.scale9Size_[2]))
+                    self.sprite_ = display.newSprite(image)
                 end
-            else
-                self.sprite_ = display.newSprite(image)
-            end
-            self:addChild(self.sprite_, UIButton.IMAGE_ZORDER)
+                self:addChild(self.sprite_, UIButton.IMAGE_ZORDER)
+            -- end
         end
 
         self.sprite_:setAnchorPoint(self:getAnchorPoint())
