@@ -108,6 +108,8 @@ function ccsloader:generateUINode(jsonNode, transX, transY)
 
 	if "ListView" == clsName or "PageView" == clsName then
 		uiNode:reload()
+	elseif "ScrollView" == clsName then
+		uiNode:resetPosition()
 	end
 
 	return uiNode
