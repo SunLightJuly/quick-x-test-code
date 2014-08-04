@@ -50,6 +50,8 @@ function BenchmarkScene:ctor()
     self.right  = display.right  - display.width / 4
     self.top    = display.top    - display.height / 3
     self.bottom = display.bottom + display.height / 3
+
+    local ly = require("IntroLayer").new():addTo(self)
 end
 
 function BenchmarkScene:onTouch(event, x, y)
@@ -160,6 +162,11 @@ function BenchmarkScene:onEnter()
         return self:onTouch(event.name, event.x, event.y)
     end)
     self.layer:setTouchEnabled(true)
+end
+
+function BenchmarkScene:onExit()
+    print("----BenchmarkScene:onExit")
+    self:removeAllNodeEventListeners()
 end
 
 return BenchmarkScene
