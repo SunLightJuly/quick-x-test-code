@@ -11,7 +11,7 @@ function TestSingleTouch1Scene:ctor()
             image = "WhiteButton.png",
             size = cc.size(500, 300),
             label = "TOUCH ME !",
-            labelColor = cc.c3(255, 0, 0)})
+            labelColor = cc.c3b(255, 0, 0)})
         :pos(display.cx, display.cy)
         :addTo(self)
     drawBoundingBox(self, self.sprite, cc.c4f(0, 1.0, 0, 1.0))
@@ -59,6 +59,11 @@ function TestSingleTouch1Scene:onEnter()
     local ts = crypto.md5("ksdjflkasdjflsjfdlasdjfl")
     print("*******ts = ", ts)
     local dt = cc.HelperFunc:getFileData("ttttt")
+
+    display.newDrawNode():drawCircle(100, {fillColor = cc.c4f(0,0,1,1), pos = {display.cx, display.cy}}):addTo(self)
+    display.newDrawNode():drawRect({display.cx, display.cy, 100, 100}, {fillColor = cc.c4f(1,0,0,1)}):addTo(self)
+    display.newDrawNode():drawDot(cc.p(display.cx, display.cy), 10, cc.c4f(0,1,0,1)):addTo(self)
+    display.newDrawNode():drawLine({0,0}, {200,200}, 5, cc.c4f(1,1,0,1)):addTo(self)
 end
 
 return TestSingleTouch1Scene

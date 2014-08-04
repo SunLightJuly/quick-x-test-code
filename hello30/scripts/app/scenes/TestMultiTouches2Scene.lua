@@ -1,26 +1,53 @@
 
 import("..includes.functions")
 
-local TestSingleTouch2Scene = class("TestSingleTouch2Scene", function()
-    return display.newScene("TestSingleTouch2Scene")
+local TestMultiTouches2Scene = class("TestMultiTouches2Scene", function()
+    return display.newScene("TestMultiTouches2Scene")
 end)
 
-function TestSingleTouch2Scene:ctor()
+function TestMultiTouches2Scene:ctor()
+    -- 这个标志变量用于在触摸事件捕获阶段决定是否接受事件
+    self.isTouchCaptureEnabled_ = true
+
     -- parentButton 是 button1 的父节点
     self.parentButton = createTouchableSprite({
             image = "WhiteButton.png",
             size = cc.size(600, 500),
             label = "TOUCH ME !",
-            labelColor = cc.c3(255, 0, 0)})
+            labelColor = cc.c3b(255, 0, 0)})
         :pos(display.cx, display.cy)
         :addTo(self)
-    self.parentButton.name = "parentButton"
     drawBoundingBox(self, self.parentButton, cc.c4f(0, 1.0, 0, 1.0))
+
+    self.parentButton.label2 = cc.ui.UILabel.new({text = "", size = 24, color = cc.c3b(0, 0, 255)})
+        :align(display.CENTER, 300, 60)
+        :addTo(self.parentButton)
+
     self.parentButton:setTouchEnabled(true)
     self.parentButton:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        local label = string.format("parentButton: %s x,y: %0.2f, %0.2f", event.name, event.x, event.y)
+        local label = string.format("parentButton: %s", event.name)
         self.parentButton.label:setString(label)
+        printf("%s %s [TARGETING]", "parentButton", event.name)
+        if event.name == "ended" or event.name == "cancelled" then
+            print("-----------------------------")
+        else
+            print("")
+        end
         return true
+    end)
+
+    -- 可以动态捕获触摸事件，并在捕获触摸事件开始时决定是否接受此次事件
+    self.parentButton:addNodeEventListener(cc.NODE_TOUCH_CAPTURE_EVENT, function(event)
+        if event.name == "began" then
+            print("-----------------------------")
+        end
+
+        local label = string.format("parentButton CAPTURE: %s", event.name)
+        self.parentButton.label2:setString(label)
+        printf("%s %s [CAPTURING]", "parentButton", event.name)
+        if event.name == "began" or event.name == "moved" then
+            return self.isTouchCaptureEnabled_
+        end
     end)
 
     -- button1 响应触摸后，会吞噬掉触摸事件
@@ -36,10 +63,17 @@ function TestSingleTouch2Scene:ctor()
     drawBoundingBox(self, self.button1, cc.c4f(1.0, 0, 0, 1.0))
 
     self.button1:setTouchEnabled(true)
+    self.button1:setTouchMode(cc.TOUCH_MODE_ALL_AT_ONCE) -- 多点
     self.button1:setTouchSwallowEnabled(true) -- 是否吞噬事件，默认值为 true
     self.button1:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        local label = string.format("button1: %s x,y: %0.2f, %0.2f", event.name, event.x, event.y)
+        local label = string.format("button1: %s count: %d", event.name, table.nums(event.points))
         self.button1.label:setString(label)
+        printf("%s %s [TARGETING]", "button1", event.name)
+        if event.name == "ended" or event.name == "cancelled" then
+            print("-----------------------------")
+        else
+            print("")
+        end
         return true
     end)
 
@@ -56,10 +90,18 @@ function TestSingleTouch2Scene:ctor()
     drawBoundingBox(self, self.button2, cc.c4f(0, 0, 1.0, 1.0))
 
     self.button2:setTouchEnabled(true)
+    self.button2:setTouchMode(cc.TOUCH_MODE_ALL_AT_ONCE) -- 多点
     self.button2:setTouchSwallowEnabled(false) -- 当不吞噬事件时，触摸事件会从上层对象往下层对象传递，称为“穿透”
     self.button2:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        local label = string.format("button1: %s x,y: %0.2f, %0.2f", event.name, event.x, event.y)
+        local label = string.format("button1: %s count: %d", event.name, table.nums(event.points))
         self.button2.label:setString(label)
+        printf("%s %s [TARGETING]", "button2", event.name)
+        return true
+    end)
+
+    -- 即便父对象在捕获阶段阻止响应事件，但子对象仍然可以捕获到事件，只是不会触发事件
+    self.button2:addNodeEventListener(cc.NODE_TOUCH_CAPTURE_EVENT, function(event)
+        printf("%s %s [CAPTURING]", "button2", event.name)
         return true
     end)
 
@@ -78,21 +120,21 @@ function TestSingleTouch2Scene:ctor()
         end)
         :onButtonClicked(function(event)
             local button = event.target
-            self.parentButton:setTouchCaptureEnabled(button:isButtonSelected())
+            self.isTouchCaptureEnabled_ = button:isButtonSelected()
         end)
         :pos(display.cx - 160, display.top - 80)
         :addTo(self)
 
     cc.ui.UILabel.new({
-        text = "当不允许父对象捕获触摸事件时，\n父对象及其包含的所有子对象都将得不到触摸事件",
+        text = "事件处理流程：\n1. 【捕获】阶段：从父到子\n2. 【目标】阶段\n3. 【传递】阶段：尝试传递给下层对象",
         size= 24})
-        :align(display.CENTER, display.cx, display.top - 140)
+        :align(display.CENTER_TOP, display.cx, display.top - 120)
         :addTo(self)
 
     --
 
     app:createNextButton(self)
-    app:createTitle(self, "单点触摸测试 - 事件穿透和事件捕获")
+    app:createTitle(self, "多点触摸测试 - 在事件捕获阶段决定是否接受事件")
 end
 
-return TestSingleTouch2Scene
+return TestMultiTouches2Scene
