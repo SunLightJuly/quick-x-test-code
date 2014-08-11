@@ -31,7 +31,7 @@ function UICheckBoxButtonGroup:removeButtonAtIndex(index)
     layout:removeWidget(button)
     layout:apply(self)
 
-    button:removeSelf()
+    button:removeFromParent()
     table.remove(self.buttons_, index)
 
     if self.currentSelectedIndex_ == index then

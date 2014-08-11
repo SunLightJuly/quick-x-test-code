@@ -109,6 +109,31 @@ function UIScrollView:resetPosition()
 	self.scrollNode:setPosition(x, y)
 end
 
+function UIScrollView:isItemInViewRect(item)
+	if "userdata" ~= type(item) then
+		item = nil
+	end
+
+	if not item then
+		print("UIScrollView - isItemInViewRect item is not right")
+		return
+	end
+
+	local bound = item:getCascadeBoundingBox()
+	-- local point = cc.p(bound.x, bound.y)
+	-- local parent = item
+	-- while true do
+	-- 	parent = parent:getParent()
+	-- 	point = parent:convertToNodeSpace(point)
+	-- 	if parent == self.scrollNode then
+	-- 		break
+	-- 	end
+	-- end
+	-- bound.x = point.x
+	-- bound.y = point.y
+	return cc.rectIntersectsRect(self:getViewRectInWorldSpace(), bound)
+end
+
 function UIScrollView:addScrollNode(node)
 	self:addChild(node)
 	self.scrollNode = node
@@ -150,7 +175,7 @@ function UIScrollView:update_(dt)
 end
 
 function UIScrollView:onTouch_(event)
-	if "began" == event.name and not self:isTouchInScrollNode(event) then
+	if "began" == event.name and not self:isTouchInViewRect(event) then
 		printInfo("#DEBUG touch didn't in viewRect")
 		return false
 	end
@@ -166,7 +191,7 @@ function UIScrollView:onTouch_(event)
 		self:callListener_{name = "began", x = event.x, y = event.y}
 
 		self:enableScrollBar()
-		self:changeViewRectToNodeSpaceIf()
+		-- self:changeViewRectToNodeSpaceIf()
 
 		return true
 	elseif "moved" == event.name then
@@ -196,6 +221,16 @@ function UIScrollView:onTouch_(event)
 			self:callListener_{name = "clicked", x = event.x, y = event.y}
 		end
 	end
+end
+
+function UIScrollView:isTouchInViewRect(event)
+	-- dump(self.viewRect_, "viewRect:")
+	local viewRect = self:convertToWorldSpace(cc.p(self.viewRect_.x, self.viewRect_.y))
+	viewRect.width = self.viewRect_.width
+	viewRect.height = self.viewRect_.height
+	-- dump(viewRect, "new viewRect:")
+
+	return cc.rectContainsPoint(viewRect, cc.p(event.x, event.y))
 end
 
 function UIScrollView:isTouchInScrollNode(event)
@@ -235,6 +270,7 @@ function UIScrollView:scrollAuto()
 	self:elasticScroll()
 end
 
+-- fast drag
 function UIScrollView:twiningScroll()
 	if self:isSideShow() then
 		-- printInfo("UIScrollView - side is show, so elastic scroll")
@@ -258,19 +294,20 @@ end
 function UIScrollView:elasticScroll()
 	local cascadeBound = self:getScrollNodeRect()
 	local disX, disY = 0, 0
+	local viewRect = self:getViewRectInWorldSpace()
 
 	-- dump(cascadeBound, "UIScrollView - cascBoundingBox:")
 	-- dump(self.scrollNode:getBoundingBox(), "UIScrollView - BoundingBox:")
 
-	if cascadeBound.x > self.viewRect_.x then
-		disX = self.viewRect_.x - cascadeBound.x
-	elseif cascadeBound.x + cascadeBound.width < self.viewRect_.x + self.viewRect_.width then
-		disX = self.viewRect_.x + self.viewRect_.width - cascadeBound.x - cascadeBound.width
+	if cascadeBound.x > viewRect.x then
+		disX = viewRect.x - cascadeBound.x
+	elseif cascadeBound.x + cascadeBound.width < viewRect.x + viewRect.width then
+		disX = viewRect.x + viewRect.width - cascadeBound.x - cascadeBound.width
 	end
-	if cascadeBound.y > self.viewRect_.y then
-		disY = self.viewRect_.y - cascadeBound.y
-	elseif cascadeBound.y + cascadeBound.height < self.viewRect_.y + self.viewRect_.height then
-		disY = self.viewRect_.y + self.viewRect_.height - cascadeBound.y - cascadeBound.height
+	if cascadeBound.y > viewRect.y then
+		disY = viewRect.y - cascadeBound.y
+	elseif cascadeBound.y + cascadeBound.height < viewRect.y + viewRect.height then
+		disY = viewRect.y + viewRect.height - cascadeBound.y - cascadeBound.height
 	end
 
 	if 0 == disX and 0 == disY then
@@ -295,6 +332,15 @@ function UIScrollView:getScrollNodeRect()
 	return bound
 end
 
+function UIScrollView:getViewRectInWorldSpace()
+	local rect = self:convertToWorldSpace(
+		cc.p(self.viewRect_.x, self.viewRect_.y))
+	rect.width = self.viewRect_.width
+	rect.height = self.viewRect_.height
+
+	return rect
+end
+
 -- 是否显示到边缘
 function UIScrollView:isSideShow()
 	local bound = self.scrollNode:getCascadeBoundingBox()
@@ -312,6 +358,7 @@ function UIScrollView:callListener_(event)
 	if not self.scrollListener_ then
 		return
 	end
+	event.scrollView = self
 
 	self.scrollListener_(event)
 end

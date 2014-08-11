@@ -67,7 +67,7 @@ end
 function UIListViewItem:setMargin(margin)
 	self.margin_ = margin
 
-	dump(self.margin_, "set margin:")
+	-- dump(self.margin_, "set margin:")
 end
 
 function UIListViewItem:getMargin()

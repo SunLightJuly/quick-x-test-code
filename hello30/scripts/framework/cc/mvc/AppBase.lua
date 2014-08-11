@@ -10,8 +10,7 @@ function AppBase:ctor(appName, packageRoot)
     self.name = appName
     self.packageRoot = packageRoot or "app"
 
-    local node = cc.Node:create()
-    local eventDispatcher = node:getEventDispatcher()
+    local eventDispatcher = cc.Director:getInstance():getEventDispatcher()
     local customListenerBg = cc.EventListenerCustom:create(cc.EVENT_COME_TO_BACKGROUND,
                                 handler(self, self.onEnterBackground))
     eventDispatcher:addEventListenerWithFixedPriority(customListenerBg, 1)

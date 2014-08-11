@@ -121,43 +121,44 @@ function UIListView:itemSizeChangeListener(listItem, newSize, oldSize)
 end
 
 function UIListView:scrollListener(event)
-	if "clicked" ~= event.name then
-		return
-	end
+	if "clicked" == event.name then
+		local nodePoint = self.container:convertToNodeSpace(cc.p(event.x, event.y))
+		nodePoint.x = nodePoint.x - self.viewRect_.x
+		nodePoint.y = nodePoint.y - self.viewRect_.y
 
-	local nodePoint = self.container:convertToNodeSpace(cc.p(event.x, event.y))
-	nodePoint.x = nodePoint.x - self.viewRect_.x
-	nodePoint.y = nodePoint.y - self.viewRect_.y
+		local width, height = 0, self.size.height
+		local itemW, itemH = 0, 0
+		local pos
+		if UIScrollView.DIRECTION_VERTICAL == self.direction then
+			for i,v in ipairs(self.items_) do
+				_, itemH = v:getItemSize()
 
-	local width, height = 0, self.size.height
-	local itemW, itemH = 0, 0
-	local pos
-	if UIScrollView.DIRECTION_VERTICAL == self.direction then
-		for i,v in ipairs(self.items_) do
-			_, itemH = v:getItemSize()
-
-			if nodePoint.y < height and nodePoint.y > height - itemH then
-				pos = i
-				nodePoint.y = nodePoint.y - (height - itemH)
-				break
+				if nodePoint.y < height and nodePoint.y > height - itemH then
+					pos = i
+					nodePoint.y = nodePoint.y - (height - itemH)
+					break
+				end
+				height = height - itemH
 			end
-			height = height - itemH
+		else
+			for i,v in ipairs(self.items_) do
+				itemW, _ = v:getItemSize()
+
+				if nodePoint.x > width and nodePoint.x < width + itemW then
+					pos = i
+					break
+				end
+				width = width + itemW
+			end
 		end
+
+		self:notifyListener_{name = "clicked",
+			listView = self, itemPos = pos, item = self.items_[pos],
+			point = nodePoint}
+	elseif "moved" == event.name then
 	else
-		for i,v in ipairs(self.items_) do
-			itemW, _ = v:getItemSize()
-
-			if nodePoint.x > width and nodePoint.x < width + itemW then
-				pos = i
-				break
-			end
-			width = width + itemW
-		end
 	end
 
-	self:notifyListener_{name = "clicked",
-		listView = self, itemPos = pos, item = self.items_[pos],
-		point = nodePoint}
 end
 
 function UIListView:addItem(listItem, pos)
@@ -205,6 +206,27 @@ function UIListView:getItemPos(listItem)
 			return i
 		end
 	end
+end
+
+function UIListView:isItemInViewRect(pos)
+	local item
+	if "number" == type(pos) then
+		item = self.items_[pos]
+	elseif "userdata" == type(pos) then
+		item = pos
+	end
+
+	if not item then
+		return
+	end
+	
+	local bound = item:getBoundingBox()
+	local nodePoint = self.container:convertToWorldSpace(
+		cc.p(bound.x, bound.y))
+	bound.x = nodePoint.x
+	bound.y = nodePoint.y
+
+	return cc.rectIntersectsRect(self.viewRect_, bound)
 end
 
 function UIListView:layout_()
@@ -404,6 +426,80 @@ function UIListView:modifyItemSizeIf_(item)
 			item:setItemSize(w, self.viewRect_.height, true)
 		end
 	end
+end
+
+function UIListView:update_(dt)
+	UIListView.super.update_(self, dt)
+
+	self:checkItemsInStatus_()
+end
+
+function UIListView:checkItemsInStatus_()
+	if not self.itemInStatus_ then
+		self.itemInStatus_ = {}
+	end
+
+	local rectIntersectsRect = function(rectParent, rect)
+		-- dump(rectParent, "parent:")
+		-- dump(rect, "rect:")
+
+		local nIntersects -- 0:no intersects,1:have intersects,2,have intersects and include totally
+		local bIn = rectParent.x <= rect.x and
+				rectParent.x + rectParent.width >= rect.x + rect.width and
+				rectParent.y <= rect.y and
+				rectParent.y + rectParent.height >= rect.y + rect.height
+		if bIn then
+			nIntersects = 2
+		else
+			local bNotIn = rectParent.x > rect.x + rect.width or
+				rectParent.x + rectParent.width < rect.x or
+				rectParent.y > rect.y + rect.height or
+				rectParent.y + rectParent.height < rect.y
+			if bNotIn then
+				nIntersects = 0
+			else
+				nIntersects = 1
+			end
+		end
+
+		return nIntersects
+	end
+
+	local newStatus = {}
+	local bound
+	local nodePoint
+	for i,v in ipairs(self.items_) do
+		bound = v:getBoundingBox()
+		nodePoint = self.container:convertToWorldSpace(cc.p(bound.x, bound.y))
+		bound.x = nodePoint.x
+		bound.y = nodePoint.y
+		newStatus[i] =
+			rectIntersectsRect(self.viewRect_, bound)
+	end
+
+	-- dump(self.itemInStatus_, "status:")
+	-- dump(newStatus, "newStatus:")
+	for i,v in ipairs(newStatus) do
+		if self.itemInStatus_[i] and self.itemInStatus_[i] ~= v then
+			-- print("statsus:" .. self.itemInStatus_[i] .. " v:" .. v)
+			local params = {listView = self,
+							itemPos = i,
+							item = self.items_[i]}
+			if 0 == v then
+				params.name = "itemDisappear"
+			elseif 1 == v then
+				params.name = "itemAppearChange"
+			elseif 2 == v then
+				params.name = "itemAppear"
+			end
+			self:notifyListener_(params)
+		else
+			-- print("status same:" .. self.itemInStatus_[i])
+		end
+	end
+	self.itemInStatus_ = newStatus
+	-- dump(self.itemInStatus_, "status:")
+	-- print("itemStaus:" .. #self.itemInStatus_)
 end
 
 return UIListView

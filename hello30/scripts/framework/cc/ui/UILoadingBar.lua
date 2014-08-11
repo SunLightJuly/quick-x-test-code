@@ -46,11 +46,11 @@ function UILoadingBar:setPercent(percent)
 	else
 		if UILoadingBar.DIRECTION_LEFT_TO_RIGHT == self.direction_ then
 			rect.width = newWidth
-			self:setClippingRegion(rect)
+			self:setClippingRegion(cc.rect(rect.x, rect.y, rect.width, rect.height))
 		else
 			rect.x = rect.x + rect.width - newWidth
 			rect.width = newWidth
-			self:setClippingRegion(rect)
+			self:setClippingRegion(cc.rect(rect.x, rect.y, rect.width, rect.height))
 		end
 	end
 end

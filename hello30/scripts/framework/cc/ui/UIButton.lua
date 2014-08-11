@@ -27,12 +27,7 @@ function UIButton:ctor(events, initialState, options)
     makeUIControl_(self)
     self:setLayoutSizePolicy(display.FIXED_SIZE, display.FIXED_SIZE)
     self:setButtonEnabled(true)
-    -- print("----UIButton:ctor addNodeEventListener NODE_TOUCH_EVENT")
-    -- self:addNodeEventListener(cc.NODE_TOUCH_EVENT, handler(self, self.onTouch_))
-    self:addNodeEventListener(cc.NODE_TOUCH_EVENT, function ( event )
-        -- print("----handler UIButton")
-        return self:onTouch_(event)
-    end)
+    self:addNodeEventListener(cc.NODE_TOUCH_EVENT, handler(self, self.onTouch_))
 
     self.touchInSpriteOnly_ = options and options.touchInSprite
     self.currentImage_ = nil
@@ -202,7 +197,7 @@ function UIButton:onChangeState_(event)
     end
 end
 
-function UIButton:onTouch_(event, x, y)
+function UIButton:onTouch_(event)
     printError("UIButton:onTouch_() - must override in inherited class")
 end
 
