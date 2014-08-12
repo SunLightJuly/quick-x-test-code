@@ -45,6 +45,11 @@ using namespace cocos2d;
 
 @synthesize menu;
 
+std::string getCurAppPath(void)
+{
+    return [[[NSBundle mainBundle] bundlePath] UTF8String];
+}
+
 -(void) dealloc
 {
     Director::getInstance()->end();
@@ -58,6 +63,23 @@ using namespace cocos2d;
 {
     isAlwaysOnTop = NO;
 
+    // load QUICK_COCOS2DX_ROOT from ~/.QUICK_COCOS2DX_ROOT
+    NSMutableString *path = [NSMutableString stringWithString:NSHomeDirectory()];
+    [path appendString:@"/.QUICK_V3_ROOT"];
+    NSError *error = nil;
+    NSString *env = [NSString stringWithContentsOfFile:path
+                                              encoding:NSUTF8StringEncoding
+                                                 error:&error];
+    if (error || env.length == 0)
+    {
+        [self showAlertWithoutSheet:@"Please run \"setup.app\", set quick-x-V3 root path." withTitle:@"quick run error"];
+        [[NSApplication sharedApplication] terminate:self];
+    }
+    
+    env = [env stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    env = [NSString stringWithFormat:@"%@/quick", env];
+    SimulatorConfig::sharedDefaults()->setQuickCocos2dxRootPath([env cStringUsingEncoding:NSUTF8StringEncoding]);
+    
     [self updateProjectConfigFromCommandLineArgs:&projectConfig];
     [self createWindowAndGLView];
     [self initUI];
@@ -127,6 +149,14 @@ using namespace cocos2d;
         FileUtils::getInstance()->setWritablePath(writablePath.c_str());
     }
 
+    EventDispatcher *eventDispatcher = Director::getInstance()->getEventDispatcher();
+    EventListenerCustom *_listener2 = EventListenerCustom::create("APP.EVENT", [=](EventCustom* event){
+        if (event->getDataString().compare("{\"name\":\"close\"}") == 0) {
+            Director::getInstance()->end();
+        }
+    });
+    eventDispatcher->addEventListenerWithFixedPriority(_listener2, 1);
+    
     app = new AppDelegate();
     app->setProjectConfig(projectConfig);
     app->run();
@@ -215,13 +245,22 @@ using namespace cocos2d;
 
 - (void) updateProjectConfigFromCommandLineArgs:(ProjectConfig *)config
 {
+    string path = getCurAppPath();
+    path.append("/../../../");
+    config->setProjectDir(path);
     NSArray *nsargs = [[NSProcessInfo processInfo] arguments];
-    vector<string> args;
-    for (int i = 0; i < [nsargs count]; ++i)
-    {
-        args.push_back([[nsargs objectAtIndex:i] cStringUsingEncoding:NSUTF8StringEncoding]);
+    long n = [nsargs count];
+    if (n == 2) {
+        config->setProjectDir([[nsargs objectAtIndex:1] cStringUsingEncoding:NSUTF8StringEncoding]);
+        config->setDebuggerType(kCCLuaDebuggerIDE);
+    } else {
+        vector<string> args;
+        for (int i = 0; i < [nsargs count]; ++i)
+        {
+            args.push_back([[nsargs objectAtIndex:i] cStringUsingEncoding:NSUTF8StringEncoding]);
+        }
+        config->parseCommandLine(args);
     }
-    config->parseCommandLine(args);
     config->dump();
 }
 

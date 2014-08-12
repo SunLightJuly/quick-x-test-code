@@ -2,7 +2,10 @@
 #include "CCLuaEngine.h"
 #include "SimpleAudioEngine.h"
 #include "cocos2d.h"
-
+#if (COCOS2D_DEBUG>0)
+#include "codeIDE/runtime/Runtime.h"
+#include "codeIDE/ConfigParser.h"
+#endif
 
 using namespace CocosDenshion;
 
@@ -20,12 +23,22 @@ AppDelegate::~AppDelegate()
 
 bool AppDelegate::applicationDidFinishLaunching()
 {
+#if (COCOS2D_DEBUG>0)
+    if (m_projectConfig.getDebuggerType()==kCCLuaDebuggerIDE) {
+        initRuntime();
+    }
+#endif
+    
+    if (!ConfigParser::getInstance()->isInit()) {
+        ConfigParser::getInstance()->readConfig();
+    }
+    
     // initialize director
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
 
-#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_MAC)
+#if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WP8)
 #else
         Size viewSize = m_projectConfig.getFrameSize();
         glview = GLView::createWithRect("xx", Rect(0,0,viewSize.width,viewSize.height));
@@ -51,7 +64,14 @@ bool AppDelegate::applicationDidFinishLaunching()
     
     // set script path
     string path = FileUtils::getInstance()->fullPathForFilename("scripts/main.lua");
-    log("fullPathForFilename: %s", path.c_str());
+
+#elif (CC_TARGET_PLATFORM == CC_PLATFORM_WP8 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
+    // load framework
+    pStack->loadChunksFromZIP("res/framework_precompiled_wp8.zip");
+    
+    // set script path
+    string path = FileUtils::getInstance()->fullPathForFilename("scripts/main.lua");
+    
 #else
     // load framework
 //    if (m_projectConfig.isLoadPrecompiledFramework())
@@ -62,6 +82,13 @@ bool AppDelegate::applicationDidFinishLaunching()
     
     // set script path
     string path = FileUtils::getInstance()->fullPathForFilename(m_projectConfig.getScriptFileRealPath().c_str());
+#endif
+    
+#if (COCOS2D_DEBUG>0)
+    if (m_projectConfig.getDebuggerType()==kCCLuaDebuggerIDE) {
+        if (startRuntime())
+            return true;
+    }
 #endif
     
     size_t pos;
