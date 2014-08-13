@@ -3,6 +3,7 @@
 #define  _APP_DELEGATE_H_
 
 #include "CCApplication.h"
+#include "ProjectConfig/ProjectConfig.h"
 #include "ProjectConfig/SimulatorConfig.h"
 
 /**

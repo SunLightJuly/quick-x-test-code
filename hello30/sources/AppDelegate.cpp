@@ -24,17 +24,14 @@ AppDelegate::~AppDelegate()
 bool AppDelegate::applicationDidFinishLaunching()
 {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
-
-#if (COCOS2D_DEBUG>0)
-    if (m_projectConfig.getDebuggerType()==kCCLuaDebuggerCodeIDE) {
-        initRuntime(m_projectConfig.getProjectDir());
+    if (_project.getDebuggerType() == kCCLuaDebuggerCodeIDE)
+    {
+        initRuntime(_project.getProjectDir());
+        if (!ConfigParser::getInstance()->isInit())
+        {
+            ConfigParser::getInstance()->readConfig();
+        }
     }
-#endif
-    
-    if (!ConfigParser::getInstance()->isInit()) {
-        ConfigParser::getInstance()->readConfig();
-    }
-    
 #endif //CC_TARGET_PLATFORM == CC_PLATFORM_MAC
     
     // initialize director
@@ -89,14 +86,11 @@ bool AppDelegate::applicationDidFinishLaunching()
 #endif
     
 #if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
-    
-#if (COCOS2D_DEBUG>0)
-    if (m_projectConfig.getDebuggerType()==kCCLuaDebuggerCodeIDE) {
-        if (startRuntime())
-            return true;
+    // Code IDE
+    if (project.getDebuggerType() == kCCLuaDebuggerCodeIDE)
+    {
+        if (startRuntime()) return;
     }
-#endif
-
 #endif //CC_TARGET_PLATFORM == CC_PLATFORM_MAC
     
     size_t pos;
