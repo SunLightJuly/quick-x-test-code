@@ -252,7 +252,7 @@ std::string getCurAppPath(void)
     long n = [nsargs count];
     if (n == 2) {
         config->setProjectDir([[nsargs objectAtIndex:1] cStringUsingEncoding:NSUTF8StringEncoding]);
-        config->setDebuggerType(kCCLuaDebuggerIDE);
+        config->setDebuggerType(kCCLuaDebuggerCodeIDE);
     } else {
         vector<string> args;
         for (int i = 0; i < [nsargs count]; ++i)

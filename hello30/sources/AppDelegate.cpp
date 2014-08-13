@@ -23,15 +23,19 @@ AppDelegate::~AppDelegate()
 
 bool AppDelegate::applicationDidFinishLaunching()
 {
+#if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
+
 #if (COCOS2D_DEBUG>0)
-    if (m_projectConfig.getDebuggerType()==kCCLuaDebuggerIDE) {
-        initRuntime();
+    if (m_projectConfig.getDebuggerType()==kCCLuaDebuggerCodeIDE) {
+        initRuntime(m_projectConfig.getProjectDir());
     }
 #endif
     
     if (!ConfigParser::getInstance()->isInit()) {
         ConfigParser::getInstance()->readConfig();
     }
+    
+#endif //CC_TARGET_PLATFORM == CC_PLATFORM_MAC
     
     // initialize director
     auto director = Director::getInstance();
@@ -84,12 +88,16 @@ bool AppDelegate::applicationDidFinishLaunching()
     string path = FileUtils::getInstance()->fullPathForFilename(m_projectConfig.getScriptFileRealPath().c_str());
 #endif
     
+#if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
+    
 #if (COCOS2D_DEBUG>0)
-    if (m_projectConfig.getDebuggerType()==kCCLuaDebuggerIDE) {
+    if (m_projectConfig.getDebuggerType()==kCCLuaDebuggerCodeIDE) {
         if (startRuntime())
             return true;
     }
 #endif
+
+#endif //CC_TARGET_PLATFORM == CC_PLATFORM_MAC
     
     size_t pos;
     while ((pos = path.find_first_of("\\")) != std::string::npos)
