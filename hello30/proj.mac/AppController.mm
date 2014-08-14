@@ -77,8 +77,8 @@ std::string getCurAppPath(void)
     }
     
     env = [env stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-    env = [NSString stringWithFormat:@"%@/quick", env];
-    SimulatorConfig::sharedDefaults()->setQuickCocos2dxRootPath([env cStringUsingEncoding:NSUTF8StringEncoding]);
+    env = [NSString stringWithFormat:@"%@", env];
+    SimulatorConfig::getInstance()->setQuickCocos2dxRootPath([env cStringUsingEncoding:NSUTF8StringEncoding]);
     
     [self updateProjectConfigFromCommandLineArgs:&projectConfig];
     [self createWindowAndGLView];
@@ -166,7 +166,7 @@ std::string getCurAppPath(void)
 {
     NSMenu *submenu = [[[window menu] itemWithTitle:@"Screen"] submenu];
 
-    SimulatorConfig *config = SimulatorConfig::sharedDefaults();
+    SimulatorConfig *config = SimulatorConfig::getInstance();
     int current = config->checkScreenSize(projectConfig.getFrameSize());
     for (int i = config->getScreenSizeCount() - 1; i >= 0; --i)
     {
@@ -277,16 +277,8 @@ std::string getCurAppPath(void)
 
 - (void) relaunch:(NSArray*)args
 {
-    [self saveLastState];
-    if (projectConfig.isExitWhenRelaunch())
-    {
-        exit(99);
-    }
-    else
-    {
-        [self launch:args];
-        [[NSApplication sharedApplication] terminate:self];
-    }
+    [self launch:args];
+    [[NSApplication sharedApplication] terminate:self];
 }
 
 - (void) relaunch
@@ -349,9 +341,9 @@ std::string getCurAppPath(void)
 - (IBAction) onScreenChangeFrameSize:(id)sender
 {
     NSInteger i = [sender tag];
-    if (i >= 0 && i < SimulatorConfig::sharedDefaults()->getScreenSizeCount())
+    if (i >= 0 && i < SimulatorConfig::getInstance()->getScreenSizeCount())
     {
-        SimulatorScreenSize size = SimulatorConfig::sharedDefaults()->getScreenSize((int)i);
+        SimulatorScreenSize size = SimulatorConfig::getInstance()->getScreenSize((int)i);
         projectConfig.setFrameSize(projectConfig.isLandscapeFrame() ? cocos2d::Size(size.height, size.width) : cocos2d::Size(size.width, size.height));
         projectConfig.setFrameScale(1.0f);
         [self relaunch];

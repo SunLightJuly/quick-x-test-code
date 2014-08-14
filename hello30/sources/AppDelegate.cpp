@@ -24,9 +24,9 @@ AppDelegate::~AppDelegate()
 bool AppDelegate::applicationDidFinishLaunching()
 {
 #if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
-    if (_project.getDebuggerType() == kCCLuaDebuggerCodeIDE)
+    if (_projectConfig.getDebuggerType() == kCCLuaDebuggerCodeIDE)
     {
-        initRuntime(_project.getProjectDir());
+        initRuntime(_projectConfig.getProjectDir());
         if (!ConfigParser::getInstance()->isInit())
         {
             ConfigParser::getInstance()->readConfig();
@@ -41,8 +41,8 @@ bool AppDelegate::applicationDidFinishLaunching()
 
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32 || CC_TARGET_PLATFORM == CC_PLATFORM_MAC || CC_TARGET_PLATFORM == CC_PLATFORM_WP8)
 #else
-        Size viewSize = m_projectConfig.getFrameSize();
-        glview = GLView::createWithRect("xx", Rect(0,0,viewSize.width,viewSize.height));
+        Size viewSize = _projectConfig.getFrameSize();
+        glview = GLView::createWithRect("__PROJECT_PACKAGE_LAST_NAME_L__", Rect(0,0,viewSize.width,viewSize.height));
         director->setOpenGLView(glview);
 #endif
     }
@@ -77,19 +77,19 @@ bool AppDelegate::applicationDidFinishLaunching()
     // load framework
 //    if (m_projectConfig.isLoadPrecompiledFramework())
 //    {
-//        const string precompiledFrameworkPath = SimulatorConfig::sharedDefaults()->getPrecompiledFrameworkPath();
+//        const string precompiledFrameworkPath = SimulatorConfig::getInstance()->getPrecompiledFrameworkPath();
 //        pStack->loadChunksFromZIP(precompiledFrameworkPath.c_str());
 //    }
     
     // set script path
-    string path = FileUtils::getInstance()->fullPathForFilename(m_projectConfig.getScriptFileRealPath().c_str());
+    string path = FileUtils::getInstance()->fullPathForFilename(_projectConfig.getScriptFileRealPath().c_str());
 #endif
     
 #if CC_TARGET_PLATFORM == CC_PLATFORM_MAC
     // Code IDE
-    if (project.getDebuggerType() == kCCLuaDebuggerCodeIDE)
+    if (_projectConfig.getDebuggerType() == kCCLuaDebuggerCodeIDE)
     {
-        if (startRuntime()) return;
+        if (startRuntime()) return true;
     }
 #endif //CC_TARGET_PLATFORM == CC_PLATFORM_MAC
     
@@ -144,7 +144,7 @@ void AppDelegate::applicationWillEnterForeground()
 
 void AppDelegate::setProjectConfig(const ProjectConfig& config)
 {
-    m_projectConfig = config;
+    _projectConfig = config;
 }
 
 

@@ -1,5 +1,5 @@
 APP_STL := gnustl_static
-APP_CPPFLAGS := -frtti -std=c++11 -Wno-literal-suffix -fsigned-char
+APP_CPPFLAGS := -frtti -std=c++11 -Wno-literal-suffix -fsigned-char -Os $(CPPFLAGS)
 
 APP_DEBUG := $(strip $(NDK_DEBUG))
 ifeq ($(APP_DEBUG),1)
@@ -13,3 +13,12 @@ endif
 APP_ABI := armeabi
 APP_PLATFORM := android-14
 NDK_TOOLCHAIN_VERSION = 4.8
+
+QUICK_NO_CCS_ARMATURE := 1
+APP_CPPFLAGS += -DQUICK_NO_CCS_ARMATURE=1
+
+QUICK_NO_EXTRA_FILTERS := 1
+APP_CPPFLAGS += -DQUICK_NO_EXTRA_FILTERS=1
+
+QUICK_NO_FREETYPE := 1
+APP_CPPFLAGS += -DQUICK_NO_FREETYPE=1

@@ -39,7 +39,7 @@ public:
     void setProjectConfig(const ProjectConfig& config);
 
 private:
-    ProjectConfig m_projectConfig;
+    ProjectConfig _projectConfig;
 };
 
 #endif // _APP_DELEGATE_H_
