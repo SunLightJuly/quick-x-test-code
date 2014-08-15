@@ -26,8 +26,8 @@ if exist "%APP_ANDROID_ROOT%assets" rmdir /s /q "%APP_ANDROID_ROOT%assets"
 mkdir "%APP_ANDROID_ROOT%assets"
 
 echo - copy scripts
-mkdir "%APP_ANDROID_ROOT%assets\scripts"
-xcopy /s /q "%APP_ROOT%scripts\*.*" "%APP_ANDROID_ROOT%assets\scripts\"
+mkdir "%APP_ANDROID_ROOT%assets\src"
+xcopy /s /q "%APP_ROOT%src\*.*" "%APP_ANDROID_ROOT%assets\src\"
 echo - copy resources
 mkdir "%APP_ANDROID_ROOT%assets\res"
 xcopy /s /q "%APP_ROOT%res\*.*" "%APP_ANDROID_ROOT%assets\res\"

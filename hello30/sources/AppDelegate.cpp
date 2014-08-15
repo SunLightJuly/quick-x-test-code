@@ -64,14 +64,14 @@ bool AppDelegate::applicationDidFinishLaunching()
     pStack->loadChunksFromZIP("res/framework_precompiled.zip");
     
     // set script path
-    string path = FileUtils::getInstance()->fullPathForFilename("scripts/main.lua");
+    string path = FileUtils::getInstance()->fullPathForFilename("src/main.lua");
 
 #elif (CC_TARGET_PLATFORM == CC_PLATFORM_WP8 || CC_TARGET_PLATFORM == CC_PLATFORM_WINRT)
     // load framework
     pStack->loadChunksFromZIP("res/framework_precompiled_wp8.zip");
     
     // set script path
-    string path = FileUtils::getInstance()->fullPathForFilename("scripts/main.lua");
+    string path = FileUtils::getInstance()->fullPathForFilename("src/main.lua");
     
 #else
     // load framework

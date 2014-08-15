@@ -4,7 +4,7 @@
     "name": "hello30",
     "width": 960,
     "height": 640,
-    "entry": "scripts/main.lua",
+    "entry": "src/main.lua",
     "consolePort": 6010,
     "debugPort": 0
   },
