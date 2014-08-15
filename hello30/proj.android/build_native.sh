@@ -41,7 +41,7 @@ mkdir -p "$APP_ANDROID_ROOT"/assets
 chmod 755 "$APP_ANDROID_ROOT"/assets
 
 echo "- copy scripts"
-cp -rf "$APP_ROOT"/scripts "$APP_ANDROID_ROOT"/assets/
+cp -rf "$APP_ROOT"/src "$APP_ANDROID_ROOT"/assets/
 echo "- copy resources"
 cp -rf "$APP_ROOT"/res "$APP_ANDROID_ROOT"/assets/
 
