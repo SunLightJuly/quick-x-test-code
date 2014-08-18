@@ -53,20 +53,60 @@ function BenchmarkScene:ctor()
 
 end
 
-function BenchmarkScene:onTouch(event, x, y)
-    if event == "began" then
-        local p = CCPoint(x, y)
-        if self.addCoinButtonBoundingBox:containsPoint(p) then
-            self.state = "ADD"
-        elseif self.removeCoinButtonBoundingBox:containsPoint(p) then
-            self.state = "REMOVE"
-        else
-            self.state = "IDLE"
-        end
-        return true
-    elseif event ~= "moved" then
-        self.state = "IDLE"
+function table.merge1(dest, src)
+    local i = 0
+    for k, v in pairs(src) do
+        dest[k] = v
+        i = i + 1
     end
+    local mt = getmetatable(src)
+    setmetatable(dest, mt)
+    print("merged: ", i)
+end
+
+function BenchmarkScene:onTouch(event, x, y)
+    self:removeNodeEventListener(self.handler)
+    -- local tt = {}
+    -- table.merge1(tt, tolua_gc)
+    -- local mt = getmetatable(CCPoint)
+    -- table.merge1(tt, mt["tolua_ubox"])
+    if self.tbl and #self.tbl>0 then
+        local tbl = self.tbl
+        for i,v in ipairs(tbl) do
+            tbl[i] = nil
+        end
+        self.tbl = nil
+    end
+    collectgarbage("collect")
+    collectgarbage("collect")
+    collectgarbage("collect")
+    print("clean", collectgarbage("count"))
+    local t = {}
+    table.merge1(t, tolua_gc)
+    tolua_gc = t
+    local mt = getmetatable(CCPoint)
+    t = {}
+    table.merge1(t, mt["tolua_ubox"])
+    mt["tolua_ubox"] = t
+    collectgarbage("collect")
+    collectgarbage("collect")
+    collectgarbage("collect")
+    print("--clean", collectgarbage("count"))
+    return
+
+    -- if event == "began" then
+    --     local p = CCPoint(x, y)
+    --     if self.addCoinButtonBoundingBox:containsPoint(p) then
+    --         self.state = "ADD"
+    --     elseif self.removeCoinButtonBoundingBox:containsPoint(p) then
+    --         self.state = "REMOVE"
+    --     else
+    --         self.state = "IDLE"
+    --     end
+    --     return true
+    -- elseif event ~= "moved" then
+    --     self.state = "IDLE"
+    -- end
 end
 
 function BenchmarkScene:addCoin()
@@ -96,11 +136,24 @@ function BenchmarkScene:removeCoin()
 end
 
 function BenchmarkScene:onEnterFrame(dt)
-    if self.state == "ADD" then
-        self:addCoin()
-    elseif self.state == "REMOVE" and self.coinsCount > 0 then
-        self:removeCoin()
+    self.tbl = self.tbl or {}
+    for i = 1, 10000 do
+        -- local t = {}
+        local t = self.tbl
+        -- table.insert(t, CCPoint(i, i))
+        -- CCPoint(0, 0)
+        -- local t = display.newSprite("#AddCoinButton.png")
+        table.insert(t, display.newSprite("#AddCoinButton.png"))
     end
+    collectgarbage("collect")
+    print("run", collectgarbage("count"))
+    return
+
+    -- if self.state == "ADD" then
+    --     self:addCoin()
+    -- elseif self.state == "REMOVE" and self.coinsCount > 0 then
+    --     self:removeCoin()
+    -- end
 
     -- local coins = self.coins
     -- for i = 1, #coins do
@@ -155,6 +208,7 @@ function BenchmarkScene:onEnterFrame(dt)
 end
 
 function BenchmarkScene:onEnter()
+    self.handler = 
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt) self:onEnterFrame(dt) end)
     self:scheduleUpdate_()
     self.layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
@@ -162,8 +216,8 @@ function BenchmarkScene:onEnter()
     end)
     self.layer:setTouchEnabled(true)
     
-    local ly = require("IntroLayer").new():addTo(self)
-    self:removeAllNodeEventListeners()
+    -- local ly = require("IntroLayer").new():addTo(self)
+    -- self:removeAllNodeEventListeners()
 end
 
 function BenchmarkScene:onExit()
