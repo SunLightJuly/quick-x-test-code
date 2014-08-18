@@ -9,11 +9,11 @@ LOCAL_MODULE := game_shared
 LOCAL_MODULE_FILENAME := libgame
 
 LOCAL_SRC_FILES := hellocpp/main.cpp \
-    ../../sources/AppDelegate.cpp \
+    ../../native/AppDelegate.cpp \
     $(QUICK_V3_LIB)/ProjectConfig/ProjectConfig.cpp \
     $(QUICK_V3_LIB)/ProjectConfig/SimulatorConfig.cpp
 
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../sources
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../native
 
 LOCAL_LDLIBS := -lGLESv2 \
                 -llog \
