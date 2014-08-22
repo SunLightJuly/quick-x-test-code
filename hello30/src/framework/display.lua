@@ -99,25 +99,32 @@ if CONFIG_SCREEN_AUTOSCALE then
         scaleX, scaleY = CONFIG_SCREEN_AUTOSCALE_CALLBACK(w, h, device.model)
     end
 
-    if not scaleX or not scaleY then
-        scaleX, scaleY = w / CONFIG_SCREEN_WIDTH, h / CONFIG_SCREEN_HEIGHT
-    end
-
-    if CONFIG_SCREEN_AUTOSCALE == "FIXED_WIDTH" then
-        scale = scaleX
-        CONFIG_SCREEN_HEIGHT = h / scale
-    elseif CONFIG_SCREEN_AUTOSCALE == "FIXED_HEIGHT" then
-        scale = scaleY
-        CONFIG_SCREEN_WIDTH = w / scale
-    else
+    if CONFIG_SCREEN_AUTOSCALE == "FILL_ALL" then
+        CONFIG_SCREEN_WIDTH = w
+        CONFIG_SCREEN_HEIGHT = h
         scale = 1.0
-        printError(string.format("display - invalid CONFIG_SCREEN_AUTOSCALE \"%s\"", CONFIG_SCREEN_AUTOSCALE))
-    end
+        glview:setDesignResolutionSize(CONFIG_SCREEN_WIDTH, CONFIG_SCREEN_HEIGHT, cc.ResolutionPolicy.FILL_ALL)
+    else
+        if not scaleX or not scaleY then
+            scaleX, scaleY = w / CONFIG_SCREEN_WIDTH, h / CONFIG_SCREEN_HEIGHT
+        end
 
-    glview:setDesignResolutionSize(CONFIG_SCREEN_WIDTH, CONFIG_SCREEN_HEIGHT, cc.ResolutionPolicy.NO_BORDER)
+        if CONFIG_SCREEN_AUTOSCALE == "FIXED_WIDTH" then
+            scale = scaleX
+            CONFIG_SCREEN_HEIGHT = h / scale
+        elseif CONFIG_SCREEN_AUTOSCALE == "FIXED_HEIGHT" then
+            scale = scaleY
+            CONFIG_SCREEN_WIDTH = w / scale
+        else
+            scale = 1.0
+            printError(string.format("display - invalid CONFIG_SCREEN_AUTOSCALE \"%s\"", CONFIG_SCREEN_AUTOSCALE))
+        end
+        glview:setDesignResolutionSize(CONFIG_SCREEN_WIDTH, CONFIG_SCREEN_HEIGHT, cc.ResolutionPolicy.NO_BORDER)
+    end
 end
 
 local winSize = sharedDirector:getWinSize()
+display.screenScale        = 2.0
 display.contentScaleFactor = scale
 display.size               = {width = winSize.width, height = winSize.height}
 display.width              = display.size.width
@@ -551,7 +558,11 @@ function display.newSprite(filename, x, y, params)
         if string.byte(filename) == 35 then -- first char is #
             local frame = display.newSpriteFrame(string.sub(filename, 2))
             if frame then
-                sprite = spriteClass:createWithSpriteFrame(frame)
+                if params and params.capInsets then
+                    sprite = spriteClass:createWithSpriteFrame(frame, params.capInsets)
+                else
+                    sprite = spriteClass:createWithSpriteFrame(frame)
+                end
             end
         else
             if display.TEXTURES_PIXEL_FORMAT[filename] then
@@ -559,12 +570,16 @@ function display.newSprite(filename, x, y, params)
                 sprite = spriteClass:create(filename)
                 cc.Texture2D:setDefaultAlphaPixelFormat(cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A8888)
             else
-                sprite = spriteClass:create(filename)
+                if params and params.capInsets then
+                    sprite = spriteClass:createWithInsets(filename, params.capInsets)
+                else
+                    sprite = spriteClass:create(filename)
+                end
             end
         end
-    elseif t == "SpriteFrame" then
+    elseif t == "cc.SpriteFrame" then
         sprite = spriteClass:createWithSpriteFrame(filename)
-	elseif t == "Texture2D" then
+	elseif t == "cc.Texture2D" then
 		sprite = spriteClass:createWithTexture(filename)
     else
         printError("display.newSprite() - invalid filename value type")
@@ -607,8 +622,8 @@ local sprite = display.newScale9Sprite("Box.png", 0, 0, cc.size(400, 300))
 @return Sprite9Scale Sprite9Scale显示对象
 
 ]]
-function display.newScale9Sprite(filename, x, y, size)
-	return display.newSprite(filename, x, y, {class = cc.Scale9Sprite, size = size})
+function display.newScale9Sprite(filename, x, y, size, capInsets)
+	return display.newSprite(filename, x, y, {class = cc.Scale9Sprite, size = size, capInsets = capInsets})
 end
 
 --[[--
@@ -624,12 +639,7 @@ function display.newTilesSprite(filename, rect)
         return
     end
 
-    local tp = ccTexParams()
-    tp.minFilter = 9729
-    tp.magFilter = 9729
-    tp.wrapS = 10497
-    tp.wrapT = 10497
-    sprite:getTexture():setTexParameters(tp)
+    sprite:getTexture():setTexParameters(9729, 9729, 10497, 10497)
 
     display.align(sprite, display.LEFT_BOTTOM, 0, 0)
 

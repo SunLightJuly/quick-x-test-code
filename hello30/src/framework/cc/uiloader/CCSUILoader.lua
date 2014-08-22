@@ -1,36 +1,52 @@
 
-local ccsloader = class("ccsloader")
+local UILoaderUtilitys = import(".UILoaderUtilitys")
+local CCSUILoader = class("CCSUILoader")
 
-function ccsloader:load(jsonFile)
+function CCSUILoader:load(json)
+	-- local fileUtil = cc.FileUtils:getInstance()
+	-- local fullPath = fileUtil:fullPathForFilename(jsonFile)
+	-- local jsonStr = fileUtil:getStringFromFile(fullPath)
+	-- local jsonVal = json.decode(jsonStr)
+
+	self.texturesPng = json.texturesPng
+	self:loadTexture(json)
+	-- for i,v in ipairs(jsonVal.textures) do
+	-- 	display.addSpriteFrames(v, jsonVal.texturesPng[i])
+	-- end
+
+	local node = self:parserJson(json)
+	self.texturesPng = nil
+	return node, json.designWidth, json.designHeight
+end
+
+function CCSUILoader:loadFile(jsonFile)
 	local fileUtil = cc.FileUtils:getInstance()
 	local fullPath = fileUtil:fullPathForFilename(jsonFile)
 	local jsonStr = fileUtil:getStringFromFile(fullPath)
 	local jsonVal = json.decode(jsonStr)
 
-	self:loadTexture(jsonVal)
-	-- for i,v in ipairs(jsonVal.textures) do
-	-- 	display.addSpriteFrames(v, jsonVal.texturesPng[i])
-	-- end
+	UILoaderUtilitys.addSearchPathIf(io.pathinfo(fullPath).dirname)
 
-	return self:parserJson(jsonVal)
+	return self:load(jsonVal)
 end
 
-function ccsloader:parserJson(jsonVal)
+function CCSUILoader:parserJson(jsonVal)
 	local root = jsonVal.nodeTree
 	if not root then
 		root = jsonVal.widgetTree
 	end
 	if not root then
-		printInfo("ccsloader - parserJson havn't found root noe")
+		printInfo("CCSUILoader - parserJson havn't found root noe")
 		return
 	end
+	self:prettyJson(root)
 	local uiRoot = self:generateUINode(root)
 
 	return uiRoot
 end
 
 -- generate a ui node and invoke self to generate child ui node
-function ccsloader:generateUINode(jsonNode, transX, transY)
+function CCSUILoader:generateUINode(jsonNode, transX, transY, parent)
 	transX = transX or 0
 	transY = transY or 0
 
@@ -42,7 +58,7 @@ function ccsloader:generateUINode(jsonNode, transX, transY)
 	options.x = options.x + transX
 	options.y = options.y + transY
 
-	local uiNode = self:createUINode(clsName, options)
+	local uiNode = self:createUINode(clsName, options, parent)
 	if not uiNode then
 		return
 	end
@@ -55,17 +71,21 @@ function ccsloader:generateUINode(jsonNode, transX, transY)
 
 	uiNode.name = options.name or "unknow node"
 
-	-- print("ccsloader set node params:" .. uiNode.name)
+	-- print("CCSUILoader set node params:" .. uiNode.name)
 
 	if options.fileName then
 		uiNode:setSpriteFrame(options.fileName)
 	end
 
 	if options.flipX then
-		uiNode:setFlippedX(options.flipX)
+		if uiNode.setFlippedX then
+			uiNode:setFlippedX(options.flipX)
+		end
 	end
 	if options.flipY then
-		uiNode:setFlippedY(options.flipY)
+		if uiNode.setFlippedY then
+			uiNode:setFlippedY(options.flipY)
+		end
 	end
 	uiNode:setRotation(options.rotation or 0)
 
@@ -73,6 +93,7 @@ function ccsloader:generateUINode(jsonNode, transX, transY)
 	uiNode:setScaleY(options.scaleY or 1)
 	uiNode:setVisible(options.visible)
 	uiNode:setLocalZOrder(options.ZOrder or 0)
+	-- uiNode:setGlobalZOrder(options.ZOrder or 0)
 	uiNode:setTag(options.tag or 0)
 
 	local emptyNode
@@ -84,7 +105,7 @@ function ccsloader:generateUINode(jsonNode, transX, transY)
 
 	local children = jsonNode.children
 	for i,v in ipairs(children) do
-		local childrenNode = self:generateUINode(v, posTrans.x, posTrans.y)
+		local childrenNode = self:generateUINode(v, posTrans.x, posTrans.y, uiNode)
 		if childrenNode then
 			if "ScrollView" == clsName then
 				emptyNode:addChild(childrenNode)
@@ -122,10 +143,12 @@ function ccsloader:generateUINode(jsonNode, transX, transY)
 	return uiNode
 end
 
-function ccsloader:createUINode(clsName, options)
+function CCSUILoader:createUINode(clsName, options, parent)
 	if not clsName then
 		return
 	end
+
+	-- printInfo("CCSUILoader - createUINode:" .. clsName)
 
 	local node
 
@@ -160,18 +183,18 @@ function ccsloader:createUINode(clsName, options)
 	elseif clsName == "PageView" then
 		node = self:createPageView(options)
 	else
-		-- printError("ccsloader not support node:" .. clsName)
-		printInfo("ccsloader not support node:" .. clsName)
+		-- printError("CCSUILoader not support node:" .. clsName)
+		printInfo("CCSUILoader not support node:" .. clsName)
 	end
 
 	return node
 end
 
-function ccsloader:getChildOptionJson(json)
+function CCSUILoader:getChildOptionJson(json)
 	return json.options.layoutParameter
 end
 
-function ccsloader:newWapperNode(oldNode, layoutParameter)
+function CCSUILoader:newWapperNode(oldNode, layoutParameter)
 	local newNode = display.newNode()
 	local size = oldNode:getContentSize()
 	size.width = size.width + layoutParameter.marginLeft + layoutParameter.marginRight
@@ -181,22 +204,22 @@ function ccsloader:newWapperNode(oldNode, layoutParameter)
 	oldNode:setPosition()
 end
 
-function ccsloader:getButtonStateImages(options)
+function CCSUILoader:getButtonStateImages(options)
 	local images = {}
 	if options.normalData and options.normalData.path then
-		images.normal = self:transResName(options.normalData.path)
+		images.normal = self:transResName(options.normalData)
 	end
 	if options.pressedData and options.pressedData.path then
-		images.pressed = self:transResName(options.pressedData.path)
+		images.pressed = self:transResName(options.pressedData)
 	end
 	if options.disabledData and options.disabledData.path then
-		images.disabled = self:transResName(options.disabledData.path)
+		images.disabled = self:transResName(options.disabledData)
 	end
 
 	return images
 end
 
-function ccsloader:getAnchorType(anchorX, anchorY)
+function CCSUILoader:getAnchorType(anchorX, anchorY)
 	if 1 == anchorX then
 		if 1 == anchorY then
 			return display.RIGHT_TOP
@@ -225,16 +248,15 @@ function ccsloader:getAnchorType(anchorX, anchorY)
 end
 
 
-function ccsloader:getCheckBoxImages(options)
+function CCSUILoader:getCheckBoxImages(options)
 	local images = {}
 
 	local getBackgroundImage = function(state)
-		local image = options.backGroundBoxData.path
+		local image = options.backGroundBoxData
 		if "pressed" == state then
-			image = options.backGroundBoxSelectedData.path
-		end
-		if "disabled" == state then
-			image = options.backGroundBoxDisabledData.path
+			image = options.backGroundBoxSelectedData
+		elseif "disabled" == state then
+			image = options.backGroundBoxDisabledData
 		end
 
 		return image
@@ -255,49 +277,83 @@ function ccsloader:getCheckBoxImages(options)
 	images.off = self:transResName(getBackgroundImage("normal"))
 	images.off_pressed = self:transResName(getBackgroundImage("pressed"))
 	images.off_disabled = self:transResName(getBackgroundImage("disabled"))
-	images.on = {images.off, self:transResName(options.frontCrossData.path)}
+	images.on = {images.off, self:transResName(options.frontCrossData)}
 	images.on_pressed = images.on
 	images.on_disabled = {images.off_disabled,
-		self:transResName(options.frontCrossDisabledData.path)}
+		self:transResName(options.frontCrossDisabledData)}
 
 	return images
 end
 
-function ccsloader:loadTexture(json)
+function CCSUILoader:loadTexture(json)
 	-- cc.FileUtils:getInstance():addSearchPath("res/")
 
-	local png
 	for i,v in ipairs(json.textures) do
 		self.bUseTexture = true
-		if json.texturesPng then
-			png = json.texturesPng[i]
-		end
-		if not png then
-			png = io.pathinfo(json.textures[i]).basename .. ".png"
-		end
-		if png then
-			display.addSpriteFrames(v, png)
-		end
+		-- if json.texturesPng then
+		-- 	png = self:getTexturePng(json.texturesPng[i])
+		-- end
+		UILoaderUtilitys.loadTexture(v)
 	end
 
 end
 
-function ccsloader:transResName(name)
+function CCSUILoader:getTexturePng(plist)
+	if not plist then
+		return
+	end
+
+	local info = io.pathinfo(plist)
+
+	local png
+	if info.dirname then
+		png = info.dirname .. info.basename .. ".png"
+	else
+		png = info.basename .. ".png"
+	end
+
+	return png
+end
+
+function CCSUILoader:transResName(fileData)
+	local name = fileData.path
 	if not name then
 		return name
 	end
 
-	-- local pathInfo = io.pathinfo(path)
-	-- local name = pathInfo.filename
-
-	if self.bUseTexture then
+	UILoaderUtilitys.loadTexture(fileData.plistFile)
+	if 1 == fileData.resourceType then
 		return "#" .. name
 	else
 		return name
 	end
+
+	-- -- local pathInfo = io.pathinfo(path)
+	-- -- local name = pathInfo.filename
+	-- local isInTexturePng = function(name)
+	-- 	if not self.texturesPng then
+	-- 		return false
+	-- 	end
+	-- 	for i,v in ipairs(self.texturesPng) do
+	-- 		if v == name then
+	-- 			return true
+	-- 		end
+	-- 	end
+	-- 	return false
+	-- end
+
+	-- if not self.bUseTexture then
+	-- 	return name
+	-- end
+
+	-- if not isInTexturePng(name) then
+	-- 	return "#" .. name
+	-- else
+	-- 	return name
+	-- end
 end
 
-function ccsloader:createNode(options)
+function CCSUILoader:createNode(options)
 	local node = cc.Node:create()
 	if not options.ignoreSize then
 		node:setContentSize(cc.size(options.width, options.height))
@@ -310,7 +366,7 @@ function ccsloader:createNode(options)
 	return node
 end
 
-function ccsloader:createSprite(options)
+function CCSUILoader:createSprite(options)
 	local node = cc.Sprite:create()
 	if not options.ignoreSize then
 		node:setContentSize(cc.size(options.width, options.height))
@@ -323,11 +379,42 @@ function ccsloader:createSprite(options)
 	return node
 end
 
-function ccsloader:createImage(options)
-	local node = cc.ui.UIImage.new(
-		self:transResName(options.fileNameData.path),
-		{scale9 = not options.ignoreSize})
+function CCSUILoader:createImage(options)
+	local params = {}
+	params.scale9 = options.scale9Enable
+	if params.scale9 then
+		params.capInsets = cc.rect(options.capInsetsX, options.capInsetsY,options.capInsetsWidth, options.capInsetsHeight)
+	end
+	local node = cc.ui.UIImage.new(self:transResName(options.fileNameData), params)
 
+	-- local capRect = cc.rect(options.capInsetsX, options.capInsetsY,
+	-- 	options.capInsetsWidth, options.capInsetsHeight)
+	-- if 1 == options.fileNameData.resourceType then
+	-- 	local frame = display.newSpriteFrame(options.fileNameData.path)
+	-- 	if options.scale9Enable then
+	-- 		node:initWithSpriteFrame(frame, capRect);
+	-- 	else
+	--		node:setSpriteFrame(frame)
+	-- 	end
+	-- else
+	-- 	if options.scale9Enable then
+	-- 		node:initWithFile(capRect, options.fileNameData.path);
+	-- 	else
+	-- 		node:setTexture(options.fileNameData.path)
+	-- 	end
+	-- end
+
+	if not options.scale9Enable then
+		if options.scale9Width or options.scale9Height then
+			local originSize = node:getContentSize()
+			if options.scale9Width then
+				options.scaleX = (options.scaleX or 1) * options.scale9Width/originSize.width
+			end
+			if options.scale9Height then
+				options.scaleY = (options.scaleY or 1) * options.scale9Height/originSize.height
+			end
+		end
+	end
 	if not options.ignoreSize then
 		node:setLayoutSize(options.width, options.height)
 	end
@@ -339,26 +426,33 @@ function ccsloader:createImage(options)
 	return node
 end
 
-function ccsloader:createButton(options)
+function CCSUILoader:createButton(options)
 	local node = cc.ui.UIPushButton.new(self:getButtonStateImages(options),
 		{scale9 = not options.ignoreSize})
+
+	if options.text then
+		node:setButtonLabel(
+			cc.ui.UILabel.new({text = options.text,
+				size = options.fontSize,
+				color = cc.c3b(options.textColorR, options.textColorG, options.textColorG)}))
+	end
 	if not options.ignoreSize then
 		node:setButtonSize(options.width, options.height)
 	end
-	node:align(self:getAnchorType(options.anchorPointX, options.anchorPointY),
+	node:align(self:getAnchorType(options.anchorPointX or 0.5, options.anchorPointY or 0.5),
 		options.x or 0, options.y or 0)
 
 	return node
 end
 
-function ccsloader:createLoadingBar(options)
+function CCSUILoader:createLoadingBar(options)
 	local params = {}
-	params.image = self:transResName(options.textureData.path)
+	params.image = self:transResName(options.textureData)
 	params.scale9 = options.scale9Enable
 	params.capInsets = cc.rect(options.capInsetsX, options.capInsetsY,
 		options.capInsetsWidth, options.capInsetsHeight)
 	params.direction = options.direction
-	params.percent = options.percent
+	params.percent = options.percent or 100
 	params.viewRect = cc.rect(options.x, options.y, options.width, options.height)
 
 	local node = cc.ui.UILoadingBar.new(params)
@@ -372,10 +466,10 @@ function ccsloader:createLoadingBar(options)
 	return node
 end
 
-function ccsloader:createSlider(options)
+function CCSUILoader:createSlider(options)
 	local node = cc.ui.UISlider.new(display.LEFT_TO_RIGHT,
-		{bar = self:transResName(options.barFileNameData.path),
-		button = self:transResName(options.ballNormalData.path)},
+		{bar = self:transResName(options.barFileNameData),
+		button = self:transResName(options.ballNormalData)},
 		{scale9 = not options.ignoreSize})
 
 	if not options.ignoreSize then
@@ -388,7 +482,7 @@ function ccsloader:createSlider(options)
 	return node
 end
 
-function ccsloader:createCheckBox(options)
+function CCSUILoader:createCheckBox(options)
 	local node = cc.ui.UICheckBoxButton.new(
 		self:getCheckBoxImages(options),
 		{scale9 = not options.ignoreSize})
@@ -396,13 +490,13 @@ function ccsloader:createCheckBox(options)
 	if not options.ignoreSize then
 		node:setButtonSize(options.width, options.height)
 	end
-	node:align(self:getAnchorType(options.anchorPointX, options.anchorPointY),
+	node:align(self:getAnchorType(options.anchorPointX or 0.5, options.anchorPointY or 0.5),
 		options.x or 0, options.y or 0)
 
 	return node
 end
 
-function ccsloader:createBMFontLabel(options)
+function CCSUILoader:createBMFontLabel(options)
 	local node = ui.newBMFontLabel({
 		text = options.text,
 		font = options.fileNameData.path,
@@ -419,7 +513,7 @@ function ccsloader:createBMFontLabel(options)
 	return node
 end
 
-function ccsloader:createLabel(options)
+function CCSUILoader:createLabel(options)
 	local node = cc.ui.UILabel.new({text = options.text,
 		font = options.fontName,
 		size = options.fontSize,
@@ -431,10 +525,13 @@ function ccsloader:createLabel(options)
 		node:setLayoutSize(options.areaWidth, options.areaHeight)
 	end
 
+	node:align(self:getAnchorType(options.anchorPointX or 0.5, options.anchorPointY or 0.5),
+		options.x or 0, options.y or 0)
+
 	return node
 end
 
-function ccsloader:createLabelAtlas(options)
+function CCSUILoader:createLabelAtlas(options)
 	local labelAtlas
 	if "function" == type(cc.LabelAtlas._create) then
 		labelAtlas = cc.LabelAtlas:_create()
@@ -461,13 +558,13 @@ function ccsloader:createLabelAtlas(options)
 	return labelAtlas
 end
 
-function ccsloader:createEditBox(options)
+function CCSUILoader:createEditBox(options)
 	local editBox = ui.newEditBox({
         size = cc.size(options.width, options.height)
     })
     editBox:setPlaceHolder(options.placeHolder)
     editBox:setFontName(options.fontName)
-    editBox:setFontSize(options.fontSize)
+    editBox:setFontSize(options.fontSize or 20)
     editBox:setText(options.text)
     editBox:setAnchorPoint(
 		cc.p(options.anchorPointX or 0.5, options.anchorPointY or 0.5))
@@ -478,15 +575,16 @@ function ccsloader:createEditBox(options)
 		editBox:setMaxLength(options.maxLength)
 	end
 
-	editBox:setPosition(
-		options.x - options.width*options.anchorPointX,
-		options.y + options.fontSize/2)
+	-- editBox:setPosition(
+	-- 	options.x - options.width*options.anchorPointX,
+	-- 	options.y + options.fontSize/2)
+	editBox:setPosition(options.x, options.y)
 
 	return editBox
 end
 
-function ccsloader:createPanel(options)
-	local node = cc.Node:create()
+function CCSUILoader:createPanel(options)
+	local node = cc.ClippingRegionNode:create()
 	local clrLayer
 	local bgLayer
 
@@ -501,12 +599,12 @@ function ccsloader:createPanel(options)
 		clrLayer:setTouchEnabled(false)
 		clrLayer:setStartColor(cc.c3b(options.bgStartColorR, options.bgStartColorG, options.bgStartColorB))
 		clrLayer:setEndColor(cc.c3b(options.bgEndColorR, options.bgEndColorG, options.bgEndColorB))
-		clrLayer:setVector(cc.p(options.vectorX, options.vectorY))
+		clrLayer:setVector(cc.p(options.vectorX or 0, options.vectorY or -0.5))
 	end
 
 	if clrLayer then
 		clrLayer:setAnchorPoint(cc.p(0, 0))
-		clrLayer:setOpacity(options.bgColorOpacity)
+		clrLayer:setOpacity(options.bgColorOpacity or 100)
 	end
 
 	-- background layer
@@ -517,19 +615,22 @@ function ccsloader:createPanel(options)
 			if self.bUseTexture then
 				bgLayer = cc.Scale9Sprite:createWithSpriteFrameName(
 					options.backGroundImageData.path, capInsets)
+				-- bgLayer:setContentSize(cc.size(options.width, options.height))
 			else
 				bgLayer = cc.Scale9Sprite:create(
 					capInsets, options.backGroundImageData.path)
+				-- bgLayer:setContentSize(cc.size(options.width, options.height))
 			end
 		end
 	else
 		if options.backGroundImageData and options.backGroundImageData.path then
 			bgLayer = display.newSprite(
-				self:transResName(options.backGroundImageData.path))
+				self:transResName(options.backGroundImageData))
 		end
 	end
 
 	local conSize = cc.size(options.width, options.height)
+	node:setClippingRegion(cc.rect(0, 0, options.width, options.height))
 	if not options.ignoreSize then
 		if clrLayer then
 			clrLayer:setContentSize(conSize)
@@ -573,7 +674,7 @@ function ccsloader:createPanel(options)
 	return node
 end
 
-function ccsloader:createScrollView(options)
+function CCSUILoader:createScrollView(options)
 	local params =
 		{viewRect = cc.rect(options.x, options.y, options.width, options.height)}
 
@@ -598,11 +699,12 @@ function ccsloader:createScrollView(options)
 		dir = 0
 	end
 	node:setDirection(dir)
+	node:setBounceable(options.bounceEnable or false)
 
 	return node
 end
 
-function ccsloader:createListView(options)
+function CCSUILoader:createListView(options)
 	local params =
 		{viewRect = cc.rect(options.x, options.y, options.width, options.height)}
 
@@ -628,11 +730,12 @@ function ccsloader:createListView(options)
 	end
 	node:setDirection(dir)
 	node:setAlignment(options.gravity)
+	node:setBounceable(options.bounceEnable or false)
 
 	return node
 end
 
-function ccsloader:createPageView(options)
+function CCSUILoader:createPageView(options)
 	local params = {}
 	params.column = 1
 	params.row = 1
@@ -643,5 +746,53 @@ function ccsloader:createPageView(options)
 	return node
 end
 
+function CCSUILoader:prettyJson(json)
+	local setZOrder
+	setZOrder = function(node, isParentScale)
+		if isParentScale then
+        	node.options.ZOrder = node.options.ZOrder or 0 + 3
+		end
 
-return ccsloader
+		if not node.children then
+			print("CCSUILoader children is nil")
+			return
+		end
+		if 0 == #node.children then
+			return
+		end
+
+        for i,v in ipairs(node.children) do
+			setZOrder(v, node.options.scale9Enable)
+        end
+	end
+
+	setZOrder(json)
+end
+
+-- function CCSUILoader:transPercentPosition(options, parent)
+-- 	if not parent then
+-- 		return
+-- 	end
+-- 	if 1 ~= options.positionType then
+-- 		return
+-- 	end
+
+-- 	local posX, posY = parent:getPosition()
+-- 	options.x = posX + options.x
+-- 	options.y = posY + options.y
+-- end
+
+-- function CCSUILoader:transPercentSize(options, parent)
+-- 	if not parent then
+-- 		return
+-- 	end
+-- 	if 1 ~= options.sizeType then
+-- 		return
+-- 	end
+
+-- 	local parentSize = parent:getContentSize()
+-- 	options.width = parentSize.width * options.sizePercentX
+-- 	options.height = parentSize.height * options.sizePercentY
+-- end
+
+return CCSUILoader

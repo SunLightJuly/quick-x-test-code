@@ -1,3 +1,4 @@
+
 cc = cc or {}
 
 cc.SPRITE_INDEX_NOT_INITIALIZED = 0xffffffff
@@ -257,7 +258,7 @@ cc.LANGUAGE_ARABIC     = 11
 cc.NODE_ON_ENTER       = 0
 cc.NODE_ON_EXIT        = 1
 cc.NODE_ON_ENTER_TRANSITION_DID_FINISH = 2
-cc.NODE_ON_EXIT_TRANSITION_DID_START   = 3 
+cc.NODE_ON_EXIT_TRANSITION_DID_START   = 3
 cc.NODE_ON_CLEAN_UP    = 4
 
 cc.CONTROL_STEPPER_PART_MINUS = 0
@@ -367,26 +368,24 @@ cc.GLYPHCOLLECTION_NEHE    = 1
 cc.GLYPHCOLLECTION_ASCII   = 2
 cc.GLYPHCOLLECTION_CUSTOM  = 3
 
-cc.ResolutionPolicy = 
-{
+cc.ResolutionPolicy = {
     EXACT_FIT = 0,
     NO_BORDER = 1,
     SHOW_ALL  = 2,
     FIXED_HEIGHT  = 3,
     FIXED_WIDTH  = 4,
-    UNKNOWN  = 5,
+    FILL_ALL = 5,
+    UNKNOWN  = 6,
 }
 
-cc.LabelEffect = 
-{
+cc.LabelEffect = {
     NORMAL  = 0,
     OUTLINE = 1,
     SHADOW  = 2,
     GLOW    = 3,
 }
 
-cc.KeyCode =
-{
+cc.KeyCode = {
     KEY_NONE              = 0,
     KEY_PAUSE             = 0x0013,
     KEY_SCROLL_LOCK       = 0x1014,
@@ -544,6 +543,3 @@ cc.KeyCode =
     KEY_MIDDLE_DOT        = 0x0095,
     KEY_SEARCH            = 0xFFAA,
 };
-
-
-

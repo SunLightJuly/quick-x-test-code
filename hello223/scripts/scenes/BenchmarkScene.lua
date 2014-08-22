@@ -136,6 +136,8 @@ function BenchmarkScene:removeCoin()
 end
 
 function BenchmarkScene:onEnterFrame(dt)
+    print("----", cc.Node.v)
+    cc.Node.v = cc.Node.v + 1
     self.tbl = self.tbl or {}
     for i = 1, 10000 do
         -- local t = {}
@@ -146,7 +148,7 @@ function BenchmarkScene:onEnterFrame(dt)
         table.insert(t, display.newSprite("#AddCoinButton.png"))
     end
     collectgarbage("collect")
-    print("run", collectgarbage("count"))
+    -- print("run", collectgarbage("count"))
     return
 
     -- if self.state == "ADD" then
@@ -208,6 +210,7 @@ function BenchmarkScene:onEnterFrame(dt)
 end
 
 function BenchmarkScene:onEnter()
+    cc.Node.v = 10
     self.handler = 
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt) self:onEnterFrame(dt) end)
     self:scheduleUpdate_()

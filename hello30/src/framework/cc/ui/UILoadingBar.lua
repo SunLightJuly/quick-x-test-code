@@ -58,7 +58,9 @@ end
 function UILoadingBar:setDirction(dir)
 	self.direction_ = dir
 	if UILoadingBar.DIRECTION_LEFT_TO_RIGHT ~= self.direction_ then
-		self.bar:setFlipX(true)
+		if self.bar.setFlipX then
+			self.bar:setFlipX(true)
+		end
 	end
 end
 

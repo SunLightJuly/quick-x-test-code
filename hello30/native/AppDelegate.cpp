@@ -75,11 +75,11 @@ bool AppDelegate::applicationDidFinishLaunching()
     
 #else
     // load framework
-    if (_projectConfig.isLoadPrecompiledFramework())
-    {
-        const string precompiledFrameworkPath = SimulatorConfig::getInstance()->getPrecompiledFrameworkPath();
-        pStack->loadChunksFromZIP(precompiledFrameworkPath.c_str());
-    }
+//    if (_projectConfig.isLoadPrecompiledFramework())
+//    {
+//        const string precompiledFrameworkPath = SimulatorConfig::getInstance()->getPrecompiledFrameworkPath();
+//        pStack->loadChunksFromZIP(precompiledFrameworkPath.c_str());
+//    }
     
     // set script path
     string path = FileUtils::getInstance()->fullPathForFilename(_projectConfig.getScriptFileRealPath().c_str());

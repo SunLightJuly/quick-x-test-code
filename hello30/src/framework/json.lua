@@ -28,7 +28,17 @@ JSON 编码与解码
 
 ]]
 local json = {}
-local cjson = require("cjson")
+
+local cjson
+local function safeLoad()
+    cjson = require("cjson")
+end
+
+if not pcall(safeLoad) then 
+    cjson = nil
+end
+
+print("======cjson", cjson)
 
 --[[--
 
@@ -125,6 +135,6 @@ function json.decode(text)
     end
 end
 
-json.null = cjson.null
+if cjson then json.null = cjson.null end
 
 return json

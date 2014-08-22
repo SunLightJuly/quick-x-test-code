@@ -49,11 +49,13 @@ end
 function UIPageView:reload()
 	local page
 	self.pages_ = {}
-	for i = 1, self:getPageCount() do
-		page = self:createPage_(i)
-		page:setVisible(false)
-		table.insert(self.pages_, page)
-		self:addChild(page)
+	if self:getPageCount() > 0 then
+		for i = 1, self:getPageCount() do
+			page = self:createPage_(i)
+			page:setVisible(false)
+			table.insert(self.pages_, page)
+			self:addChild(page)
+		end
 	end
 
 	self.curPageIdx_ = 1
