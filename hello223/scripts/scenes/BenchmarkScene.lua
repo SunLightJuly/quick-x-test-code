@@ -136,8 +136,8 @@ function BenchmarkScene:removeCoin()
 end
 
 function BenchmarkScene:onEnterFrame(dt)
-    print("----", cc.Node.v)
-    cc.Node.v = cc.Node.v + 1
+    -- if not self.updateFlag then return end
+
     self.tbl = self.tbl or {}
     for i = 1, 10000 do
         -- local t = {}
@@ -148,7 +148,7 @@ function BenchmarkScene:onEnterFrame(dt)
         table.insert(t, display.newSprite("#AddCoinButton.png"))
     end
     collectgarbage("collect")
-    -- print("run", collectgarbage("count"))
+    print("run", collectgarbage("count"))
     return
 
     -- if self.state == "ADD" then
@@ -210,7 +210,23 @@ function BenchmarkScene:onEnterFrame(dt)
 end
 
 function BenchmarkScene:onEnter()
-    cc.Node.v = 10
+    -- self.path = device.writablePath .."res/"
+    -- local packageUrl = "http://www.yzjngg.com/g/weixin.zip"
+    -- local versionUrl = "http://www.yzdfyy.com/m/index.php/index/version"
+    -- self.assetsManager = AssetsManager:new(packageUrl,versionUrl,self.path)
+    -- self.updateFlag = true
+
+    -- local function testf(  )
+    --     print("test stop")
+    --     self.updateFlag = false
+    -- end
+
+    -- self.assetsManager:registerScriptHandler(testf)    
+
+    -- if self.assetsManager:checkUpdate() then
+    --     self.assetsManager:update()
+    -- end
+    
     self.handler = 
     self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt) self:onEnterFrame(dt) end)
     self:scheduleUpdate_()
