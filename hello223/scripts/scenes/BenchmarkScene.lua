@@ -12,6 +12,9 @@ function BenchmarkScene:ctor()
     self.layer = display.newLayer()
     self:addChild(self.layer)
 
+    self.bg = display.newSprite("bg.jpg", display.cx, display.cy)
+    self:addChild(self.bg)
+
     local button = display.newSprite("#AddCoinButton.png", display.right - 100, display.bottom + 270)
     self:addChild(button)
     self.addCoinButtonBoundingBox = button:getBoundingBox()
@@ -51,6 +54,9 @@ function BenchmarkScene:ctor()
     self.top    = display.top    - display.height / 3
     self.bottom = display.bottom + display.height / 3
 
+    display.addSpriteFramesWithFile("SheetMapBattle.plist", "SheetMapBattle.png")
+    self.testSprite = display.newSprite("#IncreaseHp0017.png", display.cx, display.cy)
+    self:addChild(self.testSprite)
 end
 
 function table.merge1(dest, src)
@@ -228,13 +234,13 @@ function BenchmarkScene:onEnter()
     --     self.assetsManager:update()
     -- end
     
-    self.handler = 
-    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt) self:onEnterFrame(dt) end)
-    self:scheduleUpdate_()
-    self.layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        return self:onTouch(event.name, event.x, event.y)
-    end)
-    self.layer:setTouchEnabled(true)
+    -- self.handler = 
+    -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt) self:onEnterFrame(dt) end)
+    -- self:scheduleUpdate_()
+    -- self.layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+    --     return self:onTouch(event.name, event.x, event.y)
+    -- end)
+    -- self.layer:setTouchEnabled(true)
     
     -- local ly = require("IntroLayer").new():addTo(self)
     -- self:removeAllNodeEventListeners()
