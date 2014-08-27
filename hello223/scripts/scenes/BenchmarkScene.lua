@@ -138,16 +138,17 @@ end
 function BenchmarkScene:onEnterFrame(dt)
     -- if not self.updateFlag then return end
 
-    self.tbl = self.tbl or {}
+    -- self.tbl = self.tbl or {}
     for i = 1, 10000 do
-        -- local t = {}
-        local t = self.tbl
+        local t = {}
+        -- local t = self.tbl
         -- table.insert(t, CCPoint(i, i))
         -- CCPoint(0, 0)
         -- local t = display.newSprite("#AddCoinButton.png")
-        table.insert(t, display.newSprite("#AddCoinButton.png"))
+        -- table.insert(t, display.newSprite("#AddCoinButton.png"))
+        table.insert(t, TestClass())
     end
-    collectgarbage("collect")
+    -- collectgarbage("collect")
     print("run", collectgarbage("count"))
     return
 
