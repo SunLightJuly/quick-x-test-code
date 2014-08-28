@@ -56,7 +56,10 @@ function BenchmarkScene:ctor()
 
     display.addSpriteFramesWithFile("SheetMapBattle.plist", "SheetMapBattle.png")
     self.testSprite = display.newSprite("#IncreaseHp0017.png", display.cx, display.cy)
-    self:addChild(self.testSprite)
+    -- self:addChild(self.testSprite)
+    self.batch1 = display.newBatchNode("SheetMapBattle.png", 5)
+    self.batch1:addChild(self.testSprite)
+    self:addChild(self.batch1)
 end
 
 function table.merge1(dest, src)
