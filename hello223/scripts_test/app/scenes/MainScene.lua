@@ -73,10 +73,10 @@ function MainScene:ctor()
 
 	-- tolua.resetcfunction( CCNode, "setPosition" )
 
-	local sprite = cc.Sprite:create("helloworld.png")
-	print("----sprite:setPosition---- class="..tolua.type(sprite))
-	sprite:setPosition(display.cx, display.cy)
-	self:addChild(sprite)
+	-- local sprite = cc.Sprite:create("helloworld.png")
+	-- print("----sprite:setPosition---- class="..tolua.type(sprite))
+	-- sprite:setPosition(display.cx, display.cy)
+	-- self:addChild(sprite)
 
 
 	-- test get symbol
