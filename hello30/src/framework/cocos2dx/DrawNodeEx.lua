@@ -31,109 +31,21 @@ local DrawNode = c.DrawNode
 
 local drawPolygon = DrawNode.drawPolygon
 function DrawNode:drawPolygon(points, params)
-	local segments = #points
-	fillColor = cc.c4f(1,1,1,1)
-	borderWidth  = 0
-	borderColor  = cc.c4f(0,0,0,1)
-	if params then
-		if params.fillColor then fillColor = params.fillColor end
-		if params.borderWidth then borderWidth = params.borderWidth end
-		if params.borderColor then borderColor = params.borderColor end
-	end
-	drawPolygon(self, points, #points, fillColor, borderWidth, borderColor)
-	return self
-end
-
-function DrawNode:drawCircle(radius, params)
-	local fillColor = cc.c4f(1,1,1,1)
-	local borderColor = cc.c4f(1,1,1,1)
-	local segments = 32
-	local startRadian = 0
-	local endRadian = math.pi*2
-	local borderWidth = 0
-	local posX = 0
-	local posY = 0
-	if params then
-		if params.segments then segments = params.segments end
-		if params.startAngle then
-			startRadian = math.angle2Radian(params.startAngle)
-		end
-		if params.endAngle then
-			endRadian = startRadian+math.angle2Radian(params.endAngle)
-		end
-		if params.fillColor then fillColor = params.fillColor end
-		if params.borderColor then borderColor = params.borderColor end
-		if params.borderWidth then borderWidth = params.borderWidth end
-		if params.pos then
-			posX =  params.pos[1]
-			posY =  params.pos[2]
-		end
-	end
-	local radianPerSegm = 2 * math.pi/segments
-	local points = {}
-	for i=1,segments do
-		local radii = startRadian+i*radianPerSegm
-		if radii > endRadian then break end
-		points[i] = (cc.p(posX + radius * math.cos(radii), posY + radius * math.sin(radii)))
-	end
-	self:drawPolygon(points, params)
-	return self
+    local segments = #points
+    fillColor = cc.c4f(1,1,1,1)
+    borderWidth  = 0
+    borderColor  = cc.c4f(0,0,0,1)
+    if params then
+        if params.fillColor then fillColor = params.fillColor end
+        if params.borderWidth then borderWidth = params.borderWidth end
+        if params.borderColor then borderColor = params.borderColor end
+    end
+    drawPolygon(self, points, #points, fillColor, borderWidth, borderColor)
+    return self
 end
 
 local drawDot = DrawNode.drawDot
 function DrawNode:drawDot(point, radius, color)
-	drawDot(self, point, radius, color)
-	-- getmetatable(self).drawDot(self, point, radius, color)
-	return self
-end
-
-function DrawNode:drawRect(xywh, params)
-	local points = {}
-	local x = 0
-	local y = 0
-	local w = 100
-	local h = 100
-	if xywh then
-		-- Treat xywh as a table
-		if type(xywh) == "table" then
-			-- The table is {x=num, y=num, w=num, h=num}
-			if xywh.x then
-				x = xywh.x
-				y = xywh.y
-				w = xywh.w
-				h = xywh.h
-			-- The table is {x, y, w, h}
-			else
-				x = xywh[1]
-				y = xywh[2]
-				w = xywh[3]
-				h = xywh[4]
-			end
-		-- Treat xywh as a cc.rect
-		else
-			x = xywh.origin.x
-			y = xywh.origin.y
-			w = xywh.size.width
-			h = xywh.size.height
-		end
-	end
-	points[1] = cc.p(x,y)
-	points[2] = cc.p(x,y+h)
-	points[3] = cc.p(x+w,y+h)
-	points[4] = cc.p(x+w,y)
-	points[5] = cc.p(x,y)
-	self:drawPolygon(points, params)
-	return self
-end
-
-function DrawNode:drawLine(from, to, radius, color)
-	radius = radius or 1
-	color = color or cc.c4f(0,0,0,1)
-	assert(from or to, "Need a from point and a to point!")
-	if type(from) == "table" then
-		from = cc.p(from[1], from[2])
-		to = cc.p(to[1], to[2])
-	end
-	self:drawSegment(from, to, radius, color)
-	return self
+    drawDot(self, point, radius, color)
+    return self
 end

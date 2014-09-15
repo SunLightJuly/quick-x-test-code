@@ -81,7 +81,7 @@ function Node:getCascadeBoundingBox()
 end
 
 function Node:removeSelf()
-    -- body
+    self:removeFromParent(true)
 end
 
 function Node:onEnter()

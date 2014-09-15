@@ -1,4 +1,34 @@
 
+--[[
+
+Copyright (c) 2011-2014 chukong-inc.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+]]
+
+--[[--
+
+quick Button控件
+
+]]
+
 local UIButton = class("UIButton", function()
     return display.newNode()
 end)
@@ -11,6 +41,15 @@ UIButton.STATE_CHANGED_EVENT = "STATE_CHANGED_EVENT"
 UIButton.IMAGE_ZORDER = -100
 UIButton.LABEL_ZORDER = 0
 
+--[[--
+
+UIButton构建函数
+
+@param table events 按钮状态表
+@param string initialState 初始状态
+@param table options 参数表
+
+]]
 function UIButton:ctor(events, initialState, options)
     self.fsm_ = {}
     cc(self.fsm_)
@@ -34,6 +73,8 @@ function UIButton:ctor(events, initialState, options)
     self.images_ = {}
     self.sprite_ = {}
     self.scale9_ = options and options.scale9
+    self.flipX_ = options and options.flipX
+    self.flipY_ = options and options.flipY
     self.scale9Size_ = nil
     self.labels_ = {}
     self.labelOffset_ = {0, 0}
@@ -42,6 +83,13 @@ function UIButton:ctor(events, initialState, options)
 
     display.align(self, display.CENTER)
 
+    if "boolean" ~= type(self.flipX_) then
+        self.flipX_ = false
+    end
+    if "boolean" ~= type(self.flipY_) then
+        self.flipY_ = false
+    end
+
     self:addNodeEventListener(cc.NODE_EVENT, function(event)
         if event.name == "enter" then
             self:updateButtonImage_()
@@ -49,6 +97,17 @@ function UIButton:ctor(events, initialState, options)
     end)
 end
 
+--[[--
+
+停靠位置
+
+@param number align 锚点位置
+@param number x
+@param number y
+
+@return UIButton
+
+]]
 function UIButton:align(align, x, y)
     display.align(self, align, x, y)
     self:updateButtonImage_()
@@ -61,6 +120,17 @@ function UIButton:align(align, x, y)
     return self
 end
 
+--[[--
+
+设置按钮特定状态的图片
+
+@param string state 状态
+@param string image 图片路径
+@param boolean ignoreEmpty 是否忽略空的图片路径
+
+@return UIButton
+
+]]
 function UIButton:setButtonImage(state, image, ignoreEmpty)
     if ignoreEmpty and image == nil then return end
     self.images_[state] = image
@@ -70,6 +140,16 @@ function UIButton:setButtonImage(state, image, ignoreEmpty)
     return self
 end
 
+--[[--
+
+设置按钮特定状态的文字node
+
+@param string state 状态
+@param node label 文字node
+
+@return UIButton
+
+]]
 function UIButton:setButtonLabel(state, label)
     if not label then
         label = state
@@ -87,6 +167,15 @@ function UIButton:setButtonLabel(state, label)
     return self
 end
 
+--[[--
+
+返回按钮特定状态的文字
+
+@param string state 状态
+
+@return node 文字label
+
+]]
 function UIButton:getButtonLabel(state)
     if not state then
         state = self:getDefaultState_()
@@ -95,6 +184,16 @@ function UIButton:getButtonLabel(state)
     return self.labels_[state]
 end
 
+--[[--
+
+设置按钮特定状态的文字
+
+@param string state 状态
+@param string text 文字
+
+@return UIButton
+
+]]
 function UIButton:setButtonLabelString(state, text)
     assert(self.labels_ ~= nil, "UIButton:setButtonLabelString() - not add label")
     if text == nil then
@@ -109,26 +208,70 @@ function UIButton:setButtonLabelString(state, text)
     return self
 end
 
+--[[--
+
+返回文字标签的偏移
+
+@return number x
+@return number y
+
+]]
 function UIButton:getButtonLabelOffset()
     return self.labelOffset_[1], self.labelOffset_[2]
 end
 
+--[[--
+
+设置文字标签的偏移
+
+@param number x
+@param number y
+
+@return UIButton
+
+]]
 function UIButton:setButtonLabelOffset(ox, oy)
     self.labelOffset_ = {ox, oy}
     self:updateButtonLable_()
     return self
 end
 
+--[[--
+
+得到文字标签的停靠方式
+
+@return number
+
+]]
 function UIButton:getButtonLabelAlignment()
     return self.labelAlign_
 end
 
+--[[--
+
+设置文字标签的停靠方式
+
+@param number align
+
+@return UIButton
+
+]]
 function UIButton:setButtonLabelAlignment(align)
     self.labelAlign_ = align
     self:updateButtonLable_()
     return self
 end
 
+--[[--
+
+设置按钮的大小
+
+@param number width
+@param number height
+
+@return UIButton
+
+]]
 function UIButton:setButtonSize(width, height)
     assert(self.scale9_, "UIButton:setButtonSize() - can't change size for non-scale9 button")
     self.scale9Size_ = {width, height}
@@ -138,6 +281,15 @@ function UIButton:setButtonSize(width, height)
     return self
 end
 
+--[[--
+
+设置按钮是否有效
+
+@param boolean enabled 是否有效
+
+@return UIButton
+
+]]
 function UIButton:setButtonEnabled(enabled)
     self:setTouchEnabled(enabled)
     if enabled and self.fsm_:canDoEvent("enable") then
@@ -150,6 +302,13 @@ function UIButton:setButtonEnabled(enabled)
     return self
 end
 
+--[[--
+
+返回按钮是否有效
+
+@return boolean
+
+]]
 function UIButton:isButtonEnabled()
     return self.fsm_:canDoEvent("disable")
 end
@@ -158,6 +317,15 @@ function UIButton:addButtonClickedEventListener(callback)
     return self:addEventListener(UIButton.CLICKED_EVENT, callback)
 end
 
+--[[--
+
+注册用户点击监听
+
+@param function callback 监听函数
+
+@return UIButton
+
+]]
 function UIButton:onButtonClicked(callback)
     self:addButtonClickedEventListener(callback)
     return self
@@ -167,6 +335,15 @@ function UIButton:addButtonPressedEventListener(callback)
     return self:addEventListener(UIButton.PRESSED_EVENT, callback)
 end
 
+--[[--
+
+注册用户按下监听
+
+@param function callback 监听函数
+
+@return UIButton
+
+]]
 function UIButton:onButtonPressed(callback)
     self:addButtonPressedEventListener(callback)
     return self
@@ -176,6 +353,15 @@ function UIButton:addButtonReleaseEventListener(callback)
     return self:addEventListener(UIButton.RELEASE_EVENT, callback)
 end
 
+--[[--
+
+注册用户释放监听
+
+@param function callback 监听函数
+
+@return UIButton
+
+]]
 function UIButton:onButtonRelease(callback)
     self:addButtonReleaseEventListener(callback)
     return self
@@ -185,6 +371,15 @@ function UIButton:addButtonStateChangedEventListener(callback)
     return self:addEventListener(UIButton.STATE_CHANGED_EVENT, callback)
 end
 
+--[[--
+
+注册按钮状态变化监听
+
+@param function callback 监听函数
+
+@return UIButton
+
+]]
 function UIButton:onButtonStateChanged(callback)
     self:addButtonStateChangedEventListener(callback)
     return self
@@ -233,6 +428,10 @@ function UIButton:updateButtonImage_()
                         self.sprite_[i] = display.newSprite(v)
                     end
                     self:addChild(self.sprite_[i], UIButton.IMAGE_ZORDER)
+                    if self.sprite_[i].setFlippedX then
+                        self.sprite_[i]:setFlippedX(self.flipX_ or false)
+                        self.sprite_[i]:setFlippedY(self.flipY_ or false)
+                    end
                 end
             else
                 if self.scale9_ then
@@ -245,6 +444,10 @@ function UIButton:updateButtonImage_()
                     end
                 else
                     self.sprite_[1] = display.newSprite(image)
+                end
+                if self.sprite_[1].setFlippedX then
+                    self.sprite_[1]:setFlippedX(self.flipX_ or false)
+                    self.sprite_[1]:setFlippedY(self.flipY_ or false)
                 end
                 self:addChild(self.sprite_[1], UIButton.IMAGE_ZORDER)
             end

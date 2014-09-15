@@ -27,6 +27,7 @@ THE SOFTWARE.
 创建和管理用户界面
 
 ]]
+
 local ui = {}
 
 ui.DEFAULT_TTF_FONT      = "Arial"
@@ -107,32 +108,24 @@ end
 
 ]]
 function ui.newEditBox(params)
-    local imageNormal = params.image
-    local imagePressed = params.imagePressed
-    local imageDisabled = params.imageDisabled
+    PRINT_DEPRECATED(string.format("%s() is deprecated, please use %s()", "ui.newEditBox", "cc.ui.UIInput"))
 
-    if type(imageNormal) == "string" then
-        imageNormal = display.newScale9Sprite(imageNormal)
+    if params then
+        params.UIInputType = 1
     end
-    if type(imagePressed) == "string" then
-        imagePressed = display.newScale9Sprite(imagePressed)
-    end
-    if type(imageDisabled) == "string" then
-        imageDisabled = display.newScale9Sprite(imageDisabled)
-    end
+    return cc.ui.UIInput.new(params)
+end
 
-    local editbox = cc.EditBox:create(params.size, imageNormal, imagePressed, imageDisabled)
+function ui.newTextField(params)
+    PRINT_DEPRECATED(string.format("%s() is deprecated, please use %s()", "ui.newTextField", "cc.ui.UIInput"))
 
-    if editbox then
-        if params.listener then
-            editbox:registerScriptEditBoxHandler(params.listener)
-        end
-        if params.x and params.y then
-            editbox:setPosition(params.x, params.y)
-        end
+    if not params then
+        params = {}
     end
-
-    return editbox
+    if params then
+        params.UIInputType = 2
+    end
+    return cc.ui.UIInput.new(params)
 end
 
 --[[--
@@ -163,31 +156,9 @@ local label = ui.newBMFontLabel({
 
 ]]
 function ui.newBMFontLabel(params)
-    assert(type(params) == "table",
-           "[framework.ui] newBMFontLabel() invalid params")
+    PRINT_DEPRECATED(string.format("%s() is deprecated, please use %s()", "ui.newBMFontLabel", "cc.ui.UILabel"))
 
-    local text      = tostring(params.text)
-    local font      = params.font
-    local textAlign = params.align or ui.TEXT_ALIGN_CENTER
-    local x, y      = params.x, params.y
-    assert(font ~= nil, "ui.newBMFontLabel() - not set font")
-
-    local label = cc.LabelBMFont:create(text, font, cc.LABEL_AUTOMATIC_WIDTH, textAlign)
-    if not label then return end
-
-    if type(x) == "number" and type(y) == "number" then
-        label:setPosition(x, y)
-    end
-
-    if textAlign == ui.TEXT_ALIGN_LEFT then
-        label:align(display.LEFT_CENTER)
-    elseif textAlign == ui.TEXT_ALIGN_RIGHT then
-        label:align(display.RIGHT_CENTER)
-    else
-        label:align(display.CENTER)
-    end
-
-    return label
+    return cc.ui.UILabel.newBMFontLabel_(params)
 end
 
 --[[--
@@ -243,45 +214,9 @@ local label = ui.newTTFLabel({
 
 ]]
 function ui.newTTFLabel(params)
-    assert(type(params) == "table",
-           "[framework.ui] newTTFLabel() invalid params")
+    PRINT_DEPRECATED(string.format("%s() is deprecated, please use %s()", "ui.newTTFLabel", "cc.ui.UILabel"))
 
-    local text       = tostring(params.text)
-    local font       = params.font or ui.DEFAULT_TTF_FONT
-    local size       = params.size or ui.DEFAULT_TTF_FONT_SIZE
-    local color      = params.color or display.COLOR_WHITE
-    local textAlign  = params.align or ui.TEXT_ALIGN_LEFT
-    local textValign = params.valign or ui.TEXT_VALIGN_CENTER
-    local x, y       = params.x, params.y
-    local dimensions = params.dimensions
-
-    assert(type(size) == "number",
-           "[framework.ui] newTTFLabel() invalid params.size")
-
-    local label
-    if dimensions then
-        label = cc.LabelTTF:create(text, font, size, dimensions, textAlign, textValign)
-    else
-        label = cc.LabelTTF:create(text, font, size)
-    end
-
-    if label then
-        label:setColor(color)
-
-        function label:realign(x, y)
-            if textAlign == ui.TEXT_ALIGN_LEFT then
-                label:setPosition(math.round(x + label:getContentSize().width / 2), y)
-            elseif textAlign == ui.TEXT_ALIGN_RIGHT then
-                label:setPosition(x - math.round(label:getContentSize().width / 2), y)
-            else
-                label:setPosition(x, y)
-            end
-        end
-
-        if x and y then label:realign(x, y) end
-    end
-
-    return label
+    return cc.ui.UILabel.newTTFLabel_(params)
 end
 
 --[[--
@@ -298,58 +233,9 @@ end
 
 ]]
 function ui.newTTFLabelWithShadow(params)
-    assert(type(params) == "table",
-           "[framework.ui] newTTFLabelWithShadow() invalid params")
+    PRINT_DEPRECATED(string.format("%s() is deprecated, please use %s()", "ui.newTTFLabelWithShadow", "cc.ui.UILabel"))
 
-    local color       = params.color or display.COLOR_WHITE
-    local shadowColor = params.shadowColor or display.COLOR_BLACK
-    local x, y        = params.x, params.y
-
-    local g = display.newNode()
-    params.size = params.size
-    params.color = shadowColor
-    params.x, params.y = 0, 0
-    g.shadow1 = ui.newTTFLabel(params)
-    local offset = 1 / (display.widthInPixels / display.width)
-    g.shadow1:realign(offset, -offset)
-    g:addChild(g.shadow1)
-
-    params.color = color
-    g.label = ui.newTTFLabel(params)
-    g.label:realign(0, 0)
-    g:addChild(g.label)
-
-    function g:setString(text)
-        g.shadow1:setString(text)
-        g.label:setString(text)
-    end
-
-    function g:realign(x, y)
-        g:setPosition(x, y)
-    end
-
-    function g:getContentSize()
-        return g.label:getContentSize()
-    end
-
-    function g:setColor(...)
-        g.label:setColor(...)
-    end
-
-    function g:setShadowColor(...)
-        g.shadow1:setColor(...)
-    end
-
-    function g:setOpacity(opacity)
-        g.label:setOpacity(opacity)
-        g.shadow1:setOpacity(opacity)
-    end
-
-    if x and y then
-        g:setPosition(x, y)
-    end
-
-    return g
+    return cc.ui.UILabel.newTTFLabelWithShadow_(params)
 end
 
 --[[--
@@ -366,71 +252,9 @@ end
 
 ]]
 function ui.newTTFLabelWithOutline(params)
-    assert(type(params) == "table",
-           "[framework.ui] newTTFLabelWithShadow() invalid params")
-
-    local color        = params.color or display.COLOR_WHITE
-    local outlineColor = params.outlineColor or display.COLOR_BLACK
-    local x, y         = params.x, params.y
-
-    local g = display.newNode()
-    params.size  = params.size
-    params.color = outlineColor
-    params.x, params.y = 0, 0
-    g.shadow1 = ui.newTTFLabel(params)
-    g.shadow1:realign(1, 0)
-    g:addChild(g.shadow1)
-    g.shadow2 = ui.newTTFLabel(params)
-    g.shadow2:realign(-1, 0)
-    g:addChild(g.shadow2)
-    g.shadow3 = ui.newTTFLabel(params)
-    g.shadow3:realign(0, -1)
-    g:addChild(g.shadow3)
-    g.shadow4 = ui.newTTFLabel(params)
-    g.shadow4:realign(0, 1)
-    g:addChild(g.shadow4)
-
-    params.color = color
-    g.label = ui.newTTFLabel(params)
-    g.label:realign(0, 0)
-    g:addChild(g.label)
-
-    function g:setString(text)
-        g.shadow1:setString(text)
-        g.shadow2:setString(text)
-        g.shadow3:setString(text)
-        g.shadow4:setString(text)
-        g.label:setString(text)
-    end
-
-    function g:getContentSize()
-        return g.label:getContentSize()
-    end
-
-    function g:setColor(...)
-        g.label:setColor(...)
-    end
-
-    function g:setOutlineColor(...)
-        g.shadow1:setColor(...)
-        g.shadow2:setColor(...)
-        g.shadow3:setColor(...)
-        g.shadow4:setColor(...)
-    end
-
-    function g:setOpacity(opacity)
-        g.label:setOpacity(opacity)
-        g.shadow1:setOpacity(opacity)
-        g.shadow2:setOpacity(opacity)
-        g.shadow3:setOpacity(opacity)
-        g.shadow4:setOpacity(opacity)
-    end
-
-    if x and y then
-        g:setPosition(x, y)
-    end
-
-    return g
+    PRINT_DEPRECATED(string.format("%s() is deprecated, please use %s()", "ui.newTTFLabelWithOutline", "cc.ui.UILabel"))
+    
+    return cc.ui.UILabel.newTTFLabelWithOutline_(params)
 end
 
 return ui

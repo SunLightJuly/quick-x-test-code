@@ -1,4 +1,34 @@
 
+--[[
+
+Copyright (c) 2011-2014 chukong-inc.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+]]
+
+--[[--
+
+quick 滑动控件
+
+]]
+
 local UISlider = class("UISlider", function()
     return display.newNode()
 end)
@@ -18,6 +48,29 @@ UISlider.VALUE_CHANGED_EVENT = "VALUE_CHANGED_EVENT"
 UISlider.BAR_ZORDER = 0
 UISlider.BUTTON_ZORDER = 1
 
+--[[--
+
+滑动控件的构建函数
+
+图片对应的状态:
+
+-   bar 滑动图片
+-   button 背景图片
+
+
+可用参数有：
+
+-   scale9 图片是否可缩放
+-   min 最小值
+-   max 最大值
+-   touchInButton 是否只在触摸在滑动块上时才有效，默认为真
+
+
+@param number direction 滑动的方向
+@param table images 各种状态对应的图片路径
+@param table options 参数表
+
+]]
 function UISlider:ctor(direction, images, options)
     self.fsm_ = {}
     cc(self.fsm_)
@@ -70,6 +123,16 @@ function UISlider:ctor(direction, images, options)
     end)
 end
 
+--[[--
+
+设置滑动控件的大小
+
+@param number width 宽度
+@param number height 高度
+
+@return UISlider
+
+]]
 function UISlider:setSliderSize(width, height)
     assert(self.scale9_, "UISlider:setSliderSize() - can't change size for non-scale9 slider")
     self.scale9Size_ = {width, height}
@@ -79,6 +142,15 @@ function UISlider:setSliderSize(width, height)
     return self
 end
 
+--[[--
+
+设置滑动控件的是否起效
+
+@param boolean enabled 有效与否
+
+@return UISlider
+
+]]
 function UISlider:setSliderEnabled(enabled)
     self:setTouchEnabled(enabled)
     if enabled and self.fsm_:canDoEvent("enable") then
@@ -91,20 +163,54 @@ function UISlider:setSliderEnabled(enabled)
     return self
 end
 
+--[[--
+
+设置滑动控件停靠位置
+
+@param integer align 停靠方式
+@param integer x X方向位置
+@param integer y Y方向位置
+
+@return UISlider
+
+]]
 function UISlider:align(align, x, y)
     display.align(self, align, x, y)
     self:updateImage_()
     return self
 end
 
+--[[--
+
+滑动控件是否有效
+
+@return boolean
+
+]]
 function UISlider:isButtonEnabled()
     return self.fsm_:canDoEvent("disable")
 end
 
+--[[--
+
+得到滑动进度的值
+
+@return number
+
+]]
 function UISlider:getSliderValue()
     return self.value_
 end
 
+--[[--
+
+设置滑动进度的值
+
+@param number value 进度值
+
+@return UISlider
+
+]]
 function UISlider:setSliderValue(value)
     assert(value >= self.min_ and value <= self.max_, "UISlider:setSliderValue() - invalid value")
     if self.value_ ~= value then
@@ -115,6 +221,15 @@ function UISlider:setSliderValue(value)
     return self
 end
 
+--[[--
+
+设置滑动控件的旋转度
+
+@param number rotation 旋转度
+
+@return UISlider
+
+]]
 function UISlider:setSliderButtonRotation(rotation)
     self.buttonRotation_ = rotation
     self:updateImage_()
@@ -125,6 +240,15 @@ function UISlider:addSliderValueChangedEventListener(callback)
     return self:addEventListener(UISlider.VALUE_CHANGED_EVENT, callback)
 end
 
+--[[--
+
+注册用户滑动监听
+
+@param function callback 监听函数
+
+@return UISlider
+
+]]
 function UISlider:onSliderValueChanged(callback)
     self:addSliderValueChangedEventListener(callback)
     return self
@@ -134,6 +258,15 @@ function UISlider:addSliderPressedEventListener(callback)
     return self:addEventListener(UISlider.PRESSED_EVENT, callback)
 end
 
+--[[--
+
+注册用户按下监听
+
+@param function callback 监听函数
+
+@return UISlider
+
+]]
 function UISlider:onSliderPressed(callback)
     self:addSliderPressedEventListener(callback)
     return self
@@ -143,6 +276,15 @@ function UISlider:addSliderReleaseEventListener(callback)
     return self:addEventListener(UISlider.RELEASE_EVENT, callback)
 end
 
+--[[--
+
+注册用户抬起或离开监听
+
+@param function callback 监听函数
+
+@return UISlider
+
+]]
 function UISlider:onSliderRelease(callback)
     self:addSliderReleaseEventListener(callback)
     return self
@@ -152,6 +294,15 @@ function UISlider:addSliderStateChangedEventListener(callback)
     return self:addEventListener(UISlider.STATE_CHANGED_EVENT, callback)
 end
 
+--[[--
+
+注册滑动控件状态改变监听
+
+@param function callback 监听函数
+
+@return UISlider
+
+]]
 function UISlider:onSliderStateChanged(callback)
     self:addSliderStateChangedEventListener(callback)
     return self

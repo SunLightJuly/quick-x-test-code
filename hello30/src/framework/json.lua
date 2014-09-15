@@ -38,8 +38,6 @@ if not pcall(safeLoad) then
     cjson = nil
 end
 
-print("======cjson", cjson)
-
 --[[--
 
 将表格数据编码为 JSON 字符串

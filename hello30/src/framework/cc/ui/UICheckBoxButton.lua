@@ -1,4 +1,34 @@
 
+--[[
+
+Copyright (c) 2011-2014 chukong-inc.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+]]
+
+--[[--
+
+quick CheckButton控件
+
+]]
+
 local UIButton = import(".UIButton")
 local UICheckBoxButton = class("UICheckBoxButton", UIButton)
 
@@ -9,6 +39,14 @@ UICheckBoxButton.ON           = "on"
 UICheckBoxButton.ON_PRESSED   = "on_pressed"
 UICheckBoxButton.ON_DISABLED  = "on_disabled"
 
+--[[--
+
+UICheckBoxButton构建函数
+
+@param table images checkButton各种状态的图片表
+@param table options 参数表
+
+]]
 function UICheckBoxButton:ctor(images, options)
     UICheckBoxButton.super.ctor(self, {
         {name = "disable",  from = {"off", "off_pressed"}, to = "off_disabled"},
@@ -33,6 +71,17 @@ function UICheckBoxButton:ctor(images, options)
     self.labelAlign_ = display.LEFT_CENTER
 end
 
+--[[--
+
+设置单个状态的图片
+
+@param string state checkButton状态
+@param string image 图片路径
+@param boolean ignoreEmpty 忽略image为nil
+
+@return UICheckBoxButton 自身
+
+]]
 function UICheckBoxButton:setButtonImage(state, image, ignoreEmpty)
     assert(state == UICheckBoxButton.OFF
         or state == UICheckBoxButton.OFF_PRESSED
@@ -61,10 +110,27 @@ function UICheckBoxButton:setButtonImage(state, image, ignoreEmpty)
     return self
 end
 
+--[[--
+
+是否选中状态
+
+@return boolean 选中与否
+
+]]
 function UICheckBoxButton:isButtonSelected()
     return self.fsm_:canDoEvent("unselect")
 end
 
+
+--[[--
+
+设置选中状态
+
+@param boolean selected 选中与否
+
+@return UICheckBoxButton 自身
+
+]]
 function UICheckBoxButton:setButtonSelected(selected)
     if self:isButtonSelected() ~= selected then
         if selected then
@@ -76,6 +142,7 @@ function UICheckBoxButton:setButtonSelected(selected)
     end
     return self
 end
+
 
 function UICheckBoxButton:onTouch_(event)
     local name, x, y = event.name, event.x, event.y

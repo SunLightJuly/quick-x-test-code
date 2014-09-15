@@ -1,4 +1,34 @@
 
+--[[
+
+Copyright (c) 2011-2014 chukong-inc.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+]]
+
+--[[--
+
+quick 列表控件
+
+]]
+
 local UIScrollView = import(".UIScrollView")
 local UIListView = class("UIListView", UIScrollView)
 
@@ -23,7 +53,28 @@ UIListView.ALIGNMENT_TOP			= 3
 UIListView.ALIGNMENT_BOTTOM			= 4
 UIListView.ALIGNMENT_HCENTER		= 5
 
+--[[--
 
+UIListView构建函数
+
+可用参数有：
+
+-   direction 列表控件的滚动方向，默认为垂直方向
+-   alignment listViewItem中content的对齐方式，默认为垂直居中
+-   viewRect 列表控件的显示区域
+-   scrollbarImgH 水平方向的滚动条
+-   scrollbarImgV 垂直方向的滚动条
+-   bgColor 背景色,nil表示无背景色
+-   bgStartColor 渐变背景开始色,nil表示无背景色
+-   bgEndColor 渐变背景结束色,nil表示无背景色
+-   bg 背景图
+-   bgScale9 背景图是否可缩放
+-	capInsets 缩放区域
+
+
+@param table params 参数表
+
+]]
 function UIListView:ctor(params)
 	UIListView.super.ctor(self, params)
 
@@ -32,9 +83,6 @@ function UIListView:ctor(params)
 	self.alignment = params.alignment or UIListView.ALIGNMENT_VCENTER
 	self.container = cc.Node:create()
 	-- self.padding_ = params.padding or {left = 0, right = 0, top = 0, bottom = 0}
-
-	-- self:addBgColorIf(params)
-	self:addBgIf(params)
 
 	-- params.viewRect.x = params.viewRect.x + self.padding_.left
 	-- params.viewRect.y = params.viewRect.y + self.padding_.bottom
@@ -49,41 +97,43 @@ function UIListView:ctor(params)
 	self.size = {}
 end
 
-function UIListView:addBgColorIf(params)
-	if not params.bgColor then
-		return
-	end
+--[[--
 
-	display.newColorLayer(params.bgColor)
-		:size(params.viewRect.width, params.viewRect.height)
-		:pos(params.viewRect.x, params.viewRect.y)
-		:addTo(self, UIListView.BG_ZORDER)
-		:setTouchEnabled(false)
-end
+列表控件触摸注册函数
 
-function UIListView:addBgIf(params)
-	if not params.bg then
-		return
-	end
+@param function listener 触摸临听函数
 
-	display.newScale9Sprite(params.bg)
-		:size(params.viewRect.width, params.viewRect.height)
-		:pos(params.viewRect.x + params.viewRect.width/2,
-			params.viewRect.y + params.viewRect.height/2)
-		:addTo(self, UIListView.BG_ZORDER)
-		:setTouchEnabled(false)
-end
+@return UIListView self 自身
 
+]]
 function UIListView:onTouch(listener)
 	self.touchListener_ = listener
 
 	return self
 end
 
+--[[--
+
+列表控件设置所有listItem中content的对齐方式
+
+@param number align 对
+
+@return UIListView self 自身
+
+]]
 function UIListView:setAlignment(align)
 	self.alignment = align
 end
 
+--[[--
+
+创建一个新的listViewItem项
+
+@param node item 要放到listViewItem中的内容content
+
+@return UIListViewItem
+
+]]
 function UIListView:newItem(item)
 	item = UIListViewItem.new(item)
 	item:setDirction(self.direction)
@@ -131,7 +181,7 @@ function UIListView:scrollListener(event)
 		local pos
 		if UIScrollView.DIRECTION_VERTICAL == self.direction then
 			for i,v in ipairs(self.items_) do
-				_, itemH = v:getItemSize()
+				itemW, itemH = v:getItemSize()
 
 				if nodePoint.y < height and nodePoint.y > height - itemH then
 					pos = i
@@ -142,7 +192,7 @@ function UIListView:scrollListener(event)
 			end
 		else
 			for i,v in ipairs(self.items_) do
-				itemW, _ = v:getItemSize()
+				itemW, itemH = v:getItemSize()
 
 				if nodePoint.x > width and nodePoint.x < width + itemW then
 					pos = i
@@ -155,12 +205,24 @@ function UIListView:scrollListener(event)
 		self:notifyListener_{name = "clicked",
 			listView = self, itemPos = pos, item = self.items_[pos],
 			point = nodePoint}
-	elseif "moved" == event.name then
 	else
+		event.scrollView = nil
+		event.listView = self
+		self:notifyListener_(event)
 	end
 
 end
 
+--[[--
+
+在列表项中添加一项
+
+@param node listItem 要添加的项
+@param [integer pos] 要添加的位置
+
+@return UIListView
+
+]]
 function UIListView:addItem(listItem, pos)
 	self:modifyItemSizeIf_(listItem)
 
@@ -174,6 +236,16 @@ function UIListView:addItem(listItem, pos)
 	return self
 end
 
+--[[--
+
+在列表项中移除一项
+
+@param node listItem 要移除的项
+@param [boolean bAni] 是否要显示移除动画
+
+@return UIListView
+
+]]
 function UIListView:removeItem(listItem, bAni)
 	local itemW, itemH = listItem:getItemSize()
 	self.container:removeChild(listItem)
@@ -200,6 +272,15 @@ function UIListView:removeItem(listItem, bAni)
 	return self
 end
 
+--[[--
+
+取某项在列表控件中的位置
+
+@param node listItem 列表项
+
+@return integer
+
+]]
 function UIListView:getItemPos(listItem)
 	for i,v in ipairs(self.items_) do
 		if v == listItem then
@@ -208,6 +289,15 @@ function UIListView:getItemPos(listItem)
 	end
 end
 
+--[[--
+
+判断某项是否在列表控件的显示区域中
+
+@param integer pos 列表项位置
+
+@return boolean
+
+]]
 function UIListView:isItemInViewRect(pos)
 	local item
 	if "number" == type(pos) then
@@ -338,6 +428,13 @@ function UIListView:layout_()
 	self.container:setPosition(0, self.viewRect_.height - self.size.height)
 end
 
+--[[--
+
+加载列表
+
+@return UIListView
+
+]]
 function UIListView:reload()
 	self:layout_()
 

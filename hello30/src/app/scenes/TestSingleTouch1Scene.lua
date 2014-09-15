@@ -60,12 +60,12 @@ function TestSingleTouch1Scene:onEnter()
 
     -- local ts = crypto.md5("ksdjflkasdjflsjfdlasdjfl")
     -- print("*******ts = ", ts)
-    -- local dt = cc.HelperFunc:getFileData("ttttt")
+    local dt = cc.HelperFunc:getFileData("ttttt")
 
-    display.newDrawNode():drawCircle(100, {fillColor = cc.c4f(0,0,1,1), pos = {display.cx, display.cy}}):addTo(self)
-    display.newDrawNode():drawRect({display.cx, display.cy, 100, 100}, {fillColor = cc.c4f(1,0,0,1)}):addTo(self)
-    display.newDrawNode():drawDot(cc.p(display.cx, display.cy), 10, cc.c4f(0,1,0,1)):addTo(self)
-    display.newDrawNode():drawLine({0,0}, {200,200}, 5, cc.c4f(1,1,0,1)):addTo(self)
+    -- display.newDrawNode():drawCircle(100, {fillColor = cc.c4f(0,0,1,1), pos = {display.cx, display.cy}}):addTo(self)
+    -- display.newDrawNode():drawRect({display.cx, display.cy, 100, 100}, {fillColor = cc.c4f(1,0,0,1)}):addTo(self)
+    -- display.newDrawNode():drawDot(cc.p(display.cx, display.cy), 10, cc.c4f(0,1,0,1)):addTo(self)
+    -- display.newDrawNode():drawLine({0,0}, {200,200}, 5, cc.c4f(1,1,0,1)):addTo(self)
 
     -- local function autogc()
     --     if self.node then
@@ -82,6 +82,8 @@ function TestSingleTouch1Scene:onEnter()
     -- scheduler.performWithDelayGlobal(autogc, 0.5)
 
     print("----46/60", math.floor(46/60))
+    local utils = require("framework.cc.utils.init")
+    print(utils.Gettext._getFileData('test.txt'))
 end
 
 return TestSingleTouch1Scene

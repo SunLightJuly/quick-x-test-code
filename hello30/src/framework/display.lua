@@ -94,7 +94,7 @@ end
 
 local scale, scaleX, scaleY
 
-if CONFIG_SCREEN_AUTOSCALE then
+if CONFIG_SCREEN_AUTOSCALE and CONFIG_SCREEN_AUTOSCALE ~="NONE" then
     if type(CONFIG_SCREEN_AUTOSCALE_CALLBACK) == "function" then
         scaleX, scaleY = CONFIG_SCREEN_AUTOSCALE_CALLBACK(w, h, device.model)
     end
@@ -121,6 +121,10 @@ if CONFIG_SCREEN_AUTOSCALE then
         end
         glview:setDesignResolutionSize(CONFIG_SCREEN_WIDTH, CONFIG_SCREEN_HEIGHT, cc.ResolutionPolicy.NO_BORDER)
     end
+else
+    CONFIG_SCREEN_WIDTH = w
+    CONFIG_SCREEN_HEIGHT = h
+    scale = 1.0
 end
 
 local winSize = sharedDirector:getWinSize()
@@ -571,7 +575,7 @@ function display.newSprite(filename, x, y, params)
                 cc.Texture2D:setDefaultAlphaPixelFormat(cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A8888)
             else
                 if params and params.capInsets then
-                    sprite = spriteClass:createWithInsets(filename, params.capInsets)
+                    sprite = spriteClass:create(params.capInsets, filename)
                 else
                     sprite = spriteClass:create(filename)
                 end
@@ -579,8 +583,8 @@ function display.newSprite(filename, x, y, params)
         end
     elseif t == "cc.SpriteFrame" then
         sprite = spriteClass:createWithSpriteFrame(filename)
-	elseif t == "cc.Texture2D" then
-		sprite = spriteClass:createWithTexture(filename)
+    elseif t == "cc.Texture2D" then
+        sprite = spriteClass:createWithTexture(filename)
     else
         printError("display.newSprite() - invalid filename value type")
         sprite = spriteClass:create()
@@ -623,10 +627,18 @@ local sprite = display.newScale9Sprite("Box.png", 0, 0, cc.size(400, 300))
 
 ]]
 function display.newScale9Sprite(filename, x, y, size, capInsets)
-	return display.newSprite(filename, x, y, {class = cc.Scale9Sprite, size = size, capInsets = capInsets})
+    return display.newSprite(filename, x, y, {class = cc.Scale9Sprite, size = size, capInsets = capInsets})
 end
 
 --[[--
+
+创建并返回一个平铺的 Sprite 显示对象
+
+@param string filename 图像名
+
+@param cc.rect rect    平铺范围
+
+@return Sprite
 
 ]]
 function display.newTilesSprite(filename, rect)
@@ -656,68 +668,65 @@ create a tiled SpriteBatchNode, the image can not a POT file.
 @param integer hPadding Horizontal padding, it will display 1 px gap on moving the node, set padding for fix it.
 @param integer vPadding Vertical padding.
 
-@return A SpriteBatchNode
+@return SpriteBatchNode
 
 ]]
 function display.newTiledBatchNode(filename, plistFile, size, hPadding, vPadding)
-	size = size or cc.size(display.width, display.height)
-	hPadding = hPadding or 0
-	vPadding = vPadding or 0
-	local __sprite = display.newSprite(filename)
-	local __sliceSize = __sprite:getContentSize()
-	__sliceSize.width = __sliceSize.width - hPadding
-	__sliceSize.height = __sliceSize.height - vPadding
-	local __xRepeat = math.ceil(size.width/__sliceSize.width)
-	local __yRepeat = math.ceil(size.height/__sliceSize.height)
-	-- How maney sprites we need to fill in tiled node?
-	local __capacity = __xRepeat * __yRepeat
-	local __batch = display.newBatchNode(plistFile, __capacity)
-	local __newSize = cc.size(0,0)
-	--printf("newTileNode xRepeat:%u, yRepeat:%u", __xRepeat, __yRepeat)
-	for y=0,__yRepeat-1 do
-		for x=0,__xRepeat-1 do
-			__newSize.width = __newSize.width + __sliceSize.width
-			__sprite = display.newSprite(filename)
-				:align(display.LEFT_BOTTOM,x*__sliceSize.width, y*__sliceSize.height)
-				:addTo(__batch)
-				--print("newTileNode:", x*__sliceSize.width, y*__sliceSize.height)
-		end
-		__newSize.height = __newSize.height + __sliceSize.height
-	end
-	__batch:setContentSize(__newSize)
-	return __batch, __newSize.width, __newSize.height
+    size = size or cc.size(display.width, display.height)
+    hPadding = hPadding or 0
+    vPadding = vPadding or 0
+    local __sprite = display.newSprite(filename)
+    local __sliceSize = __sprite:getContentSize()
+    __sliceSize.width = __sliceSize.width - hPadding
+    __sliceSize.height = __sliceSize.height - vPadding
+    local __xRepeat = math.ceil(size.width/__sliceSize.width)
+    local __yRepeat = math.ceil(size.height/__sliceSize.height)
+    -- How maney sprites we need to fill in tiled node?
+    local __capacity = __xRepeat * __yRepeat
+    local __batch = display.newBatchNode(plistFile, __capacity)
+    local __newSize = cc.size(0,0)
+
+    for y=0,__yRepeat-1 do
+        for x=0,__xRepeat-1 do
+            __newSize.width = __newSize.width + __sliceSize.width
+            __sprite = display.newSprite(filename)
+                :align(display.LEFT_BOTTOM,x*__sliceSize.width, y*__sliceSize.height)
+                :addTo(__batch)
+        end
+        __newSize.height = __newSize.height + __sliceSize.height
+    end
+    __batch:setContentSize(__newSize)
+
+    return __batch, __newSize.width, __newSize.height
 end
 
 --[[--
 
 Create a masked sprite
 
+@param string mask  裁剪形状的图片名
+@param string pic   被裁减的图片名
+
+@return Sprite
+
 ]]
 function display.newMaskedSprite(__mask, __pic)
-	local __mb = ccBlendFunc()
-	__mb.src = GL_ONE
-	__mb.dst = GL_ZERO
+    local __maskSprite = display.newSprite(__mask):align(display.LEFT_BOTTOM, 0, 0)
+    __maskSprite:setBlendFunc(gl.ONE, gl.ZERO)
 
-	local __pb = ccBlendFunc()
-	__pb.src = GL_DST_ALPHA
-	__pb.dst = GL_ZERO
+    local __picSprite = display.newSprite(__pic):align(display.LEFT_BOTTOM, 0, 0)
+    __picSprite:setBlendFunc(gl.DST_ALPHA, gl.ZERO)
 
-	local __maskSprite = display.newSprite(__mask):align(display.LEFT_BOTTOM, 0, 0)
-	__maskSprite:setBlendFunc(__mb)
+    local __maskSize = __maskSprite:getContentSize()
+    local __canva = cc.RenderTexture:create(__maskSize.width,__maskSize.height)
+    __canva:begin()
+    __maskSprite:visit()
+    __picSprite:visit()
+    __canva:endToLua()
 
-	local __picSprite = display.newSprite(__pic):align(display.LEFT_BOTTOM, 0, 0)
-	__picSprite:setBlendFunc(__pb)
-
-	local __maskSize = __maskSprite:getContentSize()
-	local __canva = cc.RenderTexture:create(__maskSize.width,__maskSize.height)
-	__canva:begin()
-	__maskSprite:visit()
-	__picSprite:visit()
-	__canva:endToLua()
-
-	local __resultSprite = cc.Sprite:createWithTexture(__canva:getSprite():getTexture())
-    __resultSprite:setFlipY(true)
-	return __resultSprite
+    local __resultSprite = cc.Sprite:createWithTexture(__canva:getSprite():getTexture())
+    __resultSprite:flipY(true)
+    return __resultSprite
 end
 
 --[[--
@@ -739,41 +748,41 @@ Create a Filtered Sprite
 
 ]]
 function display.newFilteredSprite(filename, filters, params)
-	local __one = {class=cc.FilteredSpriteWithOne}
-	local __multi = {class=cc.FilteredSpriteWithMulti}
-	if not filters then return display.newSprite(filtename, nil,nil , __one) end
-	local __sp = nil
-	local __type = type(filters)
+    local __one = {class=cc.FilteredSpriteWithOne}
+    local __multi = {class=cc.FilteredSpriteWithMulti}
+    if not filters then return display.newSprite(filtename, nil,nil , __one) end
+    local __sp = nil
+    local __type = type(filters)
     if __type == "userdata" then __type = tolua.type(filters) end
-	--print("display.newFSprite type:", __type)
-	if __type == "string" then
-		__sp = display.newSprite(filename, nil, nil, __one)
-		filters = filter.newFilter(filters, params)
-		__sp:setFilter(filters)
-	elseif __type == "table" then
-		assert(#filters > 1, "display.newFilteredSprite() - Please give me 2 or more filters!")
-		__sp = display.newSprite(filename, nil, nil, __multi)
-		-- treat filters as {"FILTER_NAME", "FILTER_NAME"}
-		if type(filters[1]) == "string" then
-			__sp:setFilters(filter.newFilters(filters, params))
-		else
-			-- treat filters as {Filter, Filter , ...}
-			local __filters = cc.Array:create()
-			for i in ipairs(filters) do
-				__filters:addObject(filters[i])
-			end
-			__sp:setFilters(__filters)
-		end
-	elseif __type == "Array" then
-		-- treat filters as Array(Filter, Filter, ...)
-		__sp = display.newSprite(filename, nil, nil, __multi)
-		__sp:setFilters(filters)
-	else
-		-- treat filters as Filter
-		__sp = display.newSprite(filename, nil, nil, __one)
-		__sp:setFilter(filters)
-	end
-	return __sp
+    --print("display.newFSprite type:", __type)
+    if __type == "string" then
+        __sp = display.newSprite(filename, nil, nil, __one)
+        filters = filter.newFilter(filters, params)
+        __sp:setFilter(filters)
+    elseif __type == "table" then
+        assert(#filters > 1, "display.newFilteredSprite() - Please give me 2 or more filters!")
+        __sp = display.newSprite(filename, nil, nil, __multi)
+        -- treat filters as {"FILTER_NAME", "FILTER_NAME"}
+        if type(filters[1]) == "string" then
+            __sp:setFilters(filter.newFilters(filters, params))
+        else
+            -- treat filters as {Filter, Filter , ...}
+            local __filters = cc.Array:create()
+            for i in ipairs(filters) do
+                __filters:addObject(filters[i])
+            end
+            __sp:setFilters(__filters)
+        end
+    elseif __type == "Array" then
+        -- treat filters as Array(Filter, Filter, ...)
+        __sp = display.newSprite(filename, nil, nil, __multi)
+        __sp:setFilters(filters)
+    else
+        -- treat filters as Filter
+        __sp = display.newSprite(filename, nil, nil, __one)
+        __sp:setFilter(filters)
+    end
+    return __sp
 end
 
 --[[--
@@ -787,11 +796,20 @@ Create a Gray Sprite by FilteredSprite
 
 ]]
 function display.newGraySprite(filename, params)
-	return display.newFilteredSprite(filename, "GRAY", params)
+    return display.newFilteredSprite(filename, "GRAY", params)
 end
 
+--[[--
+
+创建并返回一个空的 DrawNode 对象
+
+@return DrawNode
+
+@see DrawNode
+
+]]
 function display.newDrawNode()
-	return cc.DrawNode:create()
+    return cc.DrawNode:create()
 end
 
 --[[--
@@ -815,17 +833,17 @@ circle:addTo(scene)
 
 ]]
 function display.newSolidCircle(radius, params)
-	local circle = display.newDrawNode()
+    local circle = display.newDrawNode()
     circle:drawDot(cc.p(params.x or 0, params.y or 0),
         radius or 0, params.color or cc.c4f(0, 0, 0, 1))
-	return circle
+    return circle
 end
 
 --[[--
 
 创建并返回一个 DrawNode （圆）对象。
 
-~~~ lua 
+~~~ lua
 
 --创建一个半径为50, 圆心在(100,100),中间填充为红色,边线为绿色,边线的宽度为2 的圆
 local circle = display.newCircle(50,
@@ -845,36 +863,50 @@ local circle = display.newCircle(50,
 
 ]]
 function display.newCircle(radius, params)
-    local segments = 32
-    local startRadian = 0
-    local endRadian = math.pi*2
-    local posX = 0
-    local posY = 0
-    if params then
-        if params.segments then segments = params.segments end
+    params = checktable(params)
+
+    local function makeVertexs(radius)
+        local segments = params.segments or 32
+        local startRadian = 0
+        local endRadian = math.pi * 2
+        local posX = params.x or 0
+        local posY = params.y or 0
         if params.startAngle then
-            startRadian = math.angle2Radian(params.startAngle)
+            startRadian = math.angle2radian(params.startAngle)
         end
         if params.endAngle then
-            endRadian = startRadian+math.angle2Radian(params.endAngle)
+            endRadian = startRadian + math.angle2radian(params.endAngle)
         end
-        if params.x then
-            posX =  params.x
+        local radianPerSegm = 2 * math.pi / segments
+        local points = {}
+        for i = 1, segments do
+            local radii = startRadian + i * radianPerSegm
+            if radii > endRadian then break end
+            points[#points + 1] = {posX + radius * math.cos(radii), posY + radius * math.sin(radii)}
         end
-        if params.y then
-            posY =  params.y
-        end
-    end
-    local radianPerSegm = 2 * math.pi/segments
-    local points = {}
-    for i=1,segments do
-        local radii = startRadian+i*radianPerSegm
-        if radii > endRadian then break end
-        table.insert(points,
-            {posX + radius * math.cos(radii), posY + radius * math.sin(radii)})
+        return points
     end
 
-    return display.newPolygon(points, params)
+    local points = makeVertexs(radius)
+    local circle = display.newPolygon(points, params)
+    if circle then
+        circle.radius = radius
+        circle.params = params
+
+        function circle:setRadius(radius)
+            self:clear()
+            local points = makeVertexs(radius)
+            display.newPolygon(points, params, self)
+        end
+
+        function circle:setLineColor(color)
+            self:clear()
+            local points = makeVertexs(radius)
+            params.borderColor = color
+            display.newPolygon(points, params, self)
+        end
+    end
+    return circle
 end
 
 --[[--
@@ -912,10 +944,12 @@ function display.newRect(rect, params)
     height = rect.height
     width = rect.width
 
-    local points = {{x,y},
-                    {x + width, y},
-                    {x + width, y + height},
-                    {x, y + height}}
+    local points = {
+        {x,y},
+        {x + width, y},
+        {x + width, y + height},
+        {x, y + height}
+    }
     return display.newPolygon(points, params)
 end
 
@@ -990,34 +1024,35 @@ local polygon = display.newPolygon(points)
 @see DrawNode
 
 ]]
-function display.newPolygon(points, params)
-    local scale
-    local fillColor
-    local borderWidth
-    local borderColor
+function display.newPolygon(points, params, drawNode)
+    params = checktable(params)
+    local scale = checknumber(params.scale or 1.0)
+    local borderWidth = checknumber(params.borderWidth or 0.5)
+    local fillColor = params.fillColor or cc.c4f(1, 1, 1, 0)
+    local borderColor = params.borderColor or cc.c4f(0, 0, 0, 1)
 
-    if not params then
-        scale = 1
-        fillColor = cc.c4f(1,1,1,0)
-        borderColor = cc.c4f(0,0,0,1)
-        borderWidth = 1
-    else
-        scale = params.scale or 1
-        fillColor = params.fillColor or cc.c4f(1,1,1,0)
-        borderColor = params.borderColor or cc.c4f(0,0,0,1)
-        borderWidth = params.borderWidth or 1
-    end
-
-    if type(scale) ~= "number" then scale = 1 end
-    local ccp = cc.p
+    local pts = {}
     for i, p in ipairs(points) do
-        p = ccp(p[1] * scale, p[2] * scale)
-        points[i] = p
+        pts[i] = {x = p[1] * scale, y = p[2] * scale}
     end
 
-    local drawNode = cc.DrawNode:create()
-    drawNode:drawPolygon(points, { fillColor = fillColor, borderWidth = borderWidth, borderColor = borderColor})
+    drawNode = drawNode or cc.DrawNode:create()
+    drawNode:drawPolygon(pts, {
+        fillColor = fillColor,
+        borderWidth = borderWidth,
+        borderColor = borderColor
+    })
 
+    if drawNode then
+        function drawNode:setLineStipple()
+        end
+
+        function drawNode:setLineStippleEnabled()
+        end
+
+        function drawNode:setLineColor(color)
+        end
+    end
     return drawNode
 end
 
@@ -1081,7 +1116,14 @@ display.addSpriteFrames(数据文件名, 材质文件名)
 
 ~~~ lua
 
+-- 同步加载纹理
 display.addSpriteFrames("Sprites.plist", "Sprites.png")
+
+-- 异步加载纹理
+local cb = function(plist, image)
+    -- do something
+end
+display.addSpriteFrames("Sprites.plist", "Sprites.png", cb)
 
 ~~~
 
@@ -1094,32 +1136,31 @@ Sprite Sheets 通俗一点解释就是包含多张图片的集合。Sprite Sheet
 
 ]]
 function display.addSpriteFrames(plistFilename, image, handler)
-	local async = type(handler) == "function"
-	local asyncHandler = nil
-	if async then
-		asyncHandler = function()
-			-- printf("%s, %s async done.", plistFilename, image)
-			local texture = sharedTextureCache:textureForKey(image)
-			assert(texture, string.format("The texture %s, %s is unavailable.", plistFilename, image))
-			sharedSpriteFrameCache:addSpriteFrames(plistFilename, texture)
-			handler(plistFilename, image)
-		end
-	end
+    local async = type(handler) == "function"
+    local asyncHandler = nil
+    if async then
+        asyncHandler = function()
+            local texture = sharedTextureCache:getTextureForKey(image)
+            assert(texture, string.format("The texture %s, %s is unavailable.", plistFilename, image))
+            sharedSpriteFrameCache:addSpriteFrames(plistFilename, texture)
+            handler(plistFilename, image)
+        end
+    end
 
     if display.TEXTURES_PIXEL_FORMAT[image] then
         cc.Texture2D:setDefaultAlphaPixelFormat(display.TEXTURES_PIXEL_FORMAT[image])
-		if async then
-			sharedTextureCache:addImageAsync(image, asyncHandler)
-		else
-			sharedSpriteFrameCache:addSpriteFrames(plistFilename, image)
-		end
+        if async then
+            sharedTextureCache:addImageAsync(image, asyncHandler)
+        else
+            sharedSpriteFrameCache:addSpriteFrames(plistFilename, image)
+        end
         cc.Texture2D:setDefaultAlphaPixelFormat(cc.TEXTURE2_D_PIXEL_FORMAT_RGB_A8888)
     else
-		if async then
-			sharedTextureCache:addImageAsync(image, asyncHandler)
-		else
-			sharedSpriteFrameCache:addSpriteFrames(plistFilename, image)
-		end
+        if async then
+            sharedTextureCache:addImageAsync(image, asyncHandler)
+        else
+            sharedSpriteFrameCache:addSpriteFrames(plistFilename, image)
+        end
     end
 end
 
@@ -1363,11 +1404,32 @@ function display.removeAnimationCache(name)
     sharedAnimationCache:removeAnimationByName(name)
 end
 
+--[[--
+
+从内存中卸载没有使用 Sprite Sheets 材质
+
+]]
 function display.removeUnusedSpriteFrames()
     sharedSpriteFrameCache:removeUnusedSpriteFrames()
     sharedTextureCache:removeUnusedTextures()
 end
 
+--[[--
+
+创建一个进度条的节点
+
+进度条类型有:
+
+- display.PROGRESS_TIMER_BAR  环形
+- display.PROGRESS_TIMER_RADIAL
+
+
+@param: mixed image         图片文件名或者精灵
+@param: int   progresssType 进度条类型
+
+@return: ProgressTimer
+
+]]
 display.PROGRESS_TIMER_BAR = 1
 display.PROGRESS_TIMER_RADIAL = 0
 
@@ -1381,42 +1443,69 @@ function display.newProgressTimer(image, progresssType)
     return progress
 end
 
+--[[--
+
+获取一个节点的纹理内容
+
+display.printscreen() 提供:
+
+- 保存节点的纹理到磁盘文件
+- 以节点的纹理创建一个精灵并返回
+
+
+注意：node 的 content size 必须大于 (0, 0). 否则会收到错误信息: LUA ERROR: ASSERT FAILED ON LUA EXECUTE: Invalid size
+
+~~~ lua
+
+-- 截屏并保存
+display.printscreen(node, {file="save.png"})
+
+-- 使用截屏纹理创建一个精灵并返回
+local sp = display.printscreen(node, {})
+
+~~~
+
 -- Get a screenshot of a Node
 -- @author zrong(zengrong.net)
 -- Creation: 2014-04-10
--- @param node A node to print.
--- @param args
--- @return An instance of Sprite or FilteredSprite.
-function display.printscreen(node, args)
-	local sp = true
-	local file = nil
-	local filters = nil
-	local filterParams = nil
-	if args then
-		if args.sprite ~= nil then sp = args.sprite end
-		file = args.file
-		filters = args.filters
-		filterParams = args.filterParams
-	end
-	local size = node:getContentSize()
-	local canvas = cc.RenderTexture:create(size.width,size.height)
-	canvas:begin()
-	node:visit()
-	canvas:endToLua()
 
-	if sp then
-		local texture = canvas:getSprite():getTexture()
-		if filters then
-			sp = display.newFilteredSprite(texture, filters, filterParams)
-		else
-			sp = display.newSprite(texture)
-		end
-		sp:flipY(true)
-	end
-	if file and device.platform ~= "mac" then
-		canvas:saveToFile(file)
-	end
-	return sp, file
+@param node A node to print.
+@param args
+
+@return An instance of Sprite or FilteredSprite.
+
+]]
+function display.printscreen(node, args)
+    local sp = true
+    local file = nil
+    local filters = nil
+    local filterParams = nil
+    if args then
+        if args.sprite ~= nil then sp = args.sprite end
+        file = args.file
+        filters = args.filters
+        filterParams = args.filterParams
+    end
+    local size = node:getContentSize()
+    local canvas = cc.RenderTexture:create(size.width,size.height)
+    canvas:begin()
+    node:visit()
+    canvas:endToLua()
+
+    if sp then
+        local texture = canvas:getSprite():getTexture()
+        if filters then
+            sp = display.newFilteredSprite(texture, filters, filterParams)
+        else
+            sp = display.newSprite(texture)
+        end
+        sp:flipY(true)
+    end
+
+    if file then
+        canvas:saveToFile(file)
+    end
+    return sp, file
 end
 
 return display

@@ -493,7 +493,8 @@ end)
 function MyScene:ctor()
     self.frameTimeCount = 0
     -- 注册帧事件
-    self:addEventListener(cc.ENTER_FRAME_EVENT, self.onEnterFrame)
+    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, self.onEnterFrame)
+    self:scheduleUpdate()
 end
 
 function MyScene:onEnterFrame(dt)
@@ -511,7 +512,8 @@ end
 function MyScene:ctor()
     self.frameTimeCount = 0
     -- 注册帧事件
-    self:addEventListener(cc.ENTER_FRAME_EVENT, handler(self, self.onEnterFrame))
+    self:addNodeEventListener(cc.ENTER_FRAME_EVENT, handler(self, self.onEnterFrame))
+    self:scheduleUpdate()
 end
 
 ~~~
@@ -565,10 +567,20 @@ function math.round(value)
     return math.floor(value + 0.5)
 end
 
+--[[--
+
+角度转弧度
+
+]]
 function math.angle2radian(angle)
 	return angle*math.pi/180
 end
 
+--[[--
+
+弧度转角度
+
+]]
 function math.radian2angle(radian)
 	return radian/math.pi*180
 end

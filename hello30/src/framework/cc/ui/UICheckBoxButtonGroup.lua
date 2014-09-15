@@ -1,4 +1,34 @@
 
+--[[
+
+Copyright (c) 2011-2014 chukong-inc.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+]]
+
+--[[--
+
+quick CheckButton组控件
+
+]]
+
 local UIBoxLayout = import(".UIBoxLayout")
 local UICheckBoxButton = import(".UICheckBoxButton")
 
@@ -7,6 +37,13 @@ local UICheckBoxButtonGroup = class("UICheckBoxButtonGroup", UIGroup)
 
 UICheckBoxButtonGroup.BUTTON_SELECT_CHANGED = "BUTTON_SELECT_CHANGED"
 
+--[[--
+
+UICheckBoxButtonGroup构建函数
+
+@param integer direction checkBox排列方向
+
+]]
 function UICheckBoxButtonGroup:ctor(direction)
     UICheckBoxButtonGroup.super.ctor(self)
     self:setLayout(UIBoxLayout.new(direction or display.LEFT_TO_RIGHT))
@@ -14,6 +51,17 @@ function UICheckBoxButtonGroup:ctor(direction)
     self.currentSelectedIndex_ = 0
 end
 
+--[[--
+
+加入一个checkBox
+
+@param UICheckBoxButton button checkBox
+
+@return UICheckBoxButtonGroup 自身
+
+@see UICheckBoxButton
+
+]]
 function UICheckBoxButtonGroup:addButton(button)
     self:addChild(button)
     self.buttons_[#self.buttons_ + 1] = button
@@ -23,6 +71,15 @@ function UICheckBoxButtonGroup:addButton(button)
     return self
 end
 
+--[[--
+
+按index移除掉一个checkBox
+
+@param integer index 要移除checkBox的位置
+
+@return UICheckBoxButtonGroup 自身
+
+]]
 function UICheckBoxButtonGroup:removeButtonAtIndex(index)
     assert(self.buttons_[index] ~= nil, "UICheckBoxButtonGroup:removeButtonAtIndex() - invalid index")
 
@@ -43,14 +100,42 @@ function UICheckBoxButtonGroup:removeButtonAtIndex(index)
     return self
 end
 
+--[[--
+
+按index获取checkBox
+
+@param integer index 要获取checkBox的位置
+
+@return UICheckBoxButton
+
+]]
 function UICheckBoxButtonGroup:getButtonAtIndex(index)
     return self.buttons_[index]
 end
 
+--[[--
+
+得到UICheckBoxButton的总数
+
+@return integer
+
+]]
 function UICheckBoxButtonGroup:getButtonsCount()
     return #self.buttons_
 end
 
+--[[--
+
+设置margin
+
+@param number top 上边的空白
+@param number right 右边的空白
+@param number bottom 下边的空白
+@param number left 左边的空白
+
+@return UICheckBoxButtonGroup 自身
+
+]]
 function UICheckBoxButtonGroup:setButtonsLayoutMargin(top, right, bottom, left)
     for _, button in ipairs(self.buttons_) do
         button:setLayoutMargin(top, right, bottom, left)
@@ -59,11 +144,19 @@ function UICheckBoxButtonGroup:setButtonsLayoutMargin(top, right, bottom, left)
     return self
 end
 
-
 function UICheckBoxButtonGroup:addButtonSelectChangedEventListener(callback)
     return self:addEventListener(UICheckBoxButtonGroup.BUTTON_SELECT_CHANGED, callback)
 end
 
+--[[--
+
+注册checkbox状态变化listener
+
+@param function callback
+
+@return UICheckBoxButtonGroup 自身
+
+]]
 function UICheckBoxButtonGroup:onButtonSelectChanged(callback)
     self:addButtonSelectChangedEventListener(callback)
     return self

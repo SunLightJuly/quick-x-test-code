@@ -32,12 +32,12 @@ local Node = c.Node
 -- Node
 
 function Node:add(child, zorder, tag)
-    self:addChild(child, zorder or 0, tag or 0)
+    self:addChild(child, zorder or child:getLocalZOrder(), tag or child:getTag())
     return self
 end
 
 function Node:addTo(target, zorder, tag)
-    target:addChild(self, zorder or 0, tag or 0)
+    target:addChild(self, zorder or self:getLocalZOrder(), tag or self:getTag())
     return self
 end
 
@@ -86,7 +86,7 @@ function Node:opacity(opacity)
 end
 
 function Node:zorder(z)
-    self:setZOrder(z)
+    self:setLocalZOrder(z)
     return self
 end
 
@@ -108,12 +108,12 @@ function Sprite:displayFrame(frame, index)
 end
 
 function Sprite:flipX(b)
-    self:setFlipX(b)
+    self:setFlippedX(b)
     return self
 end
 
 function Sprite:flipY(b)
-    self:setFlipY(b)
+    self:setFlippedY(b)
     return self
 end
 
@@ -225,10 +225,12 @@ end
 
 function Node:skewTo(time, sx, sy)
     self:runAction(cc.SkewTo:create(time, sx or self:getSkewX(), sy or self:getSkewY()))
+    return self
 end
 
 function Node:skewBy(time, sx, sy)
     self:runAction(cc.SkewBy:create(time, sx or 0, sy or 0))
+    return self
 end
 
 function Node:tintTo(time, r, g, b)

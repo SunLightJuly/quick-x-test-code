@@ -1,4 +1,34 @@
 
+--[[
+
+Copyright (c) 2011-2014 chukong-inc.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+]]
+
+--[[--
+
+quick UIListViewItem控件
+
+]]
+
 local UIScrollView = import(".UIScrollView")
 
 local UIListViewItem = class("UIListViewItem", function()
@@ -21,6 +51,13 @@ function UIListViewItem:ctor(item)
 	self:addContent(item)
 end
 
+--[[--
+
+将要内容加到列表控件项中
+
+@param node content 显示内容
+
+]]
 function UIListViewItem:addContent(content)
 	if not content then
 		return
@@ -29,10 +66,26 @@ function UIListViewItem:addContent(content)
 	self:addChild(content, UIListViewItem.CONTENT_Z_ORDER, UIListViewItem.CONTENT_TAG)
 end
 
+--[[--
+
+获取列表控件项中的内容
+
+@return node
+
+]]
 function UIListViewItem:getContent()
 	return self:getChildByTag(UIListViewItem.CONTENT_TAG)
 end
 
+--[[--
+
+设置列表项中的大小
+
+@param number w 列表项宽度
+@param number h 列表项高度
+@param [boolean bNoMargin] 是否不使用margin margin可调用setMargin赋值
+
+]]
 function UIListViewItem:setItemSize(w, h, bNoMargin)
 	if not bNoMargin then
 		if UIScrollView.DIRECTION_VERTICAL == self.lvDirection_ then
@@ -60,6 +113,14 @@ function UIListViewItem:setItemSize(w, h, bNoMargin)
 	self.listener(self, newSize, oldSize)
 end
 
+--[[--
+
+设置列表项中的大小
+
+@return number width
+@return number height
+
+]]
 function UIListViewItem:getItemSize()
 	return self.width, self.height
 end

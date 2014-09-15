@@ -44,10 +44,10 @@ end
 定义一个作废的接口
 
 ]]
-function DEPRECATED(f, name, newname)
+function DEPRECATED(newfunction, oldname, newname)
     return function(...)
-        PRINT_DEPRECATED(string.format("%s() is deprecated, please use %s()", name, newname))
-        return f(...)
+        PRINT_DEPRECATED(string.format("%s() is deprecated, please use %s()", oldname, newname))
+        return newfunction(...)
     end
 end
 

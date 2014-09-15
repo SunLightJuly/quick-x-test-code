@@ -1,4 +1,36 @@
 
+--[[
+
+Copyright (c) 2011-2014 chukong-inc.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+]]
+
+--[[--
+
+初始化 cc.uiloader,并提供对外统一接口
+
+cc.uiloader 可以将CCS导出的json文件用quick的纯lua控件构建出UI布局
+
+]]
+
 local uiloader = class("uiloader")
 local CCSUILoader = import(".CCSUILoader")
 local CCSSceneLoader = import(".CCSSceneLoader")
@@ -6,7 +38,17 @@ local CCSSceneLoader = import(".CCSSceneLoader")
 function uiloader:ctor()
 end
 
-function uiloader:load(jsonFile)
+--[[--
+
+解析json文件
+
+@param string jsonFile 要解析的json文件
+@param table params 解析参数
+
+@return node 解析后的布局
+
+]]
+function uiloader:load(jsonFile, params)
 	local json = self:loadFile_(jsonFile)
 	if not json then
 		print("uiloader - load file fail:" .. jsonFile)
@@ -16,14 +58,24 @@ function uiloader:load(jsonFile)
 	local node
 
 	if self:isScene_(json) then
-		node, w, h = CCSSceneLoader:load(json)
+		node, w, h = CCSSceneLoader:load(json, params)
 	else
-		node, w, h = CCSUILoader:load(json)
+		node, w, h = CCSUILoader:load(json, params)
 	end
 
 	return node, w, h
 end
 
+--[[--
+
+按tag查找布局中的结点
+
+@param node parent 要查找布局的结点
+@param number tag 要查找的tag
+
+@return node
+
+]]
 function uiloader:seekNodeByTag(parent, tag)
 	if not parent then
 		return
@@ -57,6 +109,16 @@ function uiloader:seekNodeByTag(parent, tag)
 	return
 end
 
+--[[--
+
+按name查找布局中的结点
+
+@param node parent 要查找布局的结点
+@param string name 要查找的name
+
+@return node
+
+]]
 function uiloader:seekNodeByName(parent, name)
 	if not parent then
 		return
@@ -90,7 +152,25 @@ function uiloader:seekNodeByName(parent, name)
 	return
 end
 
+--[[--
 
+查找布局中的组件结点
+
+~~~ lua
+
+-- "hero" 是结点名称
+-- 1 是 "hero"这个结点下的第一个组件
+local hero = cc.uiloader:seekComponents(parentNode, "hero", 1)
+
+~~~
+
+@param node parent 要查找布局的结点
+@param string nodeName 要查找的name
+@param number componentIdx 在查找组件在它的直接父结点的位置
+
+@return node
+
+]]
 function uiloader:seekComponents(parent, nodeName, componentIdx)
 	local node = self:seekNodeByName(parent, nodeName)
 	if not node then

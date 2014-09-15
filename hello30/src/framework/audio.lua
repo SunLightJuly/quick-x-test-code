@@ -40,7 +40,7 @@ local sharedEngine = cc.SimpleAudioEngine:getInstance()
 
 ]]
 function audio.getMusicVolume()
-    local volume = sharedEngine:getBackgroundMusicVolume()
+    local volume = sharedEngine:getMusicVolume()
     if DEBUG > 1 then
         printInfo("audio.getMusicVolume() - volume: %0.1f", volume)
     end
@@ -60,7 +60,7 @@ function audio.setMusicVolume(volume)
     if DEBUG > 1 then
         printInfo("audio.setMusicVolume() - volume: %0.1f", volume)
     end
-    sharedEngine:setBackgroundMusicVolume(volume)
+    sharedEngine:setMusicVolume(volume)
 end
 
 --[[--
@@ -111,7 +111,7 @@ function audio.preloadMusic(filename)
     if DEBUG > 1 then
         printInfo("audio.preloadMusic() - filename: %s", tostring(filename))
     end
-    sharedEngine:preloadBackgroundMusic(filename)
+    sharedEngine:preloadMusic(filename)
 end
 
 --[[--
@@ -138,7 +138,7 @@ function audio.playMusic(filename, isLoop)
     if DEBUG > 1 then
         printInfo("audio.playMusic() - filename: %s, isLoop: %s", tostring(filename), tostring(isLoop))
     end
-    sharedEngine:playBackgroundMusic(filename, isLoop)
+    sharedEngine:playMusic(filename, isLoop)
 end
 
 --[[--
@@ -153,7 +153,7 @@ function audio.stopMusic(isReleaseData)
     if DEBUG > 1 then
         printInfo("audio.stopMusic() - isReleaseData: %s", tostring(isReleaseData))
     end
-    sharedEngine:stopBackgroundMusic(isReleaseData)
+    sharedEngine:stopMusic(isReleaseData)
 end
 
 --[[--
@@ -165,7 +165,7 @@ function audio.pauseMusic()
     if DEBUG > 1 then
         printInfo("audio.pauseMusic()")
     end
-    sharedEngine:pauseBackgroundMusic()
+    sharedEngine:pauseMusic()
 end
 
 --[[--
@@ -177,7 +177,7 @@ function audio.resumeMusic()
     if DEBUG > 1 then
         printInfo("audio.resumeMusic()")
     end
-    sharedEngine:resumeBackgroundMusic()
+    sharedEngine:resumeMusic()
 end
 
 --[[--
@@ -189,7 +189,7 @@ function audio.rewindMusic()
     if DEBUG > 1 then
         printInfo("audio.rewindMusic()")
     end
-    ending:rewindBackgroundMusic()
+    sharedEngine:rewindMusic()
 end
 
 --[[--
@@ -204,7 +204,7 @@ end
 
 ]]
 function audio.willPlayMusic()
-    local ret = sharedEngine:willPlayBackgroundMusic()
+    local ret = sharedEngine:willPlayMusic()
     if DEBUG > 1 then
         printInfo("audio.willPlayMusic() - ret: %s", tostring(ret))
     end
@@ -221,7 +221,7 @@ end
 
 ]]
 function audio.isMusicPlaying()
-    local ret = sharedEngine:isBackgroundMusicPlaying()
+    local ret = sharedEngine:isMusicPlaying()
     if DEBUG > 1 then
         printInfo("audio.isMusicPlaying() - ret: %s", tostring(ret))
     end

@@ -9,7 +9,7 @@ function cc.clampf(value, min_inclusive, max_inclusive)
     -- body
     local temp = 0
     if min_inclusive > max_inclusive then
-        temp = min_inclusive 
+        temp = min_inclusive
         min_inclusive =  max_inclusive
         max_inclusive = temp
     end
@@ -115,7 +115,7 @@ function cc.pIsLineIntersect(A, B, C, D, s, t)
 
         return false, s, t
     end
-    
+
     s = s / denom
     t = t / denom
 
@@ -158,7 +158,7 @@ function cc.pFromSize(sz)
     return { x = sz.width, y = sz.height }
 end
 
-function cc.pLerp(pt1,pt2,alpha) 
+function cc.pLerp(pt1,pt2,alpha)
     return cc.pAdd(cc.pMul(pt1, 1.0 - alpha), cc.pMul(pt2,alpha) )
 end
 
@@ -171,13 +171,13 @@ function cc.pFuzzyEqual(pt1,pt2,variance)
 end
 
 function cc.pRotateByAngle(pt1, pt2, angle)
-    return cc.pAdd(pt2, cc.pRotate( cc.pSub(pt1, pt2),cc.pForAngle(angle)))    
+    return cc.pAdd(pt2, cc.pRotate( cc.pSub(pt1, pt2),cc.pForAngle(angle)))
 end
 
 function cc.pIsSegmentIntersect(pt1,pt2,pt3,pt4)
     local s,t,ret = 0,0,false
     ret,s,t =cc.pIsLineIntersect(pt1, pt2, pt3, pt4,s,t)
-    
+
     if ret and  s >= 0.0 and s <= 1.0 and t >= 0.0 and t <= 0.0 then
         return true;
     end
@@ -187,7 +187,7 @@ end
 
 function cc.pGetIntersectPoint(pt1,pt2,pt3,pt4)
     local s,t, ret = 0,0,false
-    ret,s,t = cc.pIsLineIntersect(pt1,pt2,pt3,pt4,s,t) 
+    ret,s,t = cc.pIsLineIntersect(pt1,pt2,pt3,pt4,s,t)
     if ret then
         return cc.p(pt1.x + s * (pt2.x - pt1.x), pt1.y + s * (pt2.y - pt1.y))
     else
@@ -240,7 +240,7 @@ end
 
 function cc.rectContainsPoint( rect, point )
     local ret = false
-    
+
     if (point.x >= rect.x) and (point.x <= rect.x + rect.width) and
        (point.y >= rect.y) and (point.y <= rect.y + rect.height) then
         ret = true
@@ -291,6 +291,22 @@ end
 --Color4F
 function cc.c4f( _r,_g,_b,_a )
     return { r = _r, g = _g, b = _b, a = _a }
+end
+
+function cc.c4bFromc3b(c)
+    return { r = c.r, g = c.g, b = c.b, a = 255 }
+end
+
+function cc.c4bFromc4f(c)
+    return { r = c.r * 255, g = c.g * 255, b = c.b * 255, a = c.a * 255 }
+end
+
+function cc.c4fFromc3b(c)
+    return { r = c.r / 255, g = c.g / 255, b = c.b / 255, a = 1.0 }
+end
+
+function cc.c4fFromc4b(c)
+    return { r = c.r / 255, g = c.g / 255, b = c.b / 255, a = c.a / 255 }
 end
 
 --Vertex2F
@@ -368,7 +384,7 @@ function cc.PhysicsMaterial(_density, _restitution, _friction)
 	return { density = _density, restitution = _restitution, friction = _friction }
 end
 
-local ConfigType = 
+local ConfigType =
 {
     NONE = 0,
     COCOSTUDIO = 1,

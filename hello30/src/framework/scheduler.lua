@@ -24,9 +24,11 @@ THE SOFTWARE.
 
 --[[--
 
- 全局计时器、计划任务
+全局计时器、计划任务
 
 «该模块在框架初始化时不会自动载入» 
+
+加载方式: local scheduler = require(cc.PACKAGE_NAME .. ".scheduler")
 
 ]]
 local scheduler = {}

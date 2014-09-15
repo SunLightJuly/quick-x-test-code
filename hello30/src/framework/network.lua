@@ -149,6 +149,7 @@ function network.createHTTPRequest(callback, url, method)
     return cc.HTTPRequest:createWithUrl(callback, url, method)
 end
 
+--[[--
 --- Upload a file through a HTTPRequest instance.
 -- @author zrong(zengrong.net)
 -- Creation: 2014-04-14
@@ -160,29 +161,33 @@ end
 -- 		contentType(Optional, the file's contentType, default is application/octet-stream)
 -- 		extra(Optional, the key-value table that transmit to form)
 -- for example:
---[[
-	network.uploadFile(function(evt)
-			if evt.name == "completed" then
-				local request = evt.request
-				printf("REQUEST getResponseStatusCode() = %d", request:getResponseStatusCode())
-				printf("REQUEST getResponseHeadersString() =\n%s", request:getResponseHeadersString())
-	 			printf("REQUEST getResponseDataLength() = %d", request:getResponseDataLength())
-                printf("REQUEST getResponseString() =\n%s", request:getResponseString())
-			end
-		end,
-		"http://127.0.0.1/upload.php",
-		{
-			fileFieldName="filepath",
-			filePath=device.writablePath.."screen.jpg",
-			contentType="Image/jpeg",
-			extra={
-				{"act", "upload"},
-				{"submit", "upload"},
-			}
+
+~~~ lua
+
+network.uploadFile(function(evt)
+		if evt.name == "completed" then
+			local request = evt.request
+			printf("REQUEST getResponseStatusCode() = %d", request:getResponseStatusCode())
+			printf("REQUEST getResponseHeadersString() =\n%s", request:getResponseHeadersString())
+ 			printf("REQUEST getResponseDataLength() = %d", request:getResponseDataLength())
+            printf("REQUEST getResponseString() =\n%s", request:getResponseString())
+		end
+	end,
+	"http://127.0.0.1/upload.php",
+	{
+		fileFieldName="filepath",
+		filePath=device.writablePath.."screen.jpg",
+		contentType="Image/jpeg",
+		extra={
+			{"act", "upload"},
+			{"submit", "upload"},
 		}
-	)
-	]]
--- 		
+	}
+)
+    
+~~~
+
+]]		
 function network.uploadFile(callback, url, datas)
 	assert(datas or datas.fileFieldName or datas.filePath, "Need file datas!")
 	local request = network.createHTTPRequest(callback, url, "POST")

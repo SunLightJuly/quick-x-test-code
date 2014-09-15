@@ -1,4 +1,34 @@
 
+--[[
+
+Copyright (c) 2011-2014 chukong-inc.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+]]
+
+--[[--
+
+quick 按钮控件
+
+]]
+
 local UIButton = import(".UIButton")
 local UIPushButton = class("UIPushButton", UIButton)
 
@@ -6,6 +36,20 @@ UIPushButton.NORMAL   = "normal"
 UIPushButton.PRESSED  = "pressed"
 UIPushButton.DISABLED = "disabled"
 
+--[[--
+
+按钮控件构建函数
+
+状态值:
+-   normal 正常状态
+-   pressed 按下状态
+-   disabled 无效状态
+
+
+@param table images 各种状态的图片
+@param table options 参数表 其中scale9为是否缩放
+
+]]
 function UIPushButton:ctor(images, options)
     UIPushButton.super.ctor(self, {
         {name = "disable", from = {"normal", "pressed"}, to = "disabled"},
