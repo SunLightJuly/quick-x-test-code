@@ -386,6 +386,9 @@ function CCSUILoader:createSprite(options)
 	if not options.ignoreSize then
 		node:setContentSize(cc.size(options.width, options.height))
 	end
+	if options.opacity then
+		node:setOpacity(options.opacity)
+	end
 	node:setPositionX(options.x or 0)
 	node:setPositionY(options.y or 0)
 	node:setAnchorPoint(
@@ -441,7 +444,9 @@ end
 
 function CCSUILoader:createButton(options)
 	local node = cc.ui.UIPushButton.new(self:getButtonStateImages(options),
-		{scale9 = not options.ignoreSize})
+		{scale9 = not options.ignoreSize,
+		flipX = options.flipX,
+		flipY = options.flipY})
 
 	if options.opacity then
 		node:setCascadeOpacityEnabled(true)

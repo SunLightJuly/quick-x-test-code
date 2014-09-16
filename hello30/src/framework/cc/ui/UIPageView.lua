@@ -473,7 +473,8 @@ function UIPageView:scroll(dis)
 		table.insert(threePages, false)
 		table.insert(threePages, self.pages_[self.curPageIdx_])
 	elseif 2 == count then
-		if dis > 0 then
+		local posX, posY = self.pages_[self.curPageIdx_]:getPosition()
+		if posX > self.viewRect_.x then
 			page = self:getNextPage(false)
 			if not page then
 				page = false
