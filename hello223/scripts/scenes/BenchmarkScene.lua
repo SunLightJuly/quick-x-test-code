@@ -1,4 +1,4 @@
-require "toluaEx"
+require "framework.toluaEx"
 
 local BenchmarkScene = class("BenchmarkScene", function()
     return display.newScene("BenchmarkScene")
@@ -94,10 +94,10 @@ function BenchmarkScene:onTouch(event, x, y)
         end
         self.tbl = nil
     end
-    collectgarbage("collect")
-    collectgarbage("collect")
-    collectgarbage("collect")
-    print("clean", collectgarbage("count"))
+    -- collectgarbage("collect")
+    -- collectgarbage("collect")
+    -- collectgarbage("collect")
+    -- print("clean", collectgarbage("count"))
     -- local t = {}
     -- tolua_gc = tolua.getregval("tolua_gc")
     -- -- dump(tolua_gc)
