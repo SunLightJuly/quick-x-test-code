@@ -1,3 +1,4 @@
+require "toluaEx"
 
 local BenchmarkScene = class("BenchmarkScene", function()
     return display.newScene("BenchmarkScene")
@@ -77,48 +78,65 @@ function table.merge1(dest, src)
 end
 
 function BenchmarkScene:onTouch(event, x, y)
-    -- self:removeNodeEventListener(self.handler)
-    -- local tt = {}
-    -- table.merge1(tt, tolua_gc)
-    -- local mt = getmetatable(CCPoint)
-    -- table.merge1(tt, mt["tolua_ubox"])
-    -- if self.tbl and #self.tbl>0 then
-    --     local tbl = self.tbl
-    --     for i,v in ipairs(tbl) do
-    --         tbl[i] = nil
-    --     end
-    --     self.tbl = nil
-    -- end
-    -- collectgarbage("collect")
-    -- collectgarbage("collect")
-    -- collectgarbage("collect")
-    -- print("clean", collectgarbage("count"))
-    -- local t = {}
-    -- table.merge1(t, tolua_gc)
-    -- tolua_gc = t
-    -- local mt = getmetatable(CCPoint)
-    -- t = {}
-    -- table.merge1(t, mt["tolua_ubox"])
-    -- mt["tolua_ubox"] = t
-    -- collectgarbage("collect")
-    -- collectgarbage("collect")
-    -- collectgarbage("collect")
-    -- print("--clean", collectgarbage("count"))
-    -- return
-
-    if event == "began" then
-        local p = CCPoint(x, y)
-        if self.addCoinButtonBoundingBox:containsPoint(p) then
-            self.state = "ADD"
-        elseif self.removeCoinButtonBoundingBox:containsPoint(p) then
-            self.state = "REMOVE"
-        else
-            self.state = "IDLE"
+    self:removeNodeEventListener(self.handler)
+    local tt = {}
+    local tolua_gc = tolua.getregval("tolua_gc")
+    table.merge1(tt, tolua_gc)
+    tolua_gc = nil
+    local ubox = tolua.getubox("CCPoint")
+    table.merge1(tt, ubox)
+    ubox = nil
+    tt = nil
+    if self.tbl and #self.tbl>0 then
+        local tbl = self.tbl
+        for i,v in ipairs(tbl) do
+            tbl[i] = nil
         end
-        return true
-    elseif event ~= "moved" then
-        self.state = "IDLE"
+        self.tbl = nil
     end
+    collectgarbage("collect")
+    collectgarbage("collect")
+    collectgarbage("collect")
+    print("clean", collectgarbage("count"))
+    -- local t = {}
+    -- tolua_gc = tolua.getregval("tolua_gc")
+    -- -- dump(tolua_gc)
+    -- table.merge1(t, tolua_gc)
+    -- tolua_gc = nil
+    -- -- tolua.setregval("tolua_gc", nil)
+    -- -- t.xxxx = "=======t.xxxxx"
+    -- tolua.setregval("tolua_gc", t)
+    -- t = nil
+    -- ubox = tolua.getubox("CCPoint")
+    -- -- dump(mt)
+    -- t = {}
+    -- table.merge1(t, ubox)
+    -- ubox = nil
+    -- tolua.setubox("CCPoint", t)
+    -- t.yyyyyy = "=======t.yyyyyyy"
+    -- t = nil
+    -- collectgarbage("collect")
+    -- collectgarbage("collect")
+    -- collectgarbage("collect")
+    tolua.fullgc({"CCPoint", {}, 1234, "CCSize"})
+    print("--==clean", collectgarbage("count"))
+    ubox = tolua.getubox("CCPoint")
+    dump(ubox)
+    return
+
+    -- if event == "began" then
+    --     local p = CCPoint(x, y)
+    --     if self.addCoinButtonBoundingBox:containsPoint(p) then
+    --         self.state = "ADD"
+    --     elseif self.removeCoinButtonBoundingBox:containsPoint(p) then
+    --         self.state = "REMOVE"
+    --     else
+    --         self.state = "IDLE"
+    --     end
+    --     return true
+    -- elseif event ~= "moved" then
+    --     self.state = "IDLE"
+    -- end
 end
 
 function BenchmarkScene:addCoin()
@@ -150,31 +168,35 @@ end
 function BenchmarkScene:onEnterFrame(dt)
     -- if not self.updateFlag then return end
 
-    -- self.tbl = self.tbl or {}
-    -- for i = 1, 10000 do
-    --     local t = {}
-    --     -- local t = self.tbl
-    --     -- table.insert(t, CCPoint(i, i))
-    --     -- CCPoint(0, 0)
-    --     -- local t = display.newSprite("#AddCoinButton.png")
-    --     -- table.insert(t, display.newSprite("#AddCoinButton.png"))
-    --     table.insert(t, TestClass())
+    self.tbl = self.tbl or {count=0}
+    if self.tbl.count<500000 then
+        for i = 1, 10000 do
+            -- local t = {}
+            local t = self.tbl
+            table.insert(t, CCPoint(i, i))
+            -- CCPoint(0, 0)
+            -- local t = display.newSprite("#AddCoinButton.png")
+            -- table.insert(t, display.newSprite("#AddCoinButton.png"))
+            -- table.insert(t, TestClass())
+            -- table.insert(t, 1)
+        end
+        self.tbl.count = self.tbl.count + 10000
+        -- collectgarbage("collect")
+        print("run", collectgarbage("count"))
+    end
+    return
+
+    -- if self.state == "ADD" then
+    --     self:addCoin()
+    -- elseif self.state == "REMOVE" and self.coinsCount > 0 then
+    --     self:removeCoin()
     -- end
-    -- -- collectgarbage("collect")
-    -- print("run", collectgarbage("count"))
-    -- return
 
-    if self.state == "ADD" then
-        self:addCoin()
-    elseif self.state == "REMOVE" and self.coinsCount > 0 then
-        self:removeCoin()
-    end
-
-    local coins = self.coins
-    for i = 1, #coins do
-        local coin = coins[i]
-        coin:onEnterFrame(dt)
-    end
+    -- local coins = self.coins
+    -- for i = 1, #coins do
+    --     local coin = coins[i]
+    --     coin:onEnterFrame(dt)
+    -- end
 
     -- if self.trackFlag==nil and coins[1] then
     --     local c = coins[1]
