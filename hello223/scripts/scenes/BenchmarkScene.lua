@@ -5,6 +5,8 @@ local BenchmarkScene = class("BenchmarkScene", function()
 end)
 
 local random = math.random
+math.newrandomseed()
+print("----random:", random())
 
 function BenchmarkScene:ctor()
     self.batch = display.newBatchNode(GAME_TEXTURE_IMAGE_FILENAME, 10000)
@@ -262,13 +264,13 @@ function BenchmarkScene:onEnter()
     --     self.assetsManager:update()
     -- end
     
-    self.handler = 
-    self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt) self:onEnterFrame(dt) end)
-    self:scheduleUpdate_()
-    self.layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
-        return self:onTouch(event.name, event.x, event.y)
-    end)
-    self.layer:setTouchEnabled(true)
+    -- self.handler = 
+    -- self:addNodeEventListener(cc.NODE_ENTER_FRAME_EVENT, function(dt) self:onEnterFrame(dt) end)
+    -- self:scheduleUpdate_()
+    -- self.layer:addNodeEventListener(cc.NODE_TOUCH_EVENT, function(event)
+    --     return self:onTouch(event.name, event.x, event.y)
+    -- end)
+    -- self.layer:setTouchEnabled(true)
     
     -- local ly = require("IntroLayer").new():addTo(self)
     -- self:removeAllNodeEventListeners()
